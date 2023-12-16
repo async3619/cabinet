@@ -51,7 +51,6 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
             icon: const Icon(Icons.check),
             onPressed: () {
               if (formKey.currentState!.saveAndValidate()) {
-                print(formKey.currentState!.value);
               }
             }
           )

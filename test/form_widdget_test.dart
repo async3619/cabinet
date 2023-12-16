@@ -9,7 +9,9 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 void main() {
   testWidgets('should render empty form widget if no fields are provided', (WidgetTester tester) async {
     final formKey = GlobalKey<FormBuilderState>();
-    await tester.pumpWidget(FormWidget(fields: [], formKey: formKey));
+    final List<FormFieldItem> fields = [];
+
+    await tester.pumpWidget(FormWidget(fields: fields, formKey: formKey));
 
     expect(find.byType(FormBuilder), findsOneWidget);
     expect(find.byType(FormField), findsNothing);
@@ -17,6 +19,7 @@ void main() {
 
   testWidgets('should render form widget with text form field', (WidgetTester tester) async {
     final formKey = GlobalKey<FormBuilderState>();
+
     final fields = [
       TextFormFieldItem(
         name: 'name',
