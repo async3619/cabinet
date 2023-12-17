@@ -1,15 +1,24 @@
+import 'package:cabinet/widgets/list_input/select_list_input.dart';
+import 'package:cabinet/widgets/list_input/text_list_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'form_field_item.dart';
 
+enum FormFieldGroupType {
+  normal,
+  list,
+}
+
 class FormFieldGroup {
   final String name;
   final List<FormFieldItem> fields;
+  final FormFieldGroupType? type;
 
   FormFieldGroup({
     required this.name,
     required this.fields,
+    this.type,
   });
 }
 
@@ -28,6 +37,26 @@ class FormWidget extends StatefulWidget {
 }
 
 class _FormWidgetState extends State<FormWidget> {
+  Widget buildListField(FormFieldItem field, bool? last) {
+    Widget fieldWidget;
+    last ??= false;
+
+    if (field is TextFormFieldItem) {
+      fieldWidget = TextListInput(field: field);
+    } else if (field is SelectFormFieldItem) {
+      fieldWidget = SelectListInput(field: field);
+    } else {
+      throw Exception('Unknown field type');
+    }
+
+    return Column(
+      children: last == false ? [fieldWidget] : [
+        const Divider(height: 1, thickness: 1),
+        fieldWidget
+      ]
+    );
+  }
+
   Widget buildField(FormFieldItem field, bool? last) {
     Widget fieldWidget;
     last ??= false;
@@ -92,15 +121,16 @@ class _FormWidgetState extends State<FormWidget> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                left: 16.0,
-                right: 16.0,
-                bottom: 16.0,
-              ),
+              padding: group.type == FormFieldGroupType.list
+                ? const EdgeInsets.all(0)
+                : const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
               child: Column(
                 children: [
                   for (var i = 0; i < group.fields.length; i++)
-                    buildField(group.fields[i], i == group.fields.length - 1)
+                    if (group.type == FormFieldGroupType.list)
+                      buildListField(group.fields[i], i == group.fields.length - 1)
+                    else
+                      buildField(group.fields[i], i == group.fields.length - 1)
                 ],
               ),
             )

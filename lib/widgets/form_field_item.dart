@@ -26,12 +26,14 @@ class TextFormFieldItem extends FormFieldItem {
 
 class SelectFormFieldItem extends FormFieldItem {
   final List<String> options;
+  final bool? multiple;
 
   SelectFormFieldItem({
     required String name,
     required String label,
     FormFieldValidator? validator,
     required this.options,
+    this.multiple,
   }) : super(
     name: name,
     label: label,
