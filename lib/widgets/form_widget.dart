@@ -76,12 +76,12 @@ class _FormWidgetState extends State<FormWidget> {
         borderRadius: BorderRadius.circular(0),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Text(
                 group.name,
                 style: TextStyle(
@@ -91,8 +91,19 @@ class _FormWidgetState extends State<FormWidget> {
                 ),
               ),
             ),
-            for (var i = 0; i < group.fields.length; i++)
-              buildField(group.fields[i], i == group.fields.length - 1),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                bottom: 16.0,
+              ),
+              child: Column(
+                children: [
+                  for (var i = 0; i < group.fields.length; i++)
+                    buildField(group.fields[i], i == group.fields.length - 1)
+                ],
+              ),
+            )
           ],
         ),
       ),
