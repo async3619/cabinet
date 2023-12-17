@@ -17,6 +17,15 @@ void main() {
     expect(find.byType(FormField), findsNothing);
   });
 
+  testWidgets('should throw error if invalid field type is provided', (WidgetTester tester) async {
+    final formKey = GlobalKey<FormBuilderState>();
+    final List<dynamic> fields = [1];
+
+    await tester.pumpWidget(FormWidget(items: fields, formKey: formKey));
+
+    expect(tester.takeException(), isInstanceOf<Exception>());
+  });
+
   testWidgets('should render form widget group with fields', (WidgetTester tester) async {
     final formKey = GlobalKey<FormBuilderState>();
     final fields = [
