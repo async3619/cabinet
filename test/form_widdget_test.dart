@@ -11,10 +11,37 @@ void main() {
     final formKey = GlobalKey<FormBuilderState>();
     final List<FormFieldItem> fields = [];
 
-    await tester.pumpWidget(FormWidget(fields: fields, formKey: formKey));
+    await tester.pumpWidget(FormWidget(items: fields, formKey: formKey));
 
     expect(find.byType(FormBuilder), findsOneWidget);
     expect(find.byType(FormField), findsNothing);
+  });
+
+  testWidgets('should render form widget group with fields', (WidgetTester tester) async {
+    final formKey = GlobalKey<FormBuilderState>();
+    final fields = [
+      FormFieldGroup(name: "General", fields: [
+        TextFormFieldItem(
+          name: 'name',
+          label: 'Name',
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(),
+          ]),
+        )
+      ])
+    ];
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: FormWidget(items: fields, formKey: formKey),
+        ),
+      ),
+    );
+
+    expect(find.byType(FormBuilder), findsOneWidget);
+    expect(find.text('General'), findsOneWidget);
+    expect(find.byType(FormBuilderTextField), findsOneWidget);
   });
 
   testWidgets('should render form widget with text form field', (WidgetTester tester) async {
@@ -33,7 +60,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: FormWidget(fields: fields, formKey: formKey),
+          body: FormWidget(items: fields, formKey: formKey),
         ),
       ),
     );
@@ -62,7 +89,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: FormWidget(fields: fields, formKey: formKey),
+          body: FormWidget(items: fields, formKey: formKey),
         ),
       ),
     );

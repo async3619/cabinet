@@ -18,25 +18,15 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
   final formKey = GlobalKey<FormBuilderState>();
 
   get formFields => [
-    TextFormFieldItem(
-      name: 'name',
-      label: 'Name',
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(),
-      ]),
-    ),
-    SelectFormFieldItem(
-      name: 'url',
-      label: 'URL',
-      options: [
-        'https://www.google.com',
-        'https://www.facebook.com',
-        'https://www.twitter.com',
-      ],
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(),
-      ]),
-    ),
+    FormFieldGroup(name: "General", fields: [
+      TextFormFieldItem(
+        name: 'name',
+        label: 'Name',
+        validator: FormBuilderValidators.compose([
+          FormBuilderValidators.required(),
+        ]),
+      )
+    ])
   ];
 
   @override
@@ -60,12 +50,9 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: FormWidget(
-                formKey: formKey,
-                fields: formFields,
-              )
+            FormWidget(
+              formKey: formKey,
+              items: formFields,
             ),
           ],
         ),
