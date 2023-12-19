@@ -1,10 +1,11 @@
-import 'package:cabinet/widgets/dialogs/multiple_select_dialog.dart';
-import 'package:cabinet/widgets/dialogs/singular_select_dialog.dart';
-import 'package:cabinet/widgets/form_field_item.dart';
-import 'package:cabinet/widgets/list_input/select_list_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'package:cabinet/widgets/form_widget/form_field_item.dart';
+import 'package:cabinet/widgets/form_widget/list_input/select_list_input.dart';
+import 'package:cabinet/widgets/form_widget/dialogs/multiple_select_dialog.dart';
+import 'package:cabinet/widgets/form_widget/dialogs/singular_select_dialog.dart';
 
 void main() {
   testWidgets('should render list tile item with field data',

@@ -1,8 +1,9 @@
-import 'package:cabinet/widgets/form_field_item.dart';
-import 'package:cabinet/widgets/list_input/text_list_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'package:cabinet/widgets/form_widget/form_field_item.dart';
+import 'package:cabinet/widgets/form_widget/list_input/text_list_input.dart';
 
 void main() {
   testWidgets('should render list tile item with field data',

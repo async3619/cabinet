@@ -1,6 +1,7 @@
-import 'package:cabinet/widgets/dialogs/singular_select_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'package:cabinet/widgets/form_widget/dialogs/singular_select_dialog.dart';
 
 void main() {
   testWidgets('should render SingularSelectDialog properly',

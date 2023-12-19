@@ -1,9 +1,10 @@
-import 'package:cabinet/widgets/list_input/select_list_input.dart';
-import 'package:cabinet/widgets/list_input/text_list_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-import 'form_field_item.dart';
+import './list_input/select_list_input.dart';
+import './list_input/text_list_input.dart';
+
+import './form_field_item.dart';
 
 class FormFieldGroup {
   final String name;

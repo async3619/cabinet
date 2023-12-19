@@ -1,9 +1,9 @@
-import 'package:cabinet/widgets/dialogs/multiple_select_dialog.dart';
-import 'package:cabinet/widgets/dialogs/singular_select_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-import 'package:cabinet/widgets/form_field_item.dart';
+import '../dialogs/multiple_select_dialog.dart';
+import '../dialogs/singular_select_dialog.dart';
+import '../form_field_item.dart';
 
 class SelectListInput extends StatefulWidget {
   final SelectFormFieldItem field;

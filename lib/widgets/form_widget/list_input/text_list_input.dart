@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:cabinet/widgets/form_field_item.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+
+import '../form_field_item.dart';
 
 class TextListInput extends StatefulWidget {
   final TextFormFieldItem field;
