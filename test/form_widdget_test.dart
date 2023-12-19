@@ -1,114 +1,94 @@
+import 'package:cabinet/widgets/form_field_item.dart';
+import 'package:cabinet/widgets/list_input/select_list_input.dart';
+import 'package:cabinet/widgets/list_input/text_list_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:cabinet/widgets/form_field_item.dart';
 import 'package:cabinet/widgets/form_widget.dart';
 
 void main() {
-  testWidgets('should render empty form widget if no fields are provided',
-      (WidgetTester tester) async {
-    final formKey = GlobalKey<FormBuilderState>();
-    final List<FormFieldItem> fields = [];
-
-    await tester.pumpWidget(FormWidget(items: fields, formKey: formKey));
-
-    expect(find.byType(FormBuilder), findsOneWidget);
-    expect(find.byType(FormField), findsNothing);
-  });
-
-  testWidgets('should throw error if invalid field type is provided',
-      (WidgetTester tester) async {
-    final formKey = GlobalKey<FormBuilderState>();
-    final List<dynamic> fields = [1];
-
-    await tester.pumpWidget(FormWidget(items: fields, formKey: formKey));
-
-    expect(tester.takeException(), isInstanceOf<Exception>());
-  });
-
-  testWidgets('should render form widget group with fields',
-      (WidgetTester tester) async {
-    final formKey = GlobalKey<FormBuilderState>();
-    final fields = [
-      FormFieldGroup(name: "General", fields: [
-        TextFormFieldItem(
-          name: 'name',
-          label: 'Name',
-          validator: FormBuilderValidators.compose([
-            FormBuilderValidators.required(),
-          ]),
-        )
-      ])
-    ];
-
-    await tester.pumpWidget(
-      MaterialApp(
+  testWidgets("should render empty form widget if no groups are provided",
+      (tester) async {
+    await tester.pumpWidget(MaterialApp(
         home: Scaffold(
-          body: FormWidget(items: fields, formKey: formKey),
-        ),
-      ),
-    );
+            body: FormWidget(
+      groups: [],
+      formKey: GlobalKey<FormBuilderState>(),
+    ))));
 
-    expect(find.byType(FormBuilder), findsOneWidget);
-    expect(find.text('General'), findsOneWidget);
-    expect(find.byType(FormBuilderTextField), findsOneWidget);
+    expect(find.byType(FormWidget), findsOneWidget);
+    expect(find.byType(Card), findsNothing);
   });
 
-  testWidgets('should render form widget with text form field',
-      (WidgetTester tester) async {
-    final formKey = GlobalKey<FormBuilderState>();
-
-    final fields = [
-      TextFormFieldItem(
-        name: 'name',
-        label: 'Name',
-        validator: FormBuilderValidators.compose([
-          FormBuilderValidators.required(),
-        ]),
-      ),
-    ];
-
-    await tester.pumpWidget(
-      MaterialApp(
+  testWidgets("should render groups provided to form widget properly",
+      (tester) async {
+    await tester.pumpWidget(MaterialApp(
         home: Scaffold(
-          body: FormWidget(items: fields, formKey: formKey),
-        ),
-      ),
-    );
+            body: FormWidget(formKey: GlobalKey<FormBuilderState>(), groups: [
+      FormFieldGroup(name: "First", fields: []),
+      FormFieldGroup(name: "Second", fields: []),
+    ]))));
 
-    expect(find.byType(FormBuilder), findsOneWidget);
-    expect(find.byType(FormBuilderTextField), findsOneWidget);
+    expect(find.byType(FormWidget), findsOneWidget);
+    expect(find.byType(Card), findsNWidgets(2));
+    expect(find.text("First"), findsOneWidget);
+    expect(find.text("Second"), findsOneWidget);
   });
 
-  testWidgets('should render form widget with select form field',
-      (WidgetTester tester) async {
-    final formKey = GlobalKey<FormBuilderState>();
-    final fields = [
-      SelectFormFieldItem(
-        name: 'url',
-        label: 'URL',
-        options: [
-          'https://www.google.com',
-          'https://www.facebook.com',
-          'https://www.twitter.com',
-        ],
-        validator: FormBuilderValidators.compose([
-          FormBuilderValidators.required(),
-        ]),
-      ),
-    ];
-
-    await tester.pumpWidget(
-      MaterialApp(
+  testWidgets("should render fields provided to form widget properly",
+      (tester) async {
+    await tester.pumpWidget(MaterialApp(
         home: Scaffold(
-          body: FormWidget(items: fields, formKey: formKey),
-        ),
-      ),
-    );
+            body: FormWidget(formKey: GlobalKey<FormBuilderState>(), groups: [
+      FormFieldGroup(name: "First", fields: [
+        TextFormFieldItem(name: "test", label: "Test"),
+      ]),
+    ]))));
 
-    expect(find.byType(FormBuilder), findsOneWidget);
-    expect(find.byType(FormBuilderDropdown<String>), findsOneWidget);
+    expect(find.byType(FormWidget), findsOneWidget);
+    expect(find.byType(Card), findsOneWidget);
+    expect(find.text("First"), findsOneWidget);
+    expect(find.text("Test"), findsOneWidget);
+  });
+
+  testWidgets("should render text field properly", (tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: FormWidget(formKey: GlobalKey<FormBuilderState>(), groups: [
+      FormFieldGroup(name: "First", fields: [
+        TextFormFieldItem(name: "test", label: "Test"),
+      ]),
+    ]))));
+
+    expect(find.byType(FormWidget), findsOneWidget);
+    expect(find.byType(Card), findsOneWidget);
+    expect(find.text("First"), findsOneWidget);
+    expect(find.text("Test"), findsOneWidget);
+    expect(find.byType(TextListInput), findsOneWidget);
+  });
+
+  testWidgets("should render select field properly", (tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: FormWidget(formKey: GlobalKey<FormBuilderState>(), groups: [
+      FormFieldGroup(name: "First", fields: [
+        SelectFormFieldItem(
+          name: 'site',
+          label: 'Site',
+          options: [
+            'test1',
+            'test2',
+            'test3',
+          ],
+        ),
+      ]),
+    ]))));
+
+    expect(find.byType(FormWidget), findsOneWidget);
+    expect(find.byType(Card), findsOneWidget);
+    expect(find.text("First"), findsOneWidget);
+    expect(find.text("Site"), findsOneWidget);
+    expect(find.byType(SelectListInput), findsOneWidget);
   });
 }

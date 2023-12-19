@@ -18,7 +18,7 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
   final formKey = GlobalKey<FormBuilderState>();
 
   get formFields => [
-        FormFieldGroup(type: FormFieldGroupType.list, name: "General", fields: [
+        FormFieldGroup(name: "General", fields: [
           TextFormFieldItem(
               name: 'name',
               label: 'Name',
@@ -26,7 +26,7 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
                 FormBuilderValidators.required(),
               ]))
         ]),
-        FormFieldGroup(type: FormFieldGroupType.list, name: "Target", fields: [
+        FormFieldGroup(name: "Target", fields: [
           SelectFormFieldItem(
             name: 'site',
             label: 'Site',
@@ -75,7 +75,7 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
           children: <Widget>[
             FormWidget(
               formKey: formKey,
-              items: formFields,
+              groups: formFields,
             ),
           ],
         ),

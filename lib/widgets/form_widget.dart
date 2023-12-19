@@ -5,30 +5,23 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'form_field_item.dart';
 
-enum FormFieldGroupType {
-  normal,
-  list,
-}
-
 class FormFieldGroup {
   final String name;
   final List<FormFieldItem> fields;
-  final FormFieldGroupType? type;
 
   FormFieldGroup({
     required this.name,
     required this.fields,
-    this.type,
   });
 }
 
 class FormWidget extends StatefulWidget {
-  final List<dynamic> items;
+  final List<FormFieldGroup> groups;
   final GlobalKey<FormBuilderState> formKey;
 
   const FormWidget({
     Key? key,
-    required this.items,
+    required this.groups,
     required this.formKey,
   }) : super(key: key);
 
@@ -37,7 +30,7 @@ class FormWidget extends StatefulWidget {
 }
 
 class _FormWidgetState extends State<FormWidget> {
-  Widget buildListField(FormFieldItem field, bool? last) {
+  Widget buildField(FormFieldItem field, bool? last) {
     Widget fieldWidget;
     last ??= false;
 
@@ -53,49 +46,6 @@ class _FormWidgetState extends State<FormWidget> {
         children: last == false
             ? [fieldWidget]
             : [const Divider(height: 1, thickness: 1), fieldWidget]);
-  }
-
-  Widget buildField(FormFieldItem field, bool? last) {
-    Widget fieldWidget;
-    last ??= false;
-
-    if (field is TextFormFieldItem) {
-      fieldWidget = FormBuilderTextField(
-        name: field.name,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        decoration: InputDecoration(
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-          labelText: field.label,
-          border: const OutlineInputBorder(),
-        ),
-        validator: field.validator,
-      );
-    } else if (field is SelectFormFieldItem) {
-      fieldWidget = FormBuilderDropdown(
-        name: field.name,
-        decoration: InputDecoration(
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-          labelText: field.label,
-          border: const OutlineInputBorder(),
-        ),
-        validator: field.validator,
-        items: field.options.map((option) {
-          return DropdownMenuItem(
-            value: option,
-            child: Text(option),
-          );
-        }).toList(),
-      );
-    } else {
-      throw Exception('Unknown field type');
-    }
-
-    return Padding(
-      padding: EdgeInsets.only(bottom: last ? 0 : 16.0),
-      child: fieldWidget,
-    );
   }
 
   Widget buildGroup(FormFieldGroup group) {
@@ -120,22 +70,12 @@ class _FormWidgetState extends State<FormWidget> {
                 ),
               ),
             ),
-            Padding(
-              padding: group.type == FormFieldGroupType.list
-                  ? const EdgeInsets.all(0)
-                  : const EdgeInsets.only(
-                      left: 16.0, right: 16.0, bottom: 16.0),
-              child: Column(
-                children: [
-                  for (var i = 0; i < group.fields.length; i++)
-                    if (group.type == FormFieldGroupType.list)
-                      buildListField(
-                          group.fields[i], i == group.fields.length - 1)
-                    else
-                      buildField(group.fields[i], i == group.fields.length - 1)
-                ],
-              ),
-            )
+            Column(
+              children: [
+                for (var i = 0; i < group.fields.length; i++)
+                  buildField(group.fields[i], i == group.fields.length - 1)
+              ],
+            ),
           ],
         ),
       ),
@@ -148,13 +88,8 @@ class _FormWidgetState extends State<FormWidget> {
         key: widget.formKey,
         child: Column(
           children: [
-            for (var i = 0; i < widget.items.length; i++)
-              if (widget.items[i] is FormFieldGroup)
-                buildGroup(widget.items[i])
-              else if (widget.items[i] is FormFieldItem)
-                buildField(widget.items[i], i == widget.items.length - 1)
-              else
-                throw Exception('Unknown item type'),
+            for (var i = 0; i < widget.groups.length; i++)
+              buildGroup(widget.groups[i]),
           ],
         ));
   }
