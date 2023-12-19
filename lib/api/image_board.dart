@@ -7,9 +7,7 @@ import 'package:cabinet/models/board/image_board.dart';
 class ImageBoardApi extends BaseApi<ImageBoardBoard> {
   final String baseUrl;
 
-  ImageBoardApi({
-    required this.baseUrl
-  });
+  ImageBoardApi({required this.baseUrl});
 
   @override
   Future<List<ImageBoardBoard>> getBoards() async {

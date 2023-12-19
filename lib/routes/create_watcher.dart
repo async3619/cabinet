@@ -18,50 +18,41 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
   final formKey = GlobalKey<FormBuilderState>();
 
   get formFields => [
-    FormFieldGroup(
-      type: FormFieldGroupType.list,
-      name: "General",
-      fields: [
-        TextFormFieldItem(
-          name: 'name',
-          label: 'Name',
-          validator: FormBuilderValidators.compose([
-            FormBuilderValidators.required(),
-          ])
-        )
-      ]
-    ),
-    FormFieldGroup(
-      type: FormFieldGroupType.list,
-      name: "Target",
-      fields: [
-        SelectFormFieldItem(
-          name: 'site',
-          label: 'Site',
-          validator: FormBuilderValidators.compose([
-            FormBuilderValidators.required(),
-          ]),
-          options: [
-            'test1',
-            'test2',
-            'test3',
-          ],
-        ),
-        SelectFormFieldItem(
-          name: 'boards',
-          label: 'Boards',
-          multiple: true,
-          validator: FormBuilderValidators.compose([
-            FormBuilderValidators.required(),
-          ]),
-          options: [
-            // make 'test1' to 'test100'
-            for (var i = 1; i <= 100; i++) 'test$i'
-          ],
-        )
-      ]
-    ),
-  ];
+        FormFieldGroup(type: FormFieldGroupType.list, name: "General", fields: [
+          TextFormFieldItem(
+              name: 'name',
+              label: 'Name',
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.required(),
+              ]))
+        ]),
+        FormFieldGroup(type: FormFieldGroupType.list, name: "Target", fields: [
+          SelectFormFieldItem(
+            name: 'site',
+            label: 'Site',
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(),
+            ]),
+            options: [
+              'test1',
+              'test2',
+              'test3',
+            ],
+          ),
+          SelectFormFieldItem(
+            name: 'boards',
+            label: 'Boards',
+            multiple: true,
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(),
+            ]),
+            options: [
+              // make 'test1' to 'test100'
+              for (var i = 1; i <= 100; i++) 'test$i'
+            ],
+          )
+        ]),
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -72,12 +63,10 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
         // add submit button
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.check),
-            onPressed: () {
-              if (formKey.currentState!.saveAndValidate()) {
-              }
-            }
-          )
+              icon: const Icon(Icons.check),
+              onPressed: () {
+                if (formKey.currentState!.saveAndValidate()) {}
+              })
         ],
       ),
       body: SingleChildScrollView(

@@ -7,7 +7,8 @@ import 'package:cabinet/widgets/form_field_item.dart';
 import 'package:cabinet/widgets/form_widget.dart';
 
 void main() {
-  testWidgets('should render empty form widget if no fields are provided', (WidgetTester tester) async {
+  testWidgets('should render empty form widget if no fields are provided',
+      (WidgetTester tester) async {
     final formKey = GlobalKey<FormBuilderState>();
     final List<FormFieldItem> fields = [];
 
@@ -17,7 +18,8 @@ void main() {
     expect(find.byType(FormField), findsNothing);
   });
 
-  testWidgets('should throw error if invalid field type is provided', (WidgetTester tester) async {
+  testWidgets('should throw error if invalid field type is provided',
+      (WidgetTester tester) async {
     final formKey = GlobalKey<FormBuilderState>();
     final List<dynamic> fields = [1];
 
@@ -26,7 +28,8 @@ void main() {
     expect(tester.takeException(), isInstanceOf<Exception>());
   });
 
-  testWidgets('should render form widget group with fields', (WidgetTester tester) async {
+  testWidgets('should render form widget group with fields',
+      (WidgetTester tester) async {
     final formKey = GlobalKey<FormBuilderState>();
     final fields = [
       FormFieldGroup(name: "General", fields: [
@@ -53,7 +56,8 @@ void main() {
     expect(find.byType(FormBuilderTextField), findsOneWidget);
   });
 
-  testWidgets('should render form widget with text form field', (WidgetTester tester) async {
+  testWidgets('should render form widget with text form field',
+      (WidgetTester tester) async {
     final formKey = GlobalKey<FormBuilderState>();
 
     final fields = [
@@ -78,7 +82,8 @@ void main() {
     expect(find.byType(FormBuilderTextField), findsOneWidget);
   });
 
-  testWidgets('should render form widget with select form field', (WidgetTester tester) async {
+  testWidgets('should render form widget with select form field',
+      (WidgetTester tester) async {
     final formKey = GlobalKey<FormBuilderState>();
     final fields = [
       SelectFormFieldItem(

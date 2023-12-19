@@ -19,27 +19,27 @@ class SelectListInput extends StatefulWidget {
 
 class _SelectListInputState extends State<SelectListInput> {
   handleListTap(FormFieldState<dynamic> field) {
-    showDialog(context: context, builder: (context) {
-      if (widget.field.multiple == true) {
-        return MultipleSelectDialog(
-          title: widget.field.label,
-          options: widget.field.options,
-          selectedOptions: field.value,
-          onSubmit: (value) {
-            field.didChange(value);
+    showDialog(
+        context: context,
+        builder: (context) {
+          if (widget.field.multiple == true) {
+            return MultipleSelectDialog(
+                title: widget.field.label,
+                options: widget.field.options,
+                selectedOptions: field.value,
+                onSubmit: (value) {
+                  field.didChange(value);
+                });
           }
-        );
-      }
 
-      return SingularSelectDialog(
-          title: widget.field.label,
-          options: widget.field.options,
-          selectedOption: field.value,
-          onSubmit: (value) {
-            field.didChange(value);
-          }
-      );
-    });
+          return SingularSelectDialog(
+              title: widget.field.label,
+              options: widget.field.options,
+              selectedOption: field.value,
+              onSubmit: (value) {
+                field.didChange(value);
+              });
+        });
   }
 
   @override
@@ -68,13 +68,17 @@ class _SelectListInputState extends State<SelectListInput> {
           title: Text(
             widget.field.label,
             style: TextStyle(
-              color: field.errorText != null ? Theme.of(context).colorScheme.error : null,
+              color: field.errorText != null
+                  ? Theme.of(context).colorScheme.error
+                  : null,
             ),
           ),
           subtitle: Text(
             field.errorText ?? valueLabel,
             style: TextStyle(
-              color: field.errorText != null ? Theme.of(context).colorScheme.error : null,
+              color: field.errorText != null
+                  ? Theme.of(context).colorScheme.error
+                  : null,
             ),
           ),
           onTap: () {

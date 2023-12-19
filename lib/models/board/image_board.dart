@@ -19,7 +19,8 @@ class ImageBoardBoard implements BaseBoard {
   @override
   late String title;
 
-  factory ImageBoardBoard.fromJson(Map<String, dynamic> json) => _$ImageBoardBoardFromJson(json);
+  factory ImageBoardBoard.fromJson(Map<String, dynamic> json) =>
+      _$ImageBoardBoardFromJson(json);
 
   Map<String, dynamic> toJson() => _$ImageBoardBoardToJson(this);
 }

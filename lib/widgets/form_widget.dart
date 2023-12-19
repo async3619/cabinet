@@ -50,11 +50,9 @@ class _FormWidgetState extends State<FormWidget> {
     }
 
     return Column(
-      children: last == false ? [fieldWidget] : [
-        const Divider(height: 1, thickness: 1),
-        fieldWidget
-      ]
-    );
+        children: last == false
+            ? [fieldWidget]
+            : [const Divider(height: 1, thickness: 1), fieldWidget]);
   }
 
   Widget buildField(FormFieldItem field, bool? last) {
@@ -66,7 +64,8 @@ class _FormWidgetState extends State<FormWidget> {
         name: field.name,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
           labelText: field.label,
           border: const OutlineInputBorder(),
         ),
@@ -76,7 +75,8 @@ class _FormWidgetState extends State<FormWidget> {
       fieldWidget = FormBuilderDropdown(
         name: field.name,
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
           labelText: field.label,
           border: const OutlineInputBorder(),
         ),
@@ -122,13 +122,15 @@ class _FormWidgetState extends State<FormWidget> {
             ),
             Padding(
               padding: group.type == FormFieldGroupType.list
-                ? const EdgeInsets.all(0)
-                : const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
+                  ? const EdgeInsets.all(0)
+                  : const EdgeInsets.only(
+                      left: 16.0, right: 16.0, bottom: 16.0),
               child: Column(
                 children: [
                   for (var i = 0; i < group.fields.length; i++)
                     if (group.type == FormFieldGroupType.list)
-                      buildListField(group.fields[i], i == group.fields.length - 1)
+                      buildListField(
+                          group.fields[i], i == group.fields.length - 1)
                     else
                       buildField(group.fields[i], i == group.fields.length - 1)
                 ],
@@ -143,18 +145,17 @@ class _FormWidgetState extends State<FormWidget> {
   @override
   Widget build(BuildContext context) {
     return FormBuilder(
-      key: widget.formKey,
-      child: Column(
-        children: [
-          for (var i = 0; i < widget.items.length; i++)
-            if (widget.items[i] is FormFieldGroup)
-              buildGroup(widget.items[i])
-            else if (widget.items[i] is FormFieldItem)
-              buildField(widget.items[i], i == widget.items.length - 1)
-            else
-              throw Exception('Unknown item type'),
-        ],
-      )
-    );
+        key: widget.formKey,
+        child: Column(
+          children: [
+            for (var i = 0; i < widget.items.length; i++)
+              if (widget.items[i] is FormFieldGroup)
+                buildGroup(widget.items[i])
+              else if (widget.items[i] is FormFieldItem)
+                buildField(widget.items[i], i == widget.items.length - 1)
+              else
+                throw Exception('Unknown item type'),
+          ],
+        ));
   }
 }

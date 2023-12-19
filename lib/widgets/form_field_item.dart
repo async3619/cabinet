@@ -18,10 +18,10 @@ class TextFormFieldItem extends FormFieldItem {
     required String label,
     FormFieldValidator? validator,
   }) : super(
-    name: name,
-    label: label,
-    validator: validator,
-  );
+          name: name,
+          label: label,
+          validator: validator,
+        );
 }
 
 class SelectFormFieldItem extends FormFieldItem {
@@ -35,8 +35,8 @@ class SelectFormFieldItem extends FormFieldItem {
     required this.options,
     this.multiple,
   }) : super(
-    name: name,
-    label: label,
-    validator: validator,
-  );
+          name: name,
+          label: label,
+          validator: validator,
+        );
 }

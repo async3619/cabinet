@@ -21,37 +21,39 @@ class _TextListInputState extends State<TextListInput> {
   handleListTap(FormFieldState<String?> field) {
     _controller.value = _controller.value.copyWith(text: field.value ?? '');
 
-    showDialog(context: context, builder: (context) {
-      return AlertDialog(
-        content: TextField(
-          controller: _controller,
-          autofocus: true,
-          decoration: InputDecoration(
-            labelText: widget.field.label,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              if (_controller.text.isEmpty) {
-                field.didChange(null);
-              } else {
-                field.didChange(_controller.text);
-              }
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: TextField(
+              controller: _controller,
+              autofocus: true,
+              decoration: InputDecoration(
+                labelText: widget.field.label,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  if (_controller.text.isEmpty) {
+                    field.didChange(null);
+                  } else {
+                    field.didChange(_controller.text);
+                  }
 
-              Navigator.pop(context);
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      );
-    });
+                  Navigator.pop(context);
+                },
+                child: const Text('Save'),
+              ),
+            ],
+          );
+        });
   }
 
   @override
