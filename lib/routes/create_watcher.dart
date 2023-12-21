@@ -1,3 +1,4 @@
+import 'package:cabinet/api/image_board.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -16,6 +17,9 @@ class CreateWatcherRoute extends StatefulWidget {
 
 class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
   final formKey = GlobalKey<FormBuilderState>();
+  final ImageBoardApi api = ImageBoardApi(
+    baseUrl: 'https://a.4cdn.org',
+  );
 
   get formFields => [
         FormFieldGroup(name: "General", fields: [
@@ -28,28 +32,22 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
         ]),
         FormFieldGroup(name: "Target", fields: [
           SelectFormFieldItem(
-            name: 'site',
-            label: 'Site',
-            validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(),
-            ]),
-            options: [
-              'test1',
-              'test2',
-              'test3',
-            ],
-          ),
-          SelectFormFieldItem(
             name: 'boards',
             label: 'Boards',
             multiple: true,
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(),
             ]),
-            options: [
-              // make 'test1' to 'test100'
-              for (var i = 1; i <= 100; i++) 'test$i'
-            ],
+            getOptions: () async {
+              return api.getBoards().then((boards) {
+                return boards
+                    .map((board) => SelectOption(
+                          value: board.id,
+                          label: board.getName(),
+                        ))
+                    .toList();
+              });
+            },
           )
         ]),
       ];

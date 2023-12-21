@@ -24,15 +24,25 @@ class TextFormFieldItem extends FormFieldItem {
         );
 }
 
+class SelectOption {
+  final String value;
+  final String label;
+
+  SelectOption({
+    required this.value,
+    required this.label,
+  });
+}
+
 class SelectFormFieldItem extends FormFieldItem {
-  final List<String> options;
+  final Future<List<SelectOption>> Function() getOptions;
   final bool? multiple;
 
   SelectFormFieldItem({
     required String name,
     required String label,
     FormFieldValidator? validator,
-    required this.options,
+    required this.getOptions,
     this.multiple,
   }) : super(
           name: name,

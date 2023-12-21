@@ -1,8 +1,7 @@
+import 'package:cabinet/widgets/form_widget/dialogs/select_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
-import '../dialogs/multiple_select_dialog.dart';
-import '../dialogs/singular_select_dialog.dart';
 import '../form_field_item.dart';
 
 class SelectListInput extends StatefulWidget {
@@ -22,23 +21,15 @@ class _SelectListInputState extends State<SelectListInput> {
     showDialog(
         context: context,
         builder: (context) {
-          if (widget.field.multiple == true) {
-            return MultipleSelectDialog(
-                title: widget.field.label,
-                options: widget.field.options,
-                selectedOptions: field.value,
-                onSubmit: (value) {
-                  field.didChange(value);
-                });
-          }
-
-          return SingularSelectDialog(
+          return SelectDialog(
               title: widget.field.label,
-              options: widget.field.options,
-              selectedOption: field.value,
+              getOptions: widget.field.getOptions,
               onSubmit: (value) {
                 field.didChange(value);
-              });
+                Navigator.of(context).pop();
+              },
+              multiple: widget.field.multiple ?? false,
+              initialSelection: field.value);
         });
   }
 

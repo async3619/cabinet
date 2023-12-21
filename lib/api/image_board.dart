@@ -16,10 +16,11 @@ class ImageBoardApi extends BaseApi<ImageBoardBoard> {
       throw Exception('Failed to load boards');
     }
 
-    final boardMap = jsonDecode(response.body) as Map<String, dynamic>;
-    final boards = boardMap.entries.map((entry) {
-      return ImageBoardBoard.fromJson(entry.value);
-    }).toList();
+    final rawResponse = jsonDecode(response.body) as Map<String, dynamic>;
+    final rawBoards = rawResponse['boards'] as List<dynamic>;
+    final boards = rawBoards
+        .map((rawBoard) => ImageBoardBoard.fromJson(rawBoard))
+        .toList();
 
     return boards;
   }

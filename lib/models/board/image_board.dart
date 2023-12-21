@@ -19,6 +19,11 @@ class ImageBoardBoard implements BaseBoard {
   @override
   late String title;
 
+  @override
+  String getName() {
+    return "/$id/ - $title";
+  }
+
   factory ImageBoardBoard.fromJson(Map<String, dynamic> json) =>
       _$ImageBoardBoardFromJson(json);
 
