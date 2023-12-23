@@ -50,3 +50,15 @@ class SelectFormFieldItem extends FormFieldItem {
           validator: validator,
         );
 }
+
+class FilterFormFieldItem extends FormFieldItem {
+  FilterFormFieldItem({
+    required String name,
+    required String label,
+    FormFieldValidator? validator,
+  }) : super(
+          name: name,
+          label: label,
+          validator: validator,
+        );
+}

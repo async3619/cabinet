@@ -50,7 +50,16 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
             },
           )
         ]),
+        FormFieldGroup(
+            name: "Filters",
+            fields: [FilterFormFieldItem(name: "filters", label: "Filters")])
       ];
+
+  void handleSubmit() {
+    if (!formKey.currentState!.saveAndValidate()) {
+      return;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +69,7 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
         title: Text(widget.title),
         // add submit button
         actions: <Widget>[
-          IconButton(
-              icon: const Icon(Icons.check),
-              onPressed: () {
-                if (formKey.currentState!.saveAndValidate()) {}
-              })
+          IconButton(icon: const Icon(Icons.check), onPressed: handleSubmit)
         ],
       ),
       body: SingleChildScrollView(
