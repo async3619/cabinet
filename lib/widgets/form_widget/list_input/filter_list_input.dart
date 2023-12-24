@@ -30,6 +30,28 @@ class _FilterListInputState extends State<FilterListInput> {
             ));
   }
 
+  Widget renderItem(FormFieldState<List<Filter>> field, Filter filter,
+      int index, List<Filter> value) {
+    final keyword = filter.keyword;
+    final location = filter.location?.name ?? "(not set)";
+    final caseSensitive = filter.caseSensitive ?? false;
+
+    return ListTile(
+      title: Text("Filter ${index + 1}"),
+      subtitle: Text(
+          "$keyword, $location, ${caseSensitive ? 'Case Sensitive' : 'Case Insensitive'}"),
+      trailing: IconButton(
+        splashRadius: 16,
+        iconSize: 20,
+        icon: const Icon(Icons.delete),
+        onPressed: () {
+          value.removeAt(index);
+          field.didChange(value);
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FormBuilderField<List<Filter>>(
@@ -42,20 +64,7 @@ class _FilterListInputState extends State<FilterListInput> {
         return Column(
           children: [
             for (var i = 0; i < value.length; i++)
-              ListTile(
-                title: Text("Filter ${i + 1}"),
-                subtitle: Text(
-                    "${value[i].keyword}, ${value[i].location!.name}, ${value[i].caseSensitive! ? 'Case Sensitive' : 'Case Insensitive'}"),
-                trailing: IconButton(
-                  splashRadius: 16,
-                  iconSize: 20,
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                    value.removeAt(i);
-                    field.didChange(value);
-                  },
-                ),
-              ),
+              renderItem(field, value[i], i, value),
             ListTile(
               onTap: () => handleAddFilterClick(context, field),
               title: const Text("Add a new filter"),
