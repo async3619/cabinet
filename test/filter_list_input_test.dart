@@ -48,6 +48,6 @@ void main() {
       ),
     ))));
 
-    expect(find.text("keyword, Subject, Case Sensitive"), findsOneWidget);
+    expect(find.text("keyword, subject, Case Sensitive"), findsOneWidget);
   });
 }
