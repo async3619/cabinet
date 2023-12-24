@@ -30,7 +30,7 @@ class _WatcherCardState extends State<WatcherCard> {
         children: [
           Text(
             "Watcher #${widget.watcher.id}",
-            style: Theme.of(context).textTheme.labelLarge,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 16),
           ResponsiveGridRow(
