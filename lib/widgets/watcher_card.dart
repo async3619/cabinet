@@ -7,8 +7,15 @@ Color? secondary(BuildContext context) =>
 
 class WatcherCard extends StatefulWidget {
   final Watcher watcher;
+  final void Function(Watcher) onDelete;
+  final void Function(Watcher) onEdit;
 
-  const WatcherCard({required this.watcher, Key? key}) : super(key: key);
+  const WatcherCard(
+      {Key? key,
+      required this.watcher,
+      required this.onDelete,
+      required this.onEdit})
+      : super(key: key);
 
   @override
   State<WatcherCard> createState() => _WatcherCardState();
@@ -24,54 +31,85 @@ class _WatcherCardState extends State<WatcherCard> {
 
     return Card(
         child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.all(0),
+      child: Stack(
         children: [
-          Text(
-            "Watcher #${widget.watcher.id}",
-            style: Theme.of(context).textTheme.titleMedium,
+          Positioned(
+            right: 0,
+            top: 0,
+            child: PopupMenuButton(
+                splashRadius: 16,
+                iconColor: secondary(context),
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem(
+                      child: Text("Edit"),
+                      onTap: () {
+                        widget.onEdit(widget.watcher);
+                      },
+                    ),
+                    PopupMenuItem(
+                      child: Text("Delete"),
+                      onTap: () {
+                        widget.onDelete(widget.watcher);
+                      },
+                    ),
+                  ];
+                }),
           ),
-          const SizedBox(height: 16),
-          ResponsiveGridRow(
-            children: [
-              ResponsiveGridCol(
-                xs: 12,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Name",
-                      style: titleStyle,
+          Padding(
+              padding: const EdgeInsets.all(16),
+              child: ResponsiveGridRow(
+                children: [
+                  ResponsiveGridCol(
+                    xs: 12,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Watcher #${widget.watcher.id}",
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: 16),
+                        ]),
+                  ),
+                  ResponsiveGridCol(
+                    xs: 12,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Name",
+                          style: titleStyle,
+                        ),
+                        Text(
+                          widget.watcher.name!,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ],
                     ),
-                    Text(
-                      widget.watcher.name!,
-                      style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  ResponsiveGridCol(
+                    xs: 12,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 12),
+                        Text(
+                          "Boards",
+                          style: titleStyle,
+                        ),
+                        Text(
+                          widget.watcher.boards
+                              .map((element) => "/${element.code}/")
+                              .join(", "),
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              ResponsiveGridCol(
-                xs: 12,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 12),
-                    Text(
-                      "Boards",
-                      style: titleStyle,
-                    ),
-                    Text(
-                      widget.watcher.boards
-                          .map((element) => "/${element.code}/")
-                          .join(", "),
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          )
+                  ),
+                ],
+              ))
         ],
       ),
     ));

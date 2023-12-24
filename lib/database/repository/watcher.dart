@@ -21,4 +21,6 @@ class WatcherRepository {
   }
 
   Future<List<Watcher>> getAll() => _box.getAllAsync();
+
+  Future<bool> delete(Watcher watcher) => _box.removeAsync(watcher.id);
 }

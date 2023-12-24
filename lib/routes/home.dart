@@ -25,6 +25,15 @@ class _HomeRouteState extends State<HomeRoute> {
     );
   }
 
+  void handleDeleteWatcher(Watcher watcher) {
+    final holder = Provider.of<RepositoryHolder>(context, listen: false);
+    holder.watcher.delete(watcher).then((value) {
+      setState(() {});
+    });
+  }
+
+  void handleEditWatcher(Watcher watcher) {}
+
   @override
   Widget build(BuildContext context) {
     final holder = Provider.of<RepositoryHolder>(context);
@@ -48,6 +57,8 @@ class _HomeRouteState extends State<HomeRoute> {
 
                   return WatcherCard(
                     watcher: watcher,
+                    onDelete: handleDeleteWatcher,
+                    onEdit: handleEditWatcher,
                   );
                 },
               );
