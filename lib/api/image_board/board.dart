@@ -1,14 +1,15 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'base.dart';
+import '../board.dart';
 
-part 'image_board.g.dart';
+part 'board.g.dart';
 
 @JsonSerializable()
 class ImageBoardBoard implements BaseBoard {
   ImageBoardBoard({
     required this.id,
     required this.title,
+    required this.description,
   });
 
   @JsonKey(name: 'board')
@@ -18,6 +19,9 @@ class ImageBoardBoard implements BaseBoard {
   @JsonKey(name: 'title')
   @override
   late String title;
+
+  @JsonKey(name: 'meta_description')
+  late String description;
 
   @override
   String getName() {

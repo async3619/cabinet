@@ -1,0 +1,125 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:2435208261968516923",
+      "lastPropertyId": "5:8202223479949716722",
+      "name": "Board",
+      "properties": [
+        {
+          "id": "1:819368075596092878",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "3:8540255429756049812",
+          "name": "code",
+          "type": 9
+        },
+        {
+          "id": "4:2956627726007234941",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "5:8202223479949716722",
+          "name": "description",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:8066954446874509676",
+          "name": "watchers",
+          "targetId": "4:3258664332393499857"
+        }
+      ]
+    },
+    {
+      "id": "3:3837527181350947478",
+      "lastPropertyId": "5:4966943925093952897",
+      "name": "Filter",
+      "properties": [
+        {
+          "id": "1:324951297970140792",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:816498822433558346",
+          "name": "keyword",
+          "type": 9
+        },
+        {
+          "id": "3:1946460842087142561",
+          "name": "caseSensitive",
+          "type": 1
+        },
+        {
+          "id": "4:3332878207973990345",
+          "name": "dbLocation",
+          "type": 6
+        },
+        {
+          "id": "5:4966943925093952897",
+          "name": "watcherId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "1:3373980394132309307",
+          "relationTarget": "Watcher"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:3258664332393499857",
+      "lastPropertyId": "2:8559576275354247062",
+      "name": "Watcher",
+      "properties": [
+        {
+          "id": "1:4168276893676959537",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8559576275354247062",
+          "name": "name",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "2:4278021265628179537",
+          "name": "boards",
+          "targetId": "1:2435208261968516923"
+        }
+      ]
+    }
+  ],
+  "lastEntityId": "4:3258664332393499857",
+  "lastIndexId": "1:3373980394132309307",
+  "lastRelationId": "2:4278021265628179537",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [
+    3952549258912231344
+  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    6226004534534792403,
+    7445203419309431275,
+    4067223898360142249,
+    8003123752882646958,
+    4216762429999835804,
+    2668393717541802962,
+    3094814733012944695
+  ],
+  "retiredRelationUids": [],
+  "version": 1
+}

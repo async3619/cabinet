@@ -1,4 +1,4 @@
-import 'package:cabinet/models/filter.dart';
+import 'package:cabinet/database/filter.dart';
 import 'package:cabinet/widgets/form_widget/form_field_item.dart';
 import 'package:cabinet/widgets/form_widget/list_input/filter_list_input.dart';
 import 'package:flutter/material.dart';
@@ -24,18 +24,17 @@ void main() {
 
   testWidgets("should render value filters listed properly",
       (widgetTester) async {
+    final filter = Filter();
+    filter.keyword = "keyword";
+    filter.location = SearchLocation.Subject;
+    filter.caseSensitive = true;
+
     await widgetTester.pumpWidget(MaterialApp(
         home: Scaffold(
             body: FormBuilder(
       key: GlobalKey<FormBuilderState>(),
       initialValue: {
-        "name": [
-          Filter(
-            keyword: "keyword",
-            location: SearchLocation.Subject,
-            caseSensitive: true,
-          ),
-        ]
+        "name": [filter]
       },
       child: Column(
         children: [

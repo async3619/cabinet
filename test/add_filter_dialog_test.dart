@@ -1,4 +1,4 @@
-import 'package:cabinet/models/filter.dart';
+import 'package:cabinet/database/filter.dart';
 import 'package:cabinet/widgets/form_widget/dialogs/add_filter_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';

@@ -15,13 +15,20 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+  objectbox: ^2.4.0
+  objectbox_flutter_libs: any
+  provider: ^6.1.1
+  path: ^1.8.3
+  path_provider: ^2.1.1
+  html_unescape: ^2.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  build_runner: ^2.3.3
+  build_runner: ^2.4.7
   json_serializable: ^6.6.0
+  objectbox_generator: any
 
 flutter:
   uses-material-design: true

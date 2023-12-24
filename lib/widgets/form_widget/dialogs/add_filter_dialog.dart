@@ -1,4 +1,4 @@
-import 'package:cabinet/models/filter.dart';
+import 'package:cabinet/database/filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -91,11 +91,10 @@ class _AddFilterDialogState extends State<AddFilterDialog> {
           onPressed: () {
             if (formKey.currentState!.saveAndValidate()) {
               final values = formKey.currentState!.value;
-              final filter = Filter(
-                keyword: values['keyword'],
-                location: values['location'],
-                caseSensitive: values['caseSensitive'] ?? false,
-              );
+              final filter = Filter();
+              filter.keyword = values['keyword'];
+              filter.location = values['location'];
+              filter.caseSensitive = values['caseSensitive'];
 
               widget.onSubmit(filter);
             }

@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'package:html_unescape/html_unescape.dart';
 
 import 'package:cabinet/api/base.dart';
 
-import 'package:cabinet/models/board/image_board.dart';
+import 'board.dart';
 
 class ImageBoardApi extends BaseApi<ImageBoardBoard> {
   final String baseUrl;
@@ -21,6 +22,11 @@ class ImageBoardApi extends BaseApi<ImageBoardBoard> {
     final boards = rawBoards
         .map((rawBoard) => ImageBoardBoard.fromJson(rawBoard))
         .toList();
+
+    var unescape = HtmlUnescape();
+    for (var board in boards) {
+      board.description = unescape.convert(board.description);
+    }
 
     return boards;
   }

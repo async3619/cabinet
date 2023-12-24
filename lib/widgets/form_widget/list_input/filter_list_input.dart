@@ -1,4 +1,4 @@
-import 'package:cabinet/models/filter.dart';
+import 'package:cabinet/database/filter.dart';
 import 'package:cabinet/widgets/form_widget/dialogs/add_filter_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -45,7 +45,7 @@ class _FilterListInputState extends State<FilterListInput> {
               ListTile(
                 title: Text("Filter ${i + 1}"),
                 subtitle: Text(
-                    "${value[i].keyword}, ${value[i].location.name}, ${value[i].caseSensitive ? 'Case Sensitive' : 'Case Insensitive'}"),
+                    "${value[i].keyword}, ${value[i].location!.name}, ${value[i].caseSensitive! ? 'Case Sensitive' : 'Case Insensitive'}"),
                 trailing: IconButton(
                   splashRadius: 16,
                   iconSize: 20,
