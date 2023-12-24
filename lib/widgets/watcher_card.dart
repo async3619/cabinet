@@ -37,41 +37,37 @@ class _WatcherCardState extends State<WatcherCard> {
             children: [
               ResponsiveGridCol(
                 xs: 12,
-                child: Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Name",
-                        style: titleStyle,
-                      ),
-                      Text(
-                        widget.watcher.name!,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Name",
+                      style: titleStyle,
+                    ),
+                    Text(
+                      widget.watcher.name!,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ],
                 ),
               ),
               ResponsiveGridCol(
                 xs: 12,
-                child: Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 12),
-                      Text(
-                        "Boards",
-                        style: titleStyle,
-                      ),
-                      Text(
-                        widget.watcher.boards
-                            .map((element) => "/${element.code}/")
-                            .join(", "),
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 12),
+                    Text(
+                      "Boards",
+                      style: titleStyle,
+                    ),
+                    Text(
+                      widget.watcher.boards
+                          .map((element) => "/${element.code}/")
+                          .join(", "),
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ],
                 ),
               ),
             ],
