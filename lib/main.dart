@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: false,
       ),
-      home: const HomeRoute(title: 'Cabinet'),
+      home: const HomeRoute(title: 'Watchers'),
     );
   }
 }
