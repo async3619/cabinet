@@ -61,22 +61,27 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
     ];
   }
 
-  void handleSubmit(RepositoryHolder holder) async {
+  void handleSubmit(RepositoryHolder holder) {
     if (!formKey.currentState!.saveAndValidate()) {
       return;
     }
 
-    final value = formKey.currentState!.value;
-    final boards = await holder.board.getBoards();
+    (() async {
+      final value = formKey.currentState!.value;
+      final boards = await holder.board.getBoards();
 
-    String name = value['name'];
-    List<String> boardCodes = value['boards'];
-    List<Filter> filters = value['filters'];
+      String name = value['name'];
+      List<String> boardCodes = value['boards'];
+      List<Filter> filters = value['filters'];
 
-    var selectedBoards =
-        boards.where((board) => boardCodes.contains(board.code)).toList();
+      var selectedBoards =
+          boards.where((board) => boardCodes.contains(board.code)).toList();
 
-    holder.watcher.create(name, selectedBoards, filters);
+      holder.watcher.create(name, selectedBoards, filters);
+    })()
+        .then((_) {
+      Navigator.pop(context);
+    });
   }
 
   @override
