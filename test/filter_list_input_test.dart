@@ -26,7 +26,7 @@ void main() {
       (widgetTester) async {
     final filter = Filter();
     filter.keyword = "keyword";
-    filter.location = SearchLocation.Subject;
+    filter.location = SearchLocation.subject;
     filter.caseSensitive = true;
 
     await widgetTester.pumpWidget(MaterialApp(

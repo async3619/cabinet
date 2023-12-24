@@ -55,15 +55,15 @@ class _AddFilterDialogState extends State<AddFilterDialog> {
               ),
               items: const [
                 DropdownMenuItem(
-                  value: SearchLocation.Subject,
+                  value: SearchLocation.subject,
                   child: Text('Subject'),
                 ),
                 DropdownMenuItem(
-                  value: SearchLocation.Content,
+                  value: SearchLocation.content,
                   child: Text('Content'),
                 ),
                 DropdownMenuItem(
-                  value: SearchLocation.SubjectContent,
+                  value: SearchLocation.subjectContent,
                   child: Text('Subject, Content'),
                 ),
               ],

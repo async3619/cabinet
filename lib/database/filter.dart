@@ -3,9 +3,9 @@ import 'package:objectbox/objectbox.dart';
 import 'watcher.dart';
 
 enum SearchLocation {
-  Subject,
-  Content,
-  SubjectContent,
+  subject,
+  content,
+  subjectContent,
 }
 
 @Entity()
@@ -36,8 +36,8 @@ class Filter {
   }
 
   void _ensureSearchLocationValue() {
-    assert(SearchLocation.Subject.index == 0);
-    assert(SearchLocation.Content.index == 1);
-    assert(SearchLocation.SubjectContent.index == 2);
+    assert(SearchLocation.subject.index == 0);
+    assert(SearchLocation.content.index == 1);
+    assert(SearchLocation.subjectContent.index == 2);
   }
 }

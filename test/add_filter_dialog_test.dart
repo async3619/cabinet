@@ -24,7 +24,7 @@ void main() {
         onSubmit: (filter) {
           onSubmitCalled = true;
           expect(filter.keyword, "keyword");
-          expect(filter.location, SearchLocation.Subject);
+          expect(filter.location, SearchLocation.subject);
           expect(filter.caseSensitive, true);
         },
       ),
