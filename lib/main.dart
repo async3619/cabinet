@@ -5,7 +5,7 @@ import 'package:objectbox/objectbox.dart';
 import 'package:provider/provider.dart';
 
 import 'database/object_box.dart';
-import 'routes/home.dart';
+import 'routes/home/main.dart';
 
 late final ObjectBox objectBox;
 late final Admin admin;
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: false,
       ),
-      home: const HomeRoute(title: 'Watchers'),
+      home: const HomeRoute(),
     );
   }
 }

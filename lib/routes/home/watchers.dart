@@ -9,18 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 import 'package:provider/provider.dart';
 
-import 'create_watcher.dart';
+import '../create_watcher.dart';
 
-class HomeRoute extends StatefulWidget {
-  const HomeRoute({super.key, required this.title});
+class WatchersTab extends StatefulWidget {
+  static const title = 'Watchers';
 
-  final String title;
+  const WatchersTab({super.key});
 
   @override
-  State<HomeRoute> createState() => _HomeRouteState();
+  State<WatchersTab> createState() => _WatchersTabState();
 }
 
-class _HomeRouteState extends State<HomeRoute> {
+class _WatchersTabState extends State<WatchersTab> {
   late final StreamSubscription<Query<Watcher>> watcherSubscription;
 
   @override
@@ -35,15 +35,6 @@ class _HomeRouteState extends State<HomeRoute> {
   void dispose() {
     watcherSubscription.cancel();
     super.dispose();
-  }
-
-  void handleAddNewWatcherClick() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const CreateWatcherRoute(title: 'Create Watcher'),
-      ),
-    );
   }
 
   void handleDeleteWatcher(Watcher watcher) async {
@@ -97,43 +88,32 @@ class _HomeRouteState extends State<HomeRoute> {
   Widget build(BuildContext context) {
     final holder = Provider.of<RepositoryHolder>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: FutureBuilder<List<Watcher>>(
-          future: holder.watcher.findAll(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              final watchers = snapshot.data!;
+    return Center(
+      child: FutureBuilder<List<Watcher>>(
+        future: holder.watcher.findAll(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final watchers = snapshot.data!;
 
-              return ListView.builder(
-                itemCount: watchers.length,
-                itemBuilder: (context, index) {
-                  final watcher = watchers[index];
+            return ListView.builder(
+              itemCount: watchers.length,
+              itemBuilder: (context, index) {
+                final watcher = watchers[index];
 
-                  return WatcherCard(
-                    watcher: watcher,
-                    onDelete: handleDeleteWatcher,
-                    onEdit: handleEditWatcher,
-                    onForceRun: handleForceRunWatcher,
-                  );
-                },
-              );
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
+                return WatcherCard(
+                  watcher: watcher,
+                  onDelete: handleDeleteWatcher,
+                  onEdit: handleEditWatcher,
+                  onForceRun: handleForceRunWatcher,
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
 
-            return const CircularProgressIndicator();
-          },
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: handleAddNewWatcherClick,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+          return const CircularProgressIndicator();
+        },
       ),
     );
   }
