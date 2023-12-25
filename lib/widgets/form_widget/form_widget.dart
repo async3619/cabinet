@@ -20,11 +20,13 @@ class FormFieldGroup {
 class FormWidget extends StatefulWidget {
   final List<FormFieldGroup> groups;
   final GlobalKey<FormBuilderState> formKey;
+  final Map<String, dynamic>? initialValues;
 
   const FormWidget({
     Key? key,
     required this.groups,
     required this.formKey,
+    this.initialValues,
   }) : super(key: key);
 
   @override
@@ -90,6 +92,7 @@ class _FormWidgetState extends State<FormWidget> {
   Widget build(BuildContext context) {
     return FormBuilder(
         key: widget.formKey,
+        initialValue: widget.initialValues ?? {},
         child: Column(
           children: [
             for (var i = 0; i < widget.groups.length; i++)

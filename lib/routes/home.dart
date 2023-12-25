@@ -49,7 +49,17 @@ class _HomeRouteState extends State<HomeRoute> {
     await holder.watcher.delete(watcher);
   }
 
-  void handleEditWatcher(Watcher watcher) {}
+  void handleEditWatcher(Watcher watcher) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateWatcherRoute(
+          title: 'Edit Watcher',
+          watcher: watcher,
+        ),
+      ),
+    );
+  }
 
   void handleWatcherChanged(Query<Watcher> event) {
     setState(() {});
