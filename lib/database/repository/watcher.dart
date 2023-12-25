@@ -4,6 +4,11 @@ import 'package:cabinet/database/watcher.dart';
 import 'package:cabinet/objectbox.g.dart';
 import 'package:objectbox/objectbox.dart';
 
+enum WatcherStatus {
+  idle,
+  running,
+}
+
 class WatcherRepository {
   final Box<Watcher> _box;
 
@@ -15,6 +20,7 @@ class WatcherRepository {
     entity.name = name;
     entity.boards.addAll(boards);
     entity.filters.addAll(filters);
+    entity.currentStatus = WatcherStatus.idle;
 
     _box.put(entity);
 
@@ -51,4 +57,9 @@ class WatcherRepository {
   Future<List<Watcher>> getAll() => _box.getAllAsync();
 
   Future<bool> delete(Watcher watcher) => _box.removeAsync(watcher.id);
+
+  Future<int> setWatcherStatus(Watcher watcher, WatcherStatus status) {
+    watcher.currentStatus = status;
+    return _box.putAsync(watcher);
+  }
 }

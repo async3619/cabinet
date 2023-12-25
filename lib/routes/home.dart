@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:cabinet/database/repository/holder.dart';
+import 'package:cabinet/database/repository/watcher.dart';
 import 'package:cabinet/database/watcher.dart';
-import 'package:cabinet/tasks/watcher_task.dart';
+import 'package:cabinet/tasks/watcher.dart';
 import 'package:cabinet/widgets/watcher_card.dart';
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
@@ -64,7 +65,26 @@ class _HomeRouteState extends State<HomeRoute> {
 
   void handleForceRunWatcher(Watcher watcher) {
     final holder = Provider.of<RepositoryHolder>(context, listen: false);
-    final task = WatcherTask(holder, watcher);
+    final task = WatcherTask(
+      repositoryHolder: holder,
+      watcher: watcher,
+      onStart: () {
+        holder.watcher.setWatcherStatus(watcher, WatcherStatus.running);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Task \'${watcher.name}\' started'),
+          ),
+        );
+      },
+      onComplete: () {
+        holder.watcher.setWatcherStatus(watcher, WatcherStatus.idle);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Task \'${watcher.name}\' completed'),
+          ),
+        );
+      },
+    );
 
     task.run();
   }

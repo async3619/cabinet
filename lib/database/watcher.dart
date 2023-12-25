@@ -1,3 +1,4 @@
+import 'package:cabinet/database/repository/watcher.dart';
 import 'package:objectbox/objectbox.dart';
 
 import 'board.dart';
@@ -9,6 +10,19 @@ class Watcher {
   int id = 0;
 
   String? name;
+
+  @Transient()
+  WatcherStatus? currentStatus;
+
+  int? get status => currentStatus?.index;
+
+  set status(int? value) {
+    if (value == null) {
+      currentStatus = null;
+    } else {
+      currentStatus = WatcherStatus.values[value];
+    }
+  }
 
   final boards = ToMany<Board>();
 

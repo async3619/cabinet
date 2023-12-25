@@ -3,13 +3,30 @@ import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/database/watcher.dart';
 
-class WatcherTask {
+import 'base.dart';
+
+class WatcherTask extends BaseTask {
   final RepositoryHolder _repositoryHolder;
   final Watcher _watcher;
 
-  WatcherTask(this._repositoryHolder, this._watcher);
+  WatcherTask({
+    required RepositoryHolder repositoryHolder,
+    required Watcher watcher,
+    Function()? onDone,
+    Function()? onStart,
+    Function()? onComplete,
+    Function(dynamic)? onError,
+  })  : _repositoryHolder = repositoryHolder,
+        _watcher = watcher,
+        super(
+          onDone: onDone,
+          onStart: onStart,
+          onComplete: onComplete,
+          onError: onError,
+        );
 
-  void run() async {
+  @override
+  Future<void> doTask() async {
     /**
      * filter out posts that match the filter
      */

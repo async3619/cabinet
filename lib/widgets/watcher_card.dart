@@ -1,3 +1,4 @@
+import 'package:cabinet/database/repository/watcher.dart';
 import 'package:cabinet/database/watcher.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_grid/responsive_grid.dart';
@@ -44,23 +45,29 @@ class _WatcherCardState extends State<WatcherCard> {
                 iconColor: secondary(context),
                 itemBuilder: (context) => <PopupMenuEntry>[
                       PopupMenuItem(
-                        child: const Text("Edit"),
+                        enabled:
+                            widget.watcher.currentStatus == WatcherStatus.idle,
                         onTap: () {
                           widget.onEdit(widget.watcher);
                         },
+                        child: const Text("Edit"),
                       ),
                       PopupMenuItem(
-                        child: const Text("Delete"),
+                        enabled:
+                            widget.watcher.currentStatus == WatcherStatus.idle,
                         onTap: () {
                           widget.onDelete(widget.watcher);
                         },
+                        child: const Text("Delete"),
                       ),
                       const PopupMenuDivider(),
                       PopupMenuItem(
-                        child: const Text("Force Run"),
+                        enabled:
+                            widget.watcher.currentStatus == WatcherStatus.idle,
                         onTap: () {
                           widget.onForceRun(widget.watcher);
                         },
+                        child: const Text("Force Run"),
                       ),
                     ]),
           ),
@@ -112,6 +119,33 @@ class _WatcherCardState extends State<WatcherCard> {
                               .join(", "),
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
+                      ],
+                    ),
+                  ),
+                  ResponsiveGridCol(
+                    xs: 12,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 12),
+                        Text(
+                          "Status",
+                          style: titleStyle,
+                        ),
+                        Text(
+                            widget.watcher.currentStatus == WatcherStatus.idle
+                                ? "Idle"
+                                : "Running",
+                            style: TextStyle(
+                              color: widget.watcher.currentStatus ==
+                                      WatcherStatus.idle
+                                  ? null
+                                  : Theme.of(context).colorScheme.primary,
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.fontSize,
+                            )),
                       ],
                     ),
                   ),
