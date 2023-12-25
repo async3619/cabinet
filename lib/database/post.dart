@@ -1,6 +1,7 @@
 import 'package:objectbox/objectbox.dart';
 
 import 'board.dart';
+import 'image.dart';
 
 @Entity()
 class Post {
@@ -20,6 +21,9 @@ class Post {
 
   @Backlink('parent')
   final children = ToMany<Post>();
+
+  @Backlink('posts')
+  final images = ToMany<Image>();
 
   @override
   String toString() {

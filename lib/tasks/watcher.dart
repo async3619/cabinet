@@ -1,4 +1,6 @@
+import 'package:darq/darq.dart';
 import 'package:cabinet/database/filter.dart';
+import 'package:cabinet/database/image.dart';
 import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/database/watcher.dart';
@@ -27,6 +29,26 @@ class WatcherTask extends BaseTask {
 
   @override
   Future<void> doTask() async {
+    final postMap =
+        await _repositoryHolder.post.box.getAllAsync().then((value) {
+      final Map<String, Post> map = {};
+      for (var post in value) {
+        map["${post.board.target?.code}-${post.no}"] = post;
+      }
+
+      return map;
+    });
+
+    final Map<String, Image> imageMap =
+        await _repositoryHolder.image.getAll().then((value) {
+      final Map<String, Image> map = {};
+      for (var image in value) {
+        map[image.md5!] = image;
+      }
+
+      return map;
+    });
+
     /**
      * filter out posts that match the filter
      */
@@ -38,57 +60,64 @@ class WatcherTask extends BaseTask {
       final openingPosts =
           await _repositoryHolder.post.fetchOpeningPosts(board);
 
-      for (var value in openingPosts) {
+      for (var post in openingPosts) {
         for (var filter in filters) {
-          if (!_checkFilter(value, filter)) {
+          if (!_checkFilter(post, filter)) {
             continue;
           }
 
-          filteredPosts.add(value);
+          filteredPosts.add(post);
         }
       }
     }
 
     /**
-     * save opening posts into database
+     * get all child posts of filtered posts and get all images from opening posts and child posts.
+     * then distinct the images and save them to database.
+     *
+     * finally, replace the image hashes in posts with the images from database.
+     * and save the posts to database.
      */
-    var dbPosts = await _repositoryHolder.post.getPostsByPostIds(
-      filteredPosts.map((e) => e.no!).toList(),
-    );
-
-    var newPosts = <Post>[];
-    for (var post in filteredPosts) {
-      final originalPost = dbPosts[post.no!];
-      if (originalPost != null) {
-        continue;
-      }
-
-      newPosts.add(post);
-    }
-
-    await _repositoryHolder.post.save(newPosts);
-
-    /**
-     * save child posts into database
-     */
+    var images = <Image>[];
+    var postsList = <List<Post>>[];
     for (var post in filteredPosts) {
       final childPosts = await _repositoryHolder.post.fetchChildPosts(post);
-      final childDbPosts = await _repositoryHolder.post.getPostsByPostIds(
-        childPosts.map((e) => e.no!).toList(),
-      );
-
-      final newPosts = <Post>[];
-      for (var childPost in childPosts) {
-        final originalPost = childDbPosts[childPost.no!];
-        if (originalPost != null) {
-          continue;
+      final posts = [post, ...childPosts].map((e) {
+        final cachedPost = postMap["${e.board.target?.code}-${e.no}"];
+        if (cachedPost != null) {
+          e.id = cachedPost.id;
         }
 
-        newPosts.add(childPost);
-      }
+        return e;
+      }).toList();
 
-      await _repositoryHolder.post.save(newPosts);
+      postsList.add(posts);
+      images.addAll(posts.expand((element) => element.images));
     }
+
+    images = images
+        .distinct((element) => element.md5!)
+        .where((element) => !imageMap.containsKey(element.md5!))
+        .toList();
+
+    await _repositoryHolder.image.box.putManyAsync(images).then((ids) {
+      for (var i = 0; i < images.length; i++) {
+        images[i].id = ids[i];
+        imageMap[images[i].md5!] = images[i];
+      }
+    });
+
+    for (var posts in postsList) {
+      for (var post in posts) {
+        final oldHashes = post.images.map((e) => e.md5!).toList();
+
+        post.images.clear();
+        post.images.addAll(oldHashes.map((e) => imageMap[e]!));
+      }
+    }
+
+    await _repositoryHolder.post
+        .save(postsList.expand((element) => element).toList());
   }
 
   bool _checkFilter(Post post, Filter filter) {

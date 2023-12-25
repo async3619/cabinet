@@ -43,6 +43,33 @@ class ImageBoardPost implements BasePost {
   @override
   late DateTime? createdAt;
 
+  @JsonKey(name: 'filename')
+  late String? filename;
+
+  @JsonKey(name: 'ext')
+  late String? extension;
+
+  @JsonKey(name: 'w')
+  late int? width;
+
+  @JsonKey(name: 'h')
+  late int? height;
+
+  @JsonKey(name: 'tn_w')
+  late int? thumbnailWidth;
+
+  @JsonKey(name: 'tn_h')
+  late int? thumbnailHeight;
+
+  @JsonKey(name: 'tim')
+  late int? imageTime;
+
+  @JsonKey(name: 'md5')
+  late String? imageMd5;
+
+  @JsonKey(name: 'fsize')
+  late int? imageSize;
+
   factory ImageBoardPost.fromJson(Map<String, dynamic> json) =>
       _$ImageBoardPostFromJson(json);
 

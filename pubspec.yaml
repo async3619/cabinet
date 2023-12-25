@@ -22,6 +22,7 @@ dependencies:
   path_provider: ^2.1.1
   html_unescape: ^2.0.0
   responsive_grid: ^2.4.4
+  darq: ^2.0.0
 
 dev_dependencies:
   flutter_test:
