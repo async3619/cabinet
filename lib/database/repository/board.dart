@@ -2,16 +2,17 @@ import 'package:cabinet/api/image_board/api.dart';
 import 'package:cabinet/database/board.dart';
 import 'package:cabinet/objectbox.g.dart';
 
-class BoardRepository {
-  final ImageBoardApi _api;
-  final Box<Board> _box;
+import 'base.dart';
 
-  BoardRepository(this._api, this._box);
+class BoardRepository extends BaseRepository<Board> {
+  final ImageBoardApi _api;
+
+  BoardRepository(this._api, Box<Board> box) : super(box);
 
   Future<List<Board>> getBoards() async {
-    final count = _box.count();
+    final count = box.count();
     if (count > 0) {
-      return _box.getAll();
+      return box.getAll();
     }
 
     var rawBoards = await _api.getBoards();
@@ -24,7 +25,7 @@ class BoardRepository {
       return entity;
     }).toList();
 
-    _box.putMany(boards);
+    box.putMany(boards);
     return boards;
   }
 }

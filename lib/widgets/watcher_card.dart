@@ -1,3 +1,4 @@
+import 'package:cabinet/database/repository/watcher.dart';
 import 'package:cabinet/database/watcher.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_grid/responsive_grid.dart';
@@ -9,12 +10,14 @@ class WatcherCard extends StatefulWidget {
   final Watcher watcher;
   final void Function(Watcher) onDelete;
   final void Function(Watcher) onEdit;
+  final void Function(Watcher) onForceRun;
 
   const WatcherCard(
       {Key? key,
       required this.watcher,
       required this.onDelete,
-      required this.onEdit})
+      required this.onEdit,
+      required this.onForceRun})
       : super(key: key);
 
   @override
@@ -40,22 +43,33 @@ class _WatcherCardState extends State<WatcherCard> {
             child: PopupMenuButton(
                 splashRadius: 16,
                 iconColor: secondary(context),
-                itemBuilder: (context) {
-                  return [
-                    PopupMenuItem(
-                      child: const Text("Edit"),
-                      onTap: () {
-                        widget.onEdit(widget.watcher);
-                      },
-                    ),
-                    PopupMenuItem(
-                      child: const Text("Delete"),
-                      onTap: () {
-                        widget.onDelete(widget.watcher);
-                      },
-                    ),
-                  ];
-                }),
+                itemBuilder: (context) => <PopupMenuEntry>[
+                      PopupMenuItem(
+                        enabled:
+                            widget.watcher.currentStatus == WatcherStatus.idle,
+                        onTap: () {
+                          widget.onEdit(widget.watcher);
+                        },
+                        child: const Text("Edit"),
+                      ),
+                      PopupMenuItem(
+                        enabled:
+                            widget.watcher.currentStatus == WatcherStatus.idle,
+                        onTap: () {
+                          widget.onDelete(widget.watcher);
+                        },
+                        child: const Text("Delete"),
+                      ),
+                      const PopupMenuDivider(),
+                      PopupMenuItem(
+                        enabled:
+                            widget.watcher.currentStatus == WatcherStatus.idle,
+                        onTap: () {
+                          widget.onForceRun(widget.watcher);
+                        },
+                        child: const Text("Force Run"),
+                      ),
+                    ]),
           ),
           Padding(
               padding: const EdgeInsets.all(16),
@@ -105,6 +119,33 @@ class _WatcherCardState extends State<WatcherCard> {
                               .join(", "),
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
+                      ],
+                    ),
+                  ),
+                  ResponsiveGridCol(
+                    xs: 12,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 12),
+                        Text(
+                          "Status",
+                          style: titleStyle,
+                        ),
+                        Text(
+                            widget.watcher.currentStatus == WatcherStatus.idle
+                                ? "Idle"
+                                : "Running",
+                            style: TextStyle(
+                              color: widget.watcher.currentStatus ==
+                                      WatcherStatus.idle
+                                  ? null
+                                  : Theme.of(context).colorScheme.primary,
+                              fontSize: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.fontSize,
+                            )),
                       ],
                     ),
                   ),
