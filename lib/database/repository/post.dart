@@ -4,11 +4,12 @@ import 'package:cabinet/database/image.dart';
 import 'package:cabinet/database/post.dart';
 import 'package:cabinet/objectbox.g.dart';
 
-class PostRepository {
-  final ImageBoardApi _api;
-  final Box<Post> box;
+import 'base.dart';
 
-  PostRepository(this._api, this.box);
+class PostRepository extends BaseRepository<Post> {
+  final ImageBoardApi _api;
+
+  PostRepository(this._api, Box<Post> box) : super(box);
 
   Future<List<Post>> fetchOpeningPosts(Board board) async {
     var rawPosts = await _api.getOpeningPosts(board.code!);
@@ -81,25 +82,5 @@ class PostRepository {
     }
 
     return postMap;
-  }
-
-  Future<T> save<T>(T postOrPosts) async {
-    if (postOrPosts is Post) {
-      final id = await box.putAsync(postOrPosts);
-      postOrPosts.id = id;
-
-      return postOrPosts;
-    }
-
-    if (postOrPosts is List<Post>) {
-      final ids = await box.putManyAsync(postOrPosts);
-      for (var i = 0; i < ids.length; i++) {
-        postOrPosts[i].id = ids[i];
-      }
-
-      return postOrPosts;
-    }
-
-    throw Exception('Invalid type');
   }
 }

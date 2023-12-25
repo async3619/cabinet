@@ -1,9 +1,10 @@
 import 'package:objectbox/objectbox.dart';
 
+import 'base.dart';
 import 'post.dart';
 
 @Entity()
-class Image {
+class Image implements BaseEntity {
   Image(
     this.filename,
     this.extension,
@@ -16,6 +17,7 @@ class Image {
     this.md5,
   );
 
+  @override
   @Id()
   int id = 0;
 

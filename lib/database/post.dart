@@ -1,10 +1,12 @@
 import 'package:objectbox/objectbox.dart';
 
+import 'base.dart';
 import 'board.dart';
 import 'image.dart';
 
 @Entity()
-class Post {
+class Post implements BaseEntity {
+  @override
   @Id()
   int id = 0;
 

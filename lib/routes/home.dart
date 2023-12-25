@@ -104,7 +104,7 @@ class _HomeRouteState extends State<HomeRoute> {
       ),
       body: Center(
         child: FutureBuilder<List<Watcher>>(
-          future: holder.watcher.getAll(),
+          future: holder.watcher.findAll(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final watchers = snapshot.data!;

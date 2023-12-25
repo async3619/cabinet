@@ -4,15 +4,15 @@ import 'package:cabinet/database/watcher.dart';
 import 'package:cabinet/objectbox.g.dart';
 import 'package:objectbox/objectbox.dart';
 
+import 'base.dart';
+
 enum WatcherStatus {
   idle,
   running,
 }
 
-class WatcherRepository {
-  final Box<Watcher> _box;
-
-  WatcherRepository(this._box);
+class WatcherRepository extends BaseRepository<Watcher> {
+  WatcherRepository(Box<Watcher> box) : super(box);
 
   Future<Watcher> create(
       String name, List<Board> boards, List<Filter> filters) async {
@@ -22,14 +22,14 @@ class WatcherRepository {
     entity.filters.addAll(filters);
     entity.currentStatus = WatcherStatus.idle;
 
-    _box.put(entity);
+    box.put(entity);
 
     return entity;
   }
 
   Future<Watcher> update(int id,
       {String? name, List<Board>? boards, List<Filter>? filters}) async {
-    final entity = _box.get(id);
+    final entity = box.get(id);
     if (entity == null) {
       throw Exception('Watcher with id $id not found');
     }
@@ -48,18 +48,12 @@ class WatcherRepository {
       entity.filters.addAll(filters);
     }
 
-    _box.put(entity);
+    box.put(entity);
     return entity;
   }
 
-  Stream<Query<Watcher>> watch() => _box.query().watch();
-
-  Future<List<Watcher>> getAll() => _box.getAllAsync();
-
-  Future<bool> delete(Watcher watcher) => _box.removeAsync(watcher.id);
-
   Future<int> setWatcherStatus(Watcher watcher, WatcherStatus status) {
     watcher.currentStatus = status;
-    return _box.putAsync(watcher);
+    return box.putAsync(watcher);
   }
 }

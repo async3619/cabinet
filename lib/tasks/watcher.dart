@@ -29,8 +29,7 @@ class WatcherTask extends BaseTask {
 
   @override
   Future<void> doTask() async {
-    final postMap =
-        await _repositoryHolder.post.box.getAllAsync().then((value) {
+    final postMap = await _repositoryHolder.post.findAll().then((value) {
       final Map<String, Post> map = {};
       for (var post in value) {
         map["${post.board.target?.code}-${post.no}"] = post;
@@ -40,7 +39,7 @@ class WatcherTask extends BaseTask {
     });
 
     final Map<String, Image> imageMap =
-        await _repositoryHolder.image.getAll().then((value) {
+        await _repositoryHolder.image.findAll().then((value) {
       final Map<String, Image> map = {};
       for (var image in value) {
         map[image.md5!] = image;
@@ -117,7 +116,7 @@ class WatcherTask extends BaseTask {
     }
 
     await _repositoryHolder.post
-        .save(postsList.expand((element) => element).toList());
+        .saveAll(postsList.expand((element) => element).toList());
   }
 
   bool _checkFilter(Post post, Filter filter) {
