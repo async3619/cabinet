@@ -1,6 +1,7 @@
 import 'package:cabinet/database/board.dart';
 import 'package:cabinet/database/filter.dart';
 import 'package:cabinet/database/watcher.dart';
+import 'package:cabinet/objectbox.g.dart';
 import 'package:objectbox/objectbox.dart';
 
 class WatcherRepository {
@@ -19,6 +20,8 @@ class WatcherRepository {
 
     return entity;
   }
+
+  Stream<Query<Watcher>> watch() => _box.query().watch();
 
   Future<List<Watcher>> getAll() => _box.getAllAsync();
 

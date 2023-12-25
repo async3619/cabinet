@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/database/watcher.dart';
 import 'package:cabinet/widgets/watcher_card.dart';
 import 'package:flutter/material.dart';
+import 'package:objectbox/src/native/query/query.dart';
 import 'package:provider/provider.dart';
 
 import 'create_watcher.dart';
@@ -16,6 +19,22 @@ class HomeRoute extends StatefulWidget {
 }
 
 class _HomeRouteState extends State<HomeRoute> {
+  late final StreamSubscription<Query<Watcher>> watcherSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final holder = Provider.of<RepositoryHolder>(context, listen: false);
+    watcherSubscription = holder.watcher.watch().listen(handleWatcherChanged);
+  }
+
+  @override
+  void dispose() {
+    watcherSubscription.cancel();
+    super.dispose();
+  }
+
   void handleAddNewWatcherClick() {
     Navigator.push(
       context,
@@ -25,14 +44,16 @@ class _HomeRouteState extends State<HomeRoute> {
     );
   }
 
-  void handleDeleteWatcher(Watcher watcher) {
+  void handleDeleteWatcher(Watcher watcher) async {
     final holder = Provider.of<RepositoryHolder>(context, listen: false);
-    holder.watcher.delete(watcher).then((value) {
-      setState(() {});
-    });
+    await holder.watcher.delete(watcher);
   }
 
   void handleEditWatcher(Watcher watcher) {}
+
+  void handleWatcherChanged(Query<Watcher> event) {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
