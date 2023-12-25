@@ -4,7 +4,7 @@ import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/database/watcher.dart';
 import 'package:cabinet/widgets/watcher_card.dart';
 import 'package:flutter/material.dart';
-import 'package:objectbox/src/native/query/query.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:provider/provider.dart';
 
 import 'create_watcher.dart';

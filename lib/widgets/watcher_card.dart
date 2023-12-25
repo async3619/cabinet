@@ -43,13 +43,13 @@ class _WatcherCardState extends State<WatcherCard> {
                 itemBuilder: (context) {
                   return [
                     PopupMenuItem(
-                      child: Text("Edit"),
+                      child: const Text("Edit"),
                       onTap: () {
                         widget.onEdit(widget.watcher);
                       },
                     ),
                     PopupMenuItem(
-                      child: Text("Delete"),
+                      child: const Text("Delete"),
                       onTap: () {
                         widget.onDelete(widget.watcher);
                       },
