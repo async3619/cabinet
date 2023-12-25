@@ -1,6 +1,7 @@
 import 'package:cabinet/api/image_board/api.dart';
 import 'package:cabinet/database/filter.dart';
 import 'package:cabinet/database/repository/holder.dart';
+import 'package:cabinet/database/watcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -10,9 +11,14 @@ import '../widgets/form_widget/form_field_item.dart';
 import '../widgets/form_widget/form_widget.dart';
 
 class CreateWatcherRoute extends StatefulWidget {
-  const CreateWatcherRoute({Key? key, required this.title}) : super(key: key);
+  const CreateWatcherRoute({
+    Key? key,
+    required this.title,
+    this.watcher,
+  }) : super(key: key);
 
   final String title;
+  final Watcher? watcher;
 
   @override
   State<CreateWatcherRoute> createState() => _CreateWatcherRouteState();
@@ -23,6 +29,20 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
   final ImageBoardApi api = ImageBoardApi(
     baseUrl: 'https://a.4cdn.org',
   );
+
+  final Map<String, dynamic> initialValues = {};
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.watcher != null) {
+      initialValues['name'] = widget.watcher!.name;
+      initialValues['boards'] =
+          widget.watcher!.boards.map((board) => board.code!).toList();
+      initialValues['filters'] = widget.watcher!.filters.toList();
+    }
+  }
 
   List<FormFieldGroup> getFormFields(BuildContext context) {
     return [
@@ -77,7 +97,12 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
       var selectedBoards =
           boards.where((board) => boardCodes.contains(board.code)).toList();
 
-      holder.watcher.create(name, selectedBoards, filters);
+      if (widget.watcher != null) {
+        holder.watcher.update(widget.watcher!.id,
+            name: name, boards: selectedBoards, filters: filters);
+      } else {
+        holder.watcher.create(name, selectedBoards, filters);
+      }
     })()
         .then((_) {
       Navigator.pop(context);
@@ -103,7 +128,10 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            FormWidget(formKey: formKey, groups: getFormFields(context)),
+            FormWidget(
+                formKey: formKey,
+                groups: getFormFields(context),
+                initialValues: initialValues),
           ],
         ),
       ),
