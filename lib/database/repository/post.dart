@@ -83,4 +83,8 @@ class PostRepository extends BaseRepository<Post> {
 
     return postMap;
   }
+
+  Future<List<Post>> getOpeningPosts() async {
+    return box.query(Post_.parent.equals(0)).build().find();
+  }
 }
