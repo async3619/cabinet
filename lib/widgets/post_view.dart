@@ -18,10 +18,12 @@ class PostView extends StatelessWidget {
     Key? key,
     required this.post,
     this.onRequestShowPost,
+    this.onShowMedia,
   }) : super(key: key);
 
   final Post post;
   final Function(int postId)? onRequestShowPost;
+  final Function(Post post)? onShowMedia;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +74,11 @@ class PostView extends StatelessWidget {
                       child: Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              if (onShowMedia != null) {
+                                onShowMedia!(post);
+                              }
+                            },
                           ))),
                 ],
               )),

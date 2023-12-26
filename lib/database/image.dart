@@ -36,4 +36,14 @@ class Image implements BaseEntity {
   String? thumbnailUrl;
 
   final posts = ToMany<Post>();
+
+  @Transient()
+  bool get isVideo {
+    return extension == '.webm' || extension == '.mp4';
+  }
+
+  @Transient()
+  bool get isImage {
+    return !isVideo;
+  }
 }
