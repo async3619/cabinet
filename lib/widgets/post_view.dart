@@ -145,12 +145,15 @@ class PostView extends StatelessWidget {
                       margin: Margins.zero,
                       padding: HtmlPaddings.zero,
                       fontSize: FontSize(
-                          Theme.of(context).textTheme.bodySmall?.fontSize ??
+                          Theme.of(context).textTheme.bodyMedium?.fontSize ??
                               14),
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
                     "a": Style(
                       color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    ".quote": Style(
+                      color: const Color(0xFFB5BD68),
                     ),
                   })
             ],
