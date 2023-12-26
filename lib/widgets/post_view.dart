@@ -46,17 +46,39 @@ class PostView extends StatelessWidget {
       ].join(" ");
     }
 
+    final thumbnailUrl = post.thumbnailUrl;
+    final isPrimaryMediaVideo = post.images.firstOrNull?.extension == ".webm";
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 60,
-          height: 60,
-          color: Colors.white,
-        ),
+        if (thumbnailUrl != null)
+          SizedBox(
+              width: 60,
+              height: 60,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                      child:
+                          Image.network(post.thumbnailUrl!, fit: BoxFit.cover)),
+                  if (isPrimaryMediaVideo)
+                    Positioned.fill(
+                        child: Center(
+                      child: Icon(Icons.play_circle_outline,
+                          size: 24,
+                          color: Theme.of(context).colorScheme.onSurface),
+                    )),
+                  Positioned.fill(
+                      child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () {},
+                          ))),
+                ],
+              )),
         Expanded(
             child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
