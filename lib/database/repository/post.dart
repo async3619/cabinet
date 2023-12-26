@@ -24,15 +24,18 @@ class PostRepository extends BaseRepository<Post> {
 
       if (post.filename != null) {
         entity.images.add(Image(
-            post.filename,
-            post.extension,
-            post.width,
-            post.height,
-            post.thumbnailWidth,
-            post.thumbnailHeight,
-            post.imageTime,
-            post.imageSize,
-            post.imageMd5));
+          post.filename,
+          post.extension,
+          post.width,
+          post.height,
+          post.thumbnailWidth,
+          post.thumbnailHeight,
+          post.imageTime,
+          post.imageSize,
+          post.imageMd5,
+          'https://i.4cdn.org/${board.code}/${post.imageTime}${post.extension}',
+          'https://i.4cdn.org/${board.code}/${post.imageTime}s.jpg',
+        ));
       }
 
       return entity;
@@ -42,8 +45,8 @@ class PostRepository extends BaseRepository<Post> {
   }
 
   Future<List<Post>> fetchChildPosts(Post parent) async {
-    var rawPosts = await _api.getChildPosts(
-        parent.board.target!.code!, parent.no.toString());
+    final boardCode = parent.board.target!.code!;
+    var rawPosts = await _api.getChildPosts(boardCode, parent.no.toString());
 
     var posts = rawPosts.map((post) {
       final entity = Post();
@@ -57,15 +60,18 @@ class PostRepository extends BaseRepository<Post> {
 
       if (post.filename != null) {
         entity.images.add(Image(
-            post.filename,
-            post.extension,
-            post.width,
-            post.height,
-            post.thumbnailWidth,
-            post.thumbnailHeight,
-            post.imageTime,
-            post.imageSize,
-            post.imageMd5));
+          post.filename,
+          post.extension,
+          post.width,
+          post.height,
+          post.thumbnailWidth,
+          post.thumbnailHeight,
+          post.imageTime,
+          post.imageSize,
+          post.imageMd5,
+          'https://i.4cdn.org/$boardCode/${post.imageTime}${post.extension}',
+          'https://i.4cdn.org/$boardCode/${post.imageTime}s.jpg',
+        ));
       }
 
       return entity;

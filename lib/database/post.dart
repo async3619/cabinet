@@ -32,7 +32,7 @@ class Post implements BaseEntity {
       return null;
     }
 
-    return "https://i.4cdn.org/${board.target?.code}/${images.first.time}s.jpg";
+    return images[0].thumbnailUrl;
   }
 
   @override
