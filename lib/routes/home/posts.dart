@@ -1,4 +1,6 @@
+import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/repository/holder.dart';
+import 'package:cabinet/routes/thread.dart';
 import 'package:cabinet/widgets/post_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +15,11 @@ class PostsTab extends StatefulWidget {
 }
 
 class _PostsTabState extends State<PostsTab> {
+  void handleCardTap(Post post) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ThreadRoute(post: post)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final holder = Provider.of<RepositoryHolder>(context, listen: false);
@@ -32,12 +39,8 @@ class _PostsTabState extends State<PostsTab> {
                 posts.length,
                 (index) => PostListItem(
                     post: posts[index],
-                    onCardTap: (post) {
-                      print("Card tapped: $post");
-                    },
-                    onImageTap: (image) {
-                      print("Image tapped: $image");
-                    })),
+                    onCardTap: handleCardTap,
+                    onImageTap: (image) {})),
           );
         });
   }

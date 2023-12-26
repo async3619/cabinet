@@ -1,11 +1,11 @@
 import 'package:cabinet/database/post.dart';
-import 'package:cabinet/database/image.dart' as dbImage;
+import 'package:cabinet/database/image.dart' as db_image;
 import 'package:flutter/material.dart';
 
 class PostListItem extends StatelessWidget {
   final Post post;
 
-  final Function(dbImage.Image)? onImageTap;
+  final Function(db_image.Image)? onImageTap;
   final Function(Post)? onCardTap;
 
   const PostListItem({
@@ -15,7 +15,7 @@ class PostListItem extends StatelessWidget {
     this.onCardTap,
   }) : super(key: key);
 
-  void handleImageTap(dbImage.Image image) {
+  void handleImageTap(db_image.Image image) {
     if (onImageTap != null) {
       onImageTap!(image);
     }
