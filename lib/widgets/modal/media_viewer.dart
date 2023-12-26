@@ -46,7 +46,6 @@ class MediaViewerModal extends ModalRoute {
 
   Widget buildViewer(BuildContext context, database.Image image, int index) {
     final isActive = index == currentIndex;
-    if (isActive) print('$index is active: $isActive (${image.url})');
 
     return MediaViewer(
       image: image,

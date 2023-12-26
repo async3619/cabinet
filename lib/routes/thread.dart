@@ -1,4 +1,5 @@
 import 'package:cabinet/database/post.dart';
+import 'package:cabinet/widgets/modal/album.dart';
 import 'package:cabinet/widgets/modal/media_viewer.dart';
 import 'package:cabinet/widgets/post_view.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +15,14 @@ class ThreadRoute extends StatefulWidget {
 
 class _ThreadRouteState extends State<ThreadRoute> {
   handleOpenAlbum() {
+    var title = widget.post.title;
+    title ??= "Thread #${widget.post.no!}";
+
     final allPosts = [widget.post, ...widget.post.children];
     final images =
         allPosts.map((post) => post.images).expand((images) => images).toList();
 
-    Navigator.of(context).push(MediaViewerModal(images: images));
+    Navigator.of(context).push(AlbumModal(images: images, title: title));
   }
 
   handleShowMedia(Post post) {

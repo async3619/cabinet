@@ -94,9 +94,9 @@ class _VideoProgressState extends State<VideoProgress> {
         Expanded(
             child: SliderTheme(
           data: SliderTheme.of(context).copyWith(
-            trackShape: CustomSliderTrackShape(),
+            trackShape: const CustomSliderTrackShape(),
           ),
-          child: Container(
+          child: SizedBox(
               height: 20,
               child: Slider(
                 inactiveColor: Colors.grey,
