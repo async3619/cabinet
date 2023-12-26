@@ -15,6 +15,8 @@ class Image implements BaseEntity {
     this.time,
     this.size,
     this.md5,
+    this.url,
+    this.thumbnailUrl,
   );
 
   @override
@@ -30,6 +32,18 @@ class Image implements BaseEntity {
   int? time;
   int? size;
   String? md5;
+  String? url;
+  String? thumbnailUrl;
 
   final posts = ToMany<Post>();
+
+  @Transient()
+  bool get isVideo {
+    return extension == '.webm' || extension == '.mp4';
+  }
+
+  @Transient()
+  bool get isImage {
+    return !isVideo;
+  }
 }

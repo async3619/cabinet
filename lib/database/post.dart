@@ -27,6 +27,14 @@ class Post implements BaseEntity {
   @Backlink('posts')
   final images = ToMany<Image>();
 
+  String? get thumbnailUrl {
+    if (images.isEmpty) {
+      return null;
+    }
+
+    return images[0].thumbnailUrl;
+  }
+
   @override
   String toString() {
     return "Post(id: $id, no: $no, board: ${board.target?.code ?? "(not set)"} title: $title, content: $content, author: $author, createdAt: $createdAt)";
