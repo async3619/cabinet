@@ -1,4 +1,5 @@
 import 'package:cabinet/database/post.dart';
+import 'package:cabinet/widgets/dialogs/post.dart';
 import 'package:cabinet/widgets/modal/album.dart';
 import 'package:cabinet/widgets/modal/media_viewer.dart';
 import 'package:cabinet/widgets/post_view.dart';
@@ -38,7 +39,15 @@ class _ThreadRouteState extends State<ThreadRoute> {
         .push(MediaViewerModal(images: images, currentIndex: index));
   }
 
-  handleRequestShowPost(int postId) {}
+  handleRequestShowPost(int postId) {
+    final allPosts = [widget.post, ...widget.post.children];
+    final post = allPosts.where((element) => element.no == postId).firstOrNull;
+    if (post == null) return;
+
+    showDialog(
+        context: context,
+        builder: (context) => PostDialog(post: post, allPosts: allPosts));
+  }
 
   @override
   Widget build(BuildContext context) {
