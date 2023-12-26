@@ -26,13 +26,18 @@ class _PostsTabState extends State<PostsTab> {
           }
 
           return GridView.count(
-            // Create a grid with 2 columns. If you change the scrollDirection to
-            // horizontal, this produces 2 rows.
             crossAxisCount: 3,
             childAspectRatio: 3 / 5,
-            // Generate 100 widgets that display their index in the List.
             children: List.generate(
-                posts.length, (index) => PostListItem(post: posts[index])),
+                posts.length,
+                (index) => PostListItem(
+                    post: posts[index],
+                    onCardTap: (post) {
+                      print("Card tapped: $post");
+                    },
+                    onImageTap: (image) {
+                      print("Image tapped: $image");
+                    })),
           );
         });
   }
