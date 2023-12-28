@@ -70,6 +70,10 @@ class PostListItem extends StatelessWidget {
     final title = post.title;
     final content = post.content;
 
+    final bodyTextStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: Theme.of(context).colorScheme.onSurface,
+        );
+
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Container(
@@ -81,12 +85,11 @@ class PostListItem extends StatelessWidget {
             Expanded(
                 child: Material(
                     color: Theme.of(context).cardColor,
-                    child: InkWell(
-                        onTap: () {
-                          handleCardTap();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -96,15 +99,14 @@ class PostListItem extends StatelessWidget {
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall
-                                          ?.fontSize,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                        ),
                                   ),
                                 if (title != null) const SizedBox(height: 4),
                                 if (content != null)
@@ -113,18 +115,34 @@ class PostListItem extends StatelessWidget {
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontSize: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall
-                                          ?.fontSize,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                    ),
+                                    style: bodyTextStyle,
                                   )
                               ]),
-                        ))))
+                        )),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            color: Theme.of(context).cardColor,
+                            child: Text(
+                              '${post.replyCount}R ${post.imageCount}I',
+                              style: bodyTextStyle,
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                        ),
+                        Positioned.fill(
+                            child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    handleCardTap();
+                                  },
+                                )))
+                      ],
+                    )))
           ],
         ),
       ),
