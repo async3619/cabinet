@@ -10,13 +10,18 @@ class ObjectBox {
 
   ObjectBox._create(this.store);
 
-  static Future<ObjectBox> create() async {
+  static Future<ObjectBox> create({ByteData? reference}) async {
     final docsDir = await getApplicationDocumentsDirectory();
     final storeDir = p.join(docsDir.path, 'objectbox');
 
-    final store = await openStore(
-      directory: storeDir,
-    );
+    Store store;
+    if (reference != null) {
+      store = Store.fromReference(getObjectBoxModel(), reference);
+    } else {
+      store = await openStore(
+        directory: storeDir,
+      );
+    }
 
     if (kDebugMode) {
       store.box<Post>().removeAll();
