@@ -54,6 +54,11 @@ class WatcherRepository extends BaseRepository<Watcher> {
 
   Future<int> setWatcherStatus(Watcher watcher, WatcherStatus status) {
     watcher.currentStatus = status;
+
+    if (status == WatcherStatus.running) {
+      watcher.lastRun = DateTime.now();
+    }
+
     return box.putAsync(watcher);
   }
 }

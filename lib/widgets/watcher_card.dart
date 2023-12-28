@@ -1,6 +1,7 @@
 import 'package:cabinet/database/repository/watcher.dart';
 import 'package:cabinet/database/watcher.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
 Color? secondary(BuildContext context) =>
@@ -123,7 +124,7 @@ class _WatcherCardState extends State<WatcherCard> {
                     ),
                   ),
                   ResponsiveGridCol(
-                    xs: 12,
+                    xs: 6,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -146,6 +147,26 @@ class _WatcherCardState extends State<WatcherCard> {
                                   .bodyLarge
                                   ?.fontSize,
                             )),
+                      ],
+                    ),
+                  ),
+                  ResponsiveGridCol(
+                    xs: 6,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 12),
+                        Text(
+                          "Last Run",
+                          style: titleStyle,
+                        ),
+                        Text(
+                          widget.watcher.lastRun == null
+                              ? "(never)"
+                              : DateFormat('yyyy-MM-dd HH:mm:ss')
+                                  .format(widget.watcher.lastRun!),
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
                       ],
                     ),
                   ),
