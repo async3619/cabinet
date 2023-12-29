@@ -16,7 +16,7 @@ class DynamicImage extends StatefulWidget {
   final bool showThumbnail;
 
   @override
-  _DynamicImageState createState() => _DynamicImageState();
+  State<DynamicImage> createState() => _DynamicImageState();
 }
 
 class _DynamicImageState extends State<DynamicImage> {
