@@ -17,7 +17,7 @@ class WatcherWork extends BaseWork {
     final repositoryHolder = RepositoryHolder(
         objectBox, ImageBoardApi(baseUrl: 'https://a.4cdn.org'));
 
-    final allImages = List<Image>.empty(growable: true);
+    var allImages = List<Image>.empty(growable: true);
     final watchers = await repositoryHolder.watcher.findAll();
 
     final notificationId = await NotificationManager().createNotification(
@@ -74,6 +74,8 @@ class WatcherWork extends BaseWork {
 
         index++;
       }
+
+      await NotificationManager().dismissNotification(imageNotificationId);
     }
   }
 }
