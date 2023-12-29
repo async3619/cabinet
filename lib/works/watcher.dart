@@ -5,6 +5,7 @@ import 'package:cabinet/database/object_box.dart';
 import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/database/repository/watcher.dart';
 import 'package:cabinet/notifications/manager.dart';
+import 'package:cabinet/system/file.dart';
 import 'package:cabinet/tasks/watcher.dart';
 import 'package:cabinet/works/base.dart';
 
@@ -58,7 +59,7 @@ class WatcherWork extends BaseWork {
               progress: 0);
 
       var index = 0;
-      for (final _ in allImages) {
+      for (var image in allImages) {
         await NotificationManager().updateNotification(
             id: imageNotificationId,
             title: "Cabinet Watcher",
@@ -68,7 +69,8 @@ class WatcherWork extends BaseWork {
             layout: NotificationLayout.ProgressBar,
             progress: ((index / allImages.length) * 100).toInt());
 
-        await Future.delayed(const Duration(seconds: 1));
+        image = await FileSystem().saveImage(image);
+        await repositoryHolder.image.save(image);
 
         index++;
       }

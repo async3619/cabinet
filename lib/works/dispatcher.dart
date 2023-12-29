@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:cabinet/database/object_box.dart';
 import 'package:cabinet/notifications/manager.dart';
+import 'package:cabinet/system/file.dart';
 import 'package:cabinet/works/manager.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -11,6 +12,12 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     final isNotificationGranted =
         await NotificationManager().isNotificationAllowed();
+
+    if (isNotificationGranted) {
+      await NotificationManager().initialize();
+    }
+
+    await FileSystem().initialize();
 
     final rawReference = inputData!['reference'];
     if (rawReference == null) {
