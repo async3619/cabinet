@@ -1,6 +1,5 @@
 import 'package:cabinet/api/image_board/api.dart';
 import 'package:cabinet/database/repository/holder.dart';
-import 'package:cabinet/works/manager.dart';
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +15,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   objectBox = await ObjectBox.create();
-  WorkManager().initialize(objectBox);
 
   if (Admin.isAvailable()) {
     admin = Admin(objectBox.store);

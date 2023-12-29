@@ -14,9 +14,10 @@ class RepositoryHolder {
   late final WatcherRepository watcher;
   late final PostRepository post;
   late final ImageRepository image;
+  late final ObjectBox objectBox;
 
   RepositoryHolder(
-    ObjectBox objectBox,
+    this.objectBox,
     ImageBoardApi imageBoardApi,
   ) {
     board = BoardRepository(imageBoardApi, objectBox.store.box<Board>());

@@ -22,7 +22,7 @@ class WorkManager {
   ];
 
   void initialize(ObjectBox objectBox) {
-    Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+    Workmanager().initialize(callbackDispatcher);
 
     if (kDebugMode) {
       Workmanager().cancelAll();
@@ -39,9 +39,9 @@ class WorkManager {
         ));
   }
 
-  Future<void> start(ObjectBox objectBox) async {
+  Future<void> start(ObjectBox objectBox, bool isNotificationGranted) async {
     for (final work in _works) {
-      await work.doWork(objectBox);
+      await work.doWork(objectBox, isNotificationGranted);
     }
   }
 }

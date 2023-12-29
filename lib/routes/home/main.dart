@@ -1,4 +1,8 @@
+import 'package:cabinet/database/repository/holder.dart';
+import 'package:cabinet/notifications/manager.dart';
+import 'package:cabinet/works/manager.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'posts.dart';
 import 'watchers.dart';
@@ -18,6 +22,13 @@ class _HomeRouteState extends State<HomeRoute> {
   @override
   void initState() {
     super.initState();
+
+    final repositoryHolder =
+        Provider.of<RepositoryHolder>(context, listen: false);
+
+    NotificationManager().ensurePermission().then((granted) {
+      WorkManager().initialize(repositoryHolder.objectBox);
+    });
   }
 
   void handleAddNewWatcherClick() {
