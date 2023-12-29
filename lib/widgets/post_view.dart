@@ -1,4 +1,5 @@
 import 'package:cabinet/database/post.dart';
+import 'package:cabinet/widgets/dynamic_image.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -62,7 +63,7 @@ class PostView extends StatelessWidget {
                 children: [
                   Positioned.fill(
                       child:
-                          Image.network(post.thumbnailUrl!, fit: BoxFit.cover)),
+                          DynamicImage(image: primaryImage, fit: BoxFit.cover)),
                   if (isPrimaryMediaVideo)
                     Positioned.fill(
                         child: Center(

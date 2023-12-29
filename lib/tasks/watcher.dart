@@ -11,7 +11,6 @@ import 'base.dart';
 class WatcherTask extends BaseTask {
   final RepositoryHolder _repositoryHolder;
   final Watcher _watcher;
-  final Function(List<Image> images)? onImages;
 
   WatcherTask({
     required RepositoryHolder repositoryHolder,
@@ -20,7 +19,6 @@ class WatcherTask extends BaseTask {
     Function()? onStart,
     Function()? onComplete,
     Function(dynamic)? onError,
-    this.onImages,
   })  : _repositoryHolder = repositoryHolder,
         _watcher = watcher,
         super(
@@ -126,10 +124,6 @@ class WatcherTask extends BaseTask {
 
     await _repositoryHolder.watcher
         .setWatcherStatus(_watcher, WatcherStatus.idle);
-
-    if (onImages != null) {
-      onImages!(images);
-    }
   }
 
   bool _checkFilter(Post post, Filter filter) {

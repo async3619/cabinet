@@ -1,5 +1,6 @@
 import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/image.dart' as db_image;
+import 'package:cabinet/widgets/dynamic_image.dart';
 import 'package:flutter/material.dart';
 
 class PostListItem extends StatelessWidget {
@@ -39,10 +40,7 @@ class PostListItem extends StatelessWidget {
         child: Stack(
           children: [
             Positioned.fill(
-                child: Image.network(
-              thumbnailUrl,
-              fit: BoxFit.cover,
-            )),
+                child: DynamicImage(image: image, fit: BoxFit.cover)),
             Positioned.fill(
                 child: Center(
               child: Icon(

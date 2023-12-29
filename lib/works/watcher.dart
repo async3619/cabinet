@@ -1,6 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cabinet/api/image_board/api.dart';
-import 'package:cabinet/database/image.dart';
 import 'package:cabinet/database/object_box.dart';
 import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/database/repository/watcher.dart';
@@ -17,7 +16,6 @@ class WatcherWork extends BaseWork {
     final repositoryHolder = RepositoryHolder(
         objectBox, ImageBoardApi(baseUrl: 'https://a.4cdn.org'));
 
-    var allImages = List<Image>.empty(growable: true);
     final watchers = await repositoryHolder.watcher.findAll();
 
     final notificationId = await NotificationManager().createNotification(
@@ -33,9 +31,6 @@ class WatcherWork extends BaseWork {
       final task = WatcherTask(
         repositoryHolder: repositoryHolder,
         watcher: watcher,
-        onImages: (images) {
-          allImages.addAll(images);
-        },
       );
 
       await NotificationManager().updateNotification(
@@ -48,6 +43,9 @@ class WatcherWork extends BaseWork {
     }
 
     await NotificationManager().dismissNotification(notificationId);
+
+    var allImages = await repositoryHolder.image.findAll();
+    allImages = allImages.where((element) => element.path == null).toList();
 
     if (allImages.isNotEmpty) {
       final imageNotificationId = await NotificationManager()

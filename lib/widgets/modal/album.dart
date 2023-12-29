@@ -1,3 +1,4 @@
+import 'package:cabinet/widgets/dynamic_image.dart';
 import 'package:cabinet/widgets/modal/media_viewer.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
@@ -62,11 +63,10 @@ class AlbumModal extends ModalRoute {
                 child: Stack(
                   children: [
                     Positioned.fill(
-                      child: Image.network(
-                        image.thumbnailUrl!,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                        child: DynamicImage(
+                      image: image,
+                      fit: BoxFit.cover,
+                    )),
                     Positioned.fill(
                         child: Material(
                       color: Colors.transparent,
