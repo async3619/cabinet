@@ -23,19 +23,24 @@ class PostsTab extends StatefulWidget {
 
 class _PostsTabState extends State<PostsTab> {
   PostSortOrder _sortOrder = PostSortOrder.bumpOrder;
-  Future<List<Post>>? _getPostFuture;
   List<Post>? _posts;
 
   @override
   void initState() {
     super.initState();
 
-    _getPostFuture = getPosts();
+    getPosts().then((posts) {
+      setState(() {
+        _posts = posts;
+      });
+    });
 
     final holder = Provider.of<RepositoryHolder>(context, listen: false);
     holder.post.watch(Post_.parent.isNull()).listen((_) {
-      setState(() {
-        _getPostFuture = getPosts();
+      getPosts().then((posts) {
+        setState(() {
+          _posts = posts;
+        });
       });
     });
   }
@@ -44,11 +49,7 @@ class _PostsTabState extends State<PostsTab> {
     final holder = Provider.of<RepositoryHolder>(context, listen: false);
     final posts = await holder.post.getOpeningPosts();
 
-    setState(() {
-      _posts = sortPosts(posts, _sortOrder);
-    });
-
-    return posts;
+    return sortPosts(posts, _sortOrder);
   }
 
   List<Post> sortPosts(List<Post> posts, PostSortOrder order) {
@@ -110,6 +111,24 @@ class _PostsTabState extends State<PostsTab> {
     );
   }
 
+  Widget buildPostList() {
+    final posts = _posts;
+    if (posts == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return GridView.count(
+        padding: EdgeInsets.zero,
+        crossAxisCount: 3,
+        childAspectRatio: 3 / 5,
+        children: List.generate(
+            posts.length,
+            (index) => PostListItem(
+                post: posts[index],
+                onCardTap: handleCardTap,
+                onImageTap: (image) {})));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -131,27 +150,7 @@ class _PostsTabState extends State<PostsTab> {
             )
           ],
         ),
-        Expanded(
-            child: FutureBuilder(
-                future: _getPostFuture,
-                builder: (context, snapshot) {
-                  final posts = _posts;
-                  if (!snapshot.hasData || posts == null) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  return GridView.count(
-                    padding: EdgeInsets.zero,
-                    crossAxisCount: 3,
-                    childAspectRatio: 3 / 5,
-                    children: List.generate(
-                        posts.length,
-                        (index) => PostListItem(
-                            post: posts[index],
-                            onCardTap: handleCardTap,
-                            onImageTap: (image) {})),
-                  );
-                }))
+        Expanded(child: buildPostList())
       ],
     );
   }
