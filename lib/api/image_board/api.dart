@@ -51,8 +51,13 @@ class ImageBoardApi extends BaseApi<ImageBoardBoard, ImageBoardPost> {
         rawPosts.map((rawPost) => ImageBoardPost.fromJson(rawPost)).toList();
 
     for (var post in posts) {
-      if (post.content == null) continue;
-      post.content = unescape.convert(post.content!);
+      if (post.title != null) {
+        post.title = unescape.convert(post.title!);
+      }
+
+      if (post.content != null) {
+        post.content = unescape.convert(post.content!);
+      }
     }
 
     return posts;
@@ -76,8 +81,13 @@ class ImageBoardApi extends BaseApi<ImageBoardBoard, ImageBoardPost> {
         .sublist(1);
 
     for (var post in posts) {
-      if (post.content == null) continue;
-      post.content = unescape.convert(post.content!);
+      if (post.title != null) {
+        post.title = unescape.convert(post.title!);
+      }
+
+      if (post.content != null) {
+        post.content = unescape.convert(post.content!);
+      }
     }
 
     return posts;
