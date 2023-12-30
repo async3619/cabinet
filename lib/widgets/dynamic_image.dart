@@ -36,6 +36,19 @@ class _DynamicImageState extends State<DynamicImage> {
   }
 
   @override
+  void didUpdateWidget(DynamicImage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final image = widget.image;
+    if (image == null) return;
+
+    final targetPath = widget.showThumbnail ? image.thumbnailPath : image.path;
+    if (targetPath == null) return;
+
+    _imageFile = File(targetPath);
+  }
+
+  @override
   build(context) {
     final image = widget.image;
     if (image == null) return Container();

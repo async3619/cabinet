@@ -12,8 +12,6 @@ import 'package:provider/provider.dart';
 import '../create_watcher.dart';
 
 class WatchersTab extends StatefulWidget {
-  static const title = 'Watchers';
-
   const WatchersTab({super.key});
 
   @override
@@ -87,33 +85,42 @@ class _WatchersTabState extends State<WatchersTab> {
   Widget build(BuildContext context) {
     final holder = Provider.of<RepositoryHolder>(context);
 
-    return Center(
-      child: FutureBuilder<List<Watcher>>(
-        future: holder.watcher.findAll(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final watchers = snapshot.data!;
+    return Column(
+      children: [
+        AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: const Text("Watchers"),
+        ),
+        Expanded(
+          child: FutureBuilder<List<Watcher>>(
+            future: holder.watcher.findAll(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final watchers = snapshot.data!;
 
-            return ListView.builder(
-              itemCount: watchers.length,
-              itemBuilder: (context, index) {
-                final watcher = watchers[index];
+                return ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: watchers.length,
+                  itemBuilder: (context, index) {
+                    final watcher = watchers[index];
 
-                return WatcherCard(
-                  watcher: watcher,
-                  onDelete: handleDeleteWatcher,
-                  onEdit: handleEditWatcher,
-                  onForceRun: handleForceRunWatcher,
+                    return WatcherCard(
+                      watcher: watcher,
+                      onDelete: handleDeleteWatcher,
+                      onEdit: handleEditWatcher,
+                      onForceRun: handleForceRunWatcher,
+                    );
+                  },
                 );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
 
-          return const CircularProgressIndicator();
-        },
-      ),
+              return const Center(child: CircularProgressIndicator());
+            },
+          ),
+        )
+      ],
     );
   }
 }
