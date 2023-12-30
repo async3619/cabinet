@@ -37,6 +37,9 @@ class ImageWork extends BaseWork {
             layout: NotificationLayout.ProgressBar,
             progress: ((index / allImages.length) * 100).toInt());
 
+        final oldImage = await repositoryHolder.image.findById(image.id);
+        if (oldImage == null) continue;
+
         image = await FileSystem().saveImage(image);
         await repositoryHolder.image.save(image);
 

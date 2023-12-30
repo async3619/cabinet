@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cabinet/database/board.dart';
 import 'package:collection/collection.dart';
 import 'package:cabinet/database/post.dart';
@@ -7,6 +9,7 @@ import 'package:cabinet/routes/thread.dart';
 import 'package:cabinet/widgets/post_list_item.dart';
 import 'package:darq/darq.dart';
 import 'package:flutter/material.dart';
+import 'package:objectbox/objectbox.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -71,6 +74,7 @@ class _PostsTabState extends State<PostsTab> {
   }
 
   List<Post>? _posts;
+  StreamSubscription<Query<Post>>? _postSubscription;
 
   PostFilteredBy _filteredBy = PostFilteredBy.watcher;
   PostSortOrder _sortOrder = PostSortOrder.bumpOrder;
@@ -120,6 +124,20 @@ class _PostsTabState extends State<PostsTab> {
         }
       });
     })();
+
+    _postSubscription = holder.post.watchOpeningPosts().listen((event) async {
+      final posts = await event.findAsync();
+
+      setState(() {
+        _posts = sortPosts(posts, _sortOrder);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _postSubscription?.cancel();
+    super.dispose();
   }
 
   void switchFilteredBy() {

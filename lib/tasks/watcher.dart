@@ -75,6 +75,16 @@ class WatcherTask extends BaseTask {
     }
 
     /**
+     * remove posts that are in blacklist
+     */
+    final blacklists = await _repositoryHolder.blacklist
+        .findAll()
+        .then((value) => value.map((e) => "${e.boardId}-${e.postId}").toList());
+
+    filteredPosts.removeWhere((element) =>
+        blacklists.contains("${element.board.target?.id}-${element.no}"));
+
+    /**
      * get all child posts of filtered posts and get all images from opening posts and child posts.
      * then distinct the images and save them to database.
      *

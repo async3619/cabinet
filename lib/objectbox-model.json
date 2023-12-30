@@ -249,9 +249,33 @@
           "targetId": "7:3124562287720995515"
         }
       ]
+    },
+    {
+      "id": "9:3414343236739698481",
+      "lastPropertyId": "3:6027769359211790252",
+      "name": "Blacklist",
+      "properties": [
+        {
+          "id": "1:8928494318657783302",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6367523570428922650",
+          "name": "postId",
+          "type": 6
+        },
+        {
+          "id": "3:6027769359211790252",
+          "name": "boardId",
+          "type": 6
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "8:1718792483664455346",
+  "lastEntityId": "9:3414343236739698481",
   "lastIndexId": "4:1682380513401251853",
   "lastRelationId": "3:1420065052635258682",
   "lastSequenceId": "0:0",
