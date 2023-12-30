@@ -2,6 +2,7 @@ import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/image.dart' as db_image;
 import 'package:cabinet/widgets/dynamic_image.dart';
 import 'package:flutter/material.dart';
+import 'package:html/parser.dart';
 
 class PostListItem extends StatelessWidget {
   final Post post;
@@ -66,7 +67,8 @@ class PostListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final thumbnail = buildThumbnail(context);
     final title = post.title;
-    final content = post.content;
+    final document = parse(post.content?.replaceAll("<br>", "\n") ?? "");
+    final content = parse(document.body?.text).documentElement?.text;
 
     final bodyTextStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
           color: Theme.of(context).colorScheme.onSurface,
