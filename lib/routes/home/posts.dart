@@ -1,13 +1,17 @@
+import 'package:cabinet/database/board.dart';
+import 'package:collection/collection.dart';
 import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/database/watcher.dart';
 import 'package:cabinet/routes/thread.dart';
 import 'package:cabinet/widgets/post_list_item.dart';
+import 'package:darq/darq.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const selectedWatcherIdKey = 'selectedWatcherId';
+const selectedBoardIdKey = 'selectedBoardId';
 
 enum PostSortOrder {
   bumpOrder,
@@ -15,6 +19,11 @@ enum PostSortOrder {
   imageCount,
   newest,
   oldest,
+}
+
+enum PostFilteredBy {
+  watcher,
+  board,
 }
 
 class PostsTab extends StatefulWidget {
@@ -25,57 +34,7 @@ class PostsTab extends StatefulWidget {
 }
 
 class _PostsTabState extends State<PostsTab> {
-  PostSortOrder _sortOrder = PostSortOrder.bumpOrder;
-  List<Post>? _posts;
-
-  List<Watcher>? _watchers;
-  Watcher? _selectedWatcher;
-
-  @override
-  void initState() {
-    super.initState();
-
-    (() async {
-      final holder = Provider.of<RepositoryHolder>(context, listen: false);
-      final watchers = holder.watcher.box.getAll();
-      final prefs = await SharedPreferences.getInstance();
-      final selectedWatcherId = prefs.getInt(selectedWatcherIdKey);
-
-      setState(() {
-        _watchers = watchers;
-        _selectedWatcher = selectedWatcherId == null
-            ? null
-            : watchers
-                .where((watcher) => watcher.id == selectedWatcherId)
-                .firstOrNull;
-      });
-
-      getPosts().then((posts) {
-        if (!mounted) return;
-
-        if (_selectedWatcher != null) {
-          posts = posts
-              .where((post) => _selectedWatcher!.isPostMatch(post))
-              .toList();
-        }
-
-        setState(() {
-          _posts = sortPosts(posts, _sortOrder);
-        });
-      });
-    })();
-  }
-
-  Future<List<Post>> getPosts() async {
-    if (!mounted) return const [];
-
-    final holder = Provider.of<RepositoryHolder>(context, listen: false);
-    final posts = await holder.post.getOpeningPosts();
-
-    return sortPosts(posts, _sortOrder);
-  }
-
-  List<Post> sortPosts(List<Post> posts, PostSortOrder order) {
+  static List<Post> sortPosts(List<Post> posts, PostSortOrder order) {
     final copiedPosts = List<Post>.from(posts);
     switch (order) {
       case PostSortOrder.bumpOrder:
@@ -110,6 +69,72 @@ class _PostsTabState extends State<PostsTab> {
     return copiedPosts;
   }
 
+  List<Post>? _posts;
+
+  PostFilteredBy _filteredBy = PostFilteredBy.watcher;
+  PostSortOrder _sortOrder = PostSortOrder.bumpOrder;
+
+  List<Board>? _boards;
+  Board? _selectedBoard;
+
+  List<Watcher>? _watchers;
+  Watcher? _selectedWatcher;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final holder = Provider.of<RepositoryHolder>(context, listen: false);
+
+    (() async {
+      final prefs = await SharedPreferences.getInstance();
+      final selectedWatcherId = prefs.getInt(selectedWatcherIdKey);
+      final posts = await holder.post.getOpeningPosts();
+
+      setState(() {
+        _watchers = holder.watcher.box.getAll();
+        _boards = posts
+            .map((e) => e.board.target)
+            .whereNotNull()
+            .distinct((b) => b.id)
+            .toList();
+        _posts = sortPosts(posts, _sortOrder);
+
+        if (selectedWatcherId != null) {
+          _selectedWatcher = holder.watcher.box.get(selectedWatcherId);
+        } else {
+          _selectedWatcher = null;
+        }
+      });
+    })();
+  }
+
+  void switchFilteredBy() {
+    setState(() {
+      _filteredBy = _filteredBy == PostFilteredBy.watcher
+          ? PostFilteredBy.board
+          : PostFilteredBy.watcher;
+    });
+  }
+
+  bool filterPostByWatcher(Post post) {
+    final selectedWatcher = _selectedWatcher;
+    if (selectedWatcher == null) {
+      return true;
+    }
+
+    return selectedWatcher.isPostMatch(post);
+  }
+
+  bool filterPostByBoard(Post post) {
+    final selectedBoard = _selectedBoard;
+    if (selectedBoard == null) {
+      return true;
+    }
+
+    return post.board.targetId == selectedBoard.id;
+  }
+
   void handleOrderChanged(PostSortOrder value) {
     setState(() {
       _sortOrder = value;
@@ -117,43 +142,89 @@ class _PostsTabState extends State<PostsTab> {
     });
   }
 
-  void handleWatcherChanged(int? value) {
-    final watchers = _watchers;
-    if (watchers == null) return;
+  void handleWatcherChanged(int? watcherId) {
+    (() async {
+      final prefs = await SharedPreferences.getInstance();
+      final watchers = _watchers;
+      if (watchers == null) {
+        return;
+      }
 
-    final watcher = value == null
-        ? null
-        : watchers.where((watcher) => watcher.id == value).firstOrNull;
-
-    setState(() {
-      _posts = null;
-      _selectedWatcher = watcher;
-    });
-
-    getPosts().then((posts) {
-      if (!mounted) return;
-
-      if (watcher != null) {
-        posts = posts.where((post) => watcher.isPostMatch(post)).toList();
+      if (watcherId == null) {
+        prefs.remove(selectedWatcherIdKey);
+      } else {
+        prefs.setInt(selectedWatcherIdKey, watcherId);
       }
 
       setState(() {
-        _posts = sortPosts(posts, _sortOrder);
+        _selectedWatcher =
+            watchers.firstWhereOrNull((element) => element.id == watcherId);
       });
-    });
+    })();
+  }
 
-    SharedPreferences.getInstance().then((prefs) {
-      if (value == null) {
-        prefs.remove(selectedWatcherIdKey);
-      } else {
-        prefs.setInt(selectedWatcherIdKey, value);
+  void handleBoardChanged(int? boardId) {
+    (() async {
+      final prefs = await SharedPreferences.getInstance();
+      final boards = _boards;
+      if (boards == null) {
+        return;
       }
-    });
+
+      if (boardId == null) {
+        prefs.remove(selectedBoardIdKey);
+      } else {
+        prefs.setInt(selectedBoardIdKey, boardId);
+      }
+
+      setState(() {
+        _selectedBoard =
+            boards.firstWhereOrNull((element) => element.id == boardId);
+      });
+    })();
   }
 
   void handleCardTap(Post post) {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => ThreadRoute(post: post)));
+  }
+
+  Widget buildFilterDropdown() {
+    List<DropdownMenuItem<int>> items = [];
+    if (_filteredBy == PostFilteredBy.watcher && _watchers != null) {
+      for (final watcher in _watchers!) {
+        items.add(DropdownMenuItem(
+          value: watcher.id,
+          child: Text(watcher.name!),
+        ));
+      }
+    } else if (_boards != null) {
+      for (final board in _boards!) {
+        items.add(DropdownMenuItem(
+          value: board.id,
+          child: Text(board.name),
+        ));
+      }
+    }
+
+    return DropdownButton<int>(
+        value: _filteredBy == PostFilteredBy.watcher
+            ? _selectedWatcher?.id
+            : _selectedBoard?.id,
+        items: [
+          const DropdownMenuItem(
+            value: null,
+            child: Text('All'),
+          ),
+          ...items,
+        ],
+        onChanged: (value) {
+          if (_filteredBy == PostFilteredBy.watcher) {
+            handleWatcherChanged(value);
+          } else {
+            handleBoardChanged(value);
+          }
+        });
   }
 
   PopupMenuItem<PostSortOrder> buildPopupMenuItem(
@@ -174,14 +245,20 @@ class _PostsTabState extends State<PostsTab> {
       return const Center(child: CircularProgressIndicator());
     }
 
+    final filter = _filteredBy == PostFilteredBy.watcher
+        ? filterPostByWatcher
+        : filterPostByBoard;
+
+    final filteredPosts = posts.where(filter).toList();
+
     return GridView.count(
         padding: EdgeInsets.zero,
         crossAxisCount: 3,
         childAspectRatio: 3 / 5,
         children: List.generate(
-            posts.length,
+            filteredPosts.length,
             (index) => PostListItem(
-                post: posts[index],
+                post: filteredPosts[index],
                 onCardTap: handleCardTap,
                 onImageTap: (image) {})));
   }
@@ -196,30 +273,17 @@ class _PostsTabState extends State<PostsTab> {
       postList = buildPostList();
     }
 
-    Widget title = DropdownButton<int>(
-      value: _selectedWatcher?.id,
-      onChanged: handleWatcherChanged,
-      items: [
-        if (watchers != null)
-          const DropdownMenuItem(
-            value: null,
-            child: Text('All'),
-          ),
-        if (watchers != null)
-          for (final watcher in watchers)
-            DropdownMenuItem(
-              value: watcher.id,
-              child: Text(watcher.name!),
-            )
-      ],
-    );
+    final filterIcon = _filteredBy == PostFilteredBy.watcher
+        ? const Icon(Icons.folder_copy)
+        : const Icon(Icons.remove_red_eye);
 
     return Column(
       children: [
         AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: title,
+          title: buildFilterDropdown(),
           actions: [
+            IconButton(onPressed: switchFilteredBy, icon: filterIcon),
             PopupMenuButton(
               onSelected: handleOrderChanged,
               icon: const Icon(Icons.sort),
