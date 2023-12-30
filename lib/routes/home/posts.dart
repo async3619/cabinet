@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PostsTab extends StatefulWidget {
-  static const title = 'Posts';
-
   const PostsTab({super.key});
 
   @override
@@ -24,24 +22,34 @@ class _PostsTabState extends State<PostsTab> {
   Widget build(BuildContext context) {
     final holder = Provider.of<RepositoryHolder>(context, listen: false);
 
-    return FutureBuilder(
-        future: holder.post.getOpeningPosts(),
-        builder: (context, snapshot) {
-          final posts = snapshot.data;
-          if (!snapshot.hasData || posts == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    return Column(
+      children: [
+        AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: const Text("Posts"),
+        ),
+        Expanded(
+            child: FutureBuilder(
+                future: holder.post.getOpeningPosts(),
+                builder: (context, snapshot) {
+                  final posts = snapshot.data;
+                  if (!snapshot.hasData || posts == null) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-          return GridView.count(
-            crossAxisCount: 3,
-            childAspectRatio: 3 / 5,
-            children: List.generate(
-                posts.length,
-                (index) => PostListItem(
-                    post: posts[index],
-                    onCardTap: handleCardTap,
-                    onImageTap: (image) {})),
-          );
-        });
+                  return GridView.count(
+                    padding: EdgeInsets.zero,
+                    crossAxisCount: 3,
+                    childAspectRatio: 3 / 5,
+                    children: List.generate(
+                        posts.length,
+                        (index) => PostListItem(
+                            post: posts[index],
+                            onCardTap: handleCardTap,
+                            onImageTap: (image) {})),
+                  );
+                }))
+      ],
+    );
   }
 }
