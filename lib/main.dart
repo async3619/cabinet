@@ -5,6 +5,7 @@ import 'package:objectbox/objectbox.dart';
 import 'package:provider/provider.dart';
 
 import 'database/object_box.dart';
+import 'objectbox.g.dart';
 import 'routes/home/main.dart';
 
 late final ObjectBox objectBox;

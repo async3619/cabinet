@@ -60,7 +60,6 @@ class _WatchersTabState extends State<WatchersTab> {
       repositoryHolder: holder,
       watcher: watcher,
       onStart: () {
-        holder.watcher.setWatcherStatus(watcher, WatcherStatus.running);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Task \'${watcher.name}\' started'),

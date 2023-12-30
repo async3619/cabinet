@@ -1,3 +1,4 @@
+import 'package:cabinet/database/repository/watcher.dart';
 import 'package:darq/darq.dart';
 import 'package:cabinet/database/filter.dart';
 import 'package:cabinet/database/image.dart';
@@ -29,6 +30,9 @@ class WatcherTask extends BaseTask {
 
   @override
   Future<void> doTask() async {
+    await _repositoryHolder.watcher
+        .setWatcherStatus(_watcher, WatcherStatus.running);
+
     final postMap = await _repositoryHolder.post.findAll().then((value) {
       final Map<String, Post> map = {};
       for (var post in value) {
@@ -117,6 +121,9 @@ class WatcherTask extends BaseTask {
 
     await _repositoryHolder.post
         .saveAll(postsList.expand((element) => element).toList());
+
+    await _repositoryHolder.watcher
+        .setWatcherStatus(_watcher, WatcherStatus.idle);
   }
 
   bool _checkFilter(Post post, Filter filter) {

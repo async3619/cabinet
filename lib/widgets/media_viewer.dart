@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cabinet/database/image.dart' as database;
+import 'package:cabinet/widgets/dynamic_image.dart';
 import 'package:cabinet/widgets/video_progress.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
@@ -60,8 +63,12 @@ class _MediaViewerState extends State<MediaViewer> {
       return;
     }
 
-    _controller =
-        VideoPlayerController.networkUrl(Uri.parse(widget.image.url!));
+    if (widget.image.path == null) {
+      _controller =
+          VideoPlayerController.networkUrl(Uri.parse(widget.image.url!));
+    } else {
+      _controller = VideoPlayerController.file(File(widget.image.path!));
+    }
 
     if (_controller == null) {
       return;
@@ -110,8 +117,8 @@ class _MediaViewerState extends State<MediaViewer> {
   }
 
   Widget buildImage() {
-    return Image.network(
-      widget.image.url!,
+    return DynamicImage(
+      image: widget.image,
       fit: BoxFit.cover,
     );
   }
@@ -120,8 +127,9 @@ class _MediaViewerState extends State<MediaViewer> {
     if (!isVideoInitialized ||
         _chewieController == null ||
         _controller == null) {
-      return Image.network(
-        widget.image.thumbnailUrl!,
+      return DynamicImage(
+        image: widget.image,
+        showThumbnail: true,
         fit: BoxFit.cover,
       );
     }

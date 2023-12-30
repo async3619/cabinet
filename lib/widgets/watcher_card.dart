@@ -1,6 +1,7 @@
 import 'package:cabinet/database/repository/watcher.dart';
 import 'package:cabinet/database/watcher.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
 Color? secondary(BuildContext context) =>
@@ -25,13 +26,35 @@ class WatcherCard extends StatefulWidget {
 }
 
 class _WatcherCardState extends State<WatcherCard> {
-  @override
-  Widget build(BuildContext context) {
+  buildItem(String title, String content, TextStyle? style, int? xs) {
     final titleStyle = TextStyle(
       color: secondary(context),
       fontSize: Theme.of(context).textTheme.labelLarge?.fontSize,
     );
 
+    xs ??= 12;
+    style ??= Theme.of(context).textTheme.bodyLarge;
+
+    return ResponsiveGridCol(
+      xs: xs,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: titleStyle,
+          ),
+          Text(
+            content,
+            style: style,
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
         child: Padding(
       padding: const EdgeInsets.all(0),
@@ -87,67 +110,41 @@ class _WatcherCardState extends State<WatcherCard> {
                           const SizedBox(height: 16),
                         ]),
                   ),
+                  buildItem("Name", widget.watcher.name!, null, 6),
+                  buildItem(
+                      "Boards",
+                      widget.watcher.boards
+                          .map((element) => "/${element.code}/")
+                          .join(", "),
+                      null,
+                      6),
                   ResponsiveGridCol(
                     xs: 12,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Name",
-                          style: titleStyle,
-                        ),
-                        Text(
-                          widget.watcher.name!,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                      ],
+                    child: const SizedBox(
+                      height: 16,
                     ),
                   ),
-                  ResponsiveGridCol(
-                    xs: 12,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 12),
-                        Text(
-                          "Boards",
-                          style: titleStyle,
-                        ),
-                        Text(
-                          widget.watcher.boards
-                              .map((element) => "/${element.code}/")
-                              .join(", "),
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                      ],
-                    ),
-                  ),
-                  ResponsiveGridCol(
-                    xs: 12,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 12),
-                        Text(
-                          "Status",
-                          style: titleStyle,
-                        ),
-                        Text(
-                            widget.watcher.currentStatus == WatcherStatus.idle
-                                ? "Idle"
-                                : "Running",
-                            style: TextStyle(
-                              color: widget.watcher.currentStatus ==
-                                      WatcherStatus.idle
+                  buildItem(
+                    "Status",
+                    widget.watcher.currentStatus == WatcherStatus.idle
+                        ? "Idle"
+                        : "Running",
+                    Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color:
+                              widget.watcher.currentStatus == WatcherStatus.idle
                                   ? null
                                   : Theme.of(context).colorScheme.primary,
-                              fontSize: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.fontSize,
-                            )),
-                      ],
-                    ),
+                        ),
+                    6,
+                  ),
+                  buildItem(
+                    "Last Run",
+                    widget.watcher.lastRun == null
+                        ? "(never)"
+                        : DateFormat('yyyy-MM-dd HH:mm:ss')
+                            .format(widget.watcher.lastRun!),
+                    null,
+                    6,
                   ),
                 ],
               ))

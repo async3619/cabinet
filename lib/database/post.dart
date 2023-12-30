@@ -27,6 +27,17 @@ class Post implements BaseEntity {
   @Backlink('posts')
   final images = ToMany<Image>();
 
+  @Transient()
+  int get imageCount {
+    return images.length +
+        children.fold(0, (previousValue, element) {
+          return previousValue + element.imageCount;
+        });
+  }
+
+  @Transient()
+  int get replyCount => children.length;
+
   String? get thumbnailUrl {
     if (images.isEmpty) {
       return null;

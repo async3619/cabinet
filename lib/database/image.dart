@@ -34,6 +34,8 @@ class Image implements BaseEntity {
   String? md5;
   String? url;
   String? thumbnailUrl;
+  String? path;
+  String? thumbnailPath;
 
   final posts = ToMany<Post>();
 
