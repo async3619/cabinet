@@ -1,3 +1,4 @@
+import 'package:cabinet/database/post.dart';
 import 'package:objectbox/objectbox.dart';
 
 import 'watcher.dart';
@@ -39,5 +40,46 @@ class Filter {
     assert(SearchLocation.subject.index == 0);
     assert(SearchLocation.content.index == 1);
     assert(SearchLocation.subjectContent.index == 2);
+  }
+
+  bool isPostMatch(Post post) {
+    final keyword = this.keyword;
+    if (keyword == null) {
+      return false;
+    }
+
+    final caseSensitive = this.caseSensitive ?? false;
+    final location = this.location ?? SearchLocation.subjectContent;
+
+    final subject = post.title;
+    final content = post.content;
+
+    if (subject == null && content == null) {
+      return false;
+    }
+
+    var subjectMatch = false;
+    var contentMatch = false;
+
+    if (subject != null) {
+      subjectMatch = caseSensitive
+          ? subject.contains(keyword)
+          : subject.toLowerCase().contains(keyword.toLowerCase());
+    }
+
+    if (content != null) {
+      contentMatch = caseSensitive
+          ? content.contains(keyword)
+          : content.toLowerCase().contains(keyword.toLowerCase());
+    }
+
+    switch (location) {
+      case SearchLocation.subject:
+        return subjectMatch;
+      case SearchLocation.content:
+        return contentMatch;
+      case SearchLocation.subjectContent:
+        return subjectMatch || contentMatch;
+    }
   }
 }

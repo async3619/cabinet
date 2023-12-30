@@ -1,5 +1,6 @@
 import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/repository/holder.dart';
+import 'package:cabinet/database/watcher.dart';
 import 'package:cabinet/objectbox.g.dart';
 import 'package:cabinet/routes/thread.dart';
 import 'package:cabinet/widgets/post_list_item.dart';
@@ -25,6 +26,9 @@ class _PostsTabState extends State<PostsTab> {
   PostSortOrder _sortOrder = PostSortOrder.bumpOrder;
   List<Post>? _posts;
 
+  List<Watcher>? _watchers;
+  Watcher? _selectedWatcher;
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +42,8 @@ class _PostsTabState extends State<PostsTab> {
     });
 
     final holder = Provider.of<RepositoryHolder>(context, listen: false);
+    _watchers = holder.watcher.box.getAll();
+
     holder.post.watch(Post_.parent.isNull()).listen((_) {
       getPosts().then((posts) {
         if (!mounted) return;
@@ -50,6 +56,8 @@ class _PostsTabState extends State<PostsTab> {
   }
 
   Future<List<Post>> getPosts() async {
+    if (!mounted) return const [];
+
     final holder = Provider.of<RepositoryHolder>(context, listen: false);
     final posts = await holder.post.getOpeningPosts();
 
@@ -98,6 +106,25 @@ class _PostsTabState extends State<PostsTab> {
     });
   }
 
+  void handleWatcherChanged(Watcher? value) {
+    setState(() {
+      _posts = null;
+      _selectedWatcher = value;
+    });
+
+    getPosts().then((posts) {
+      if (!mounted) return;
+
+      if (value != null) {
+        posts = posts.where((post) => value.isPostMatch(post)).toList();
+      }
+
+      setState(() {
+        _posts = sortPosts(posts, _sortOrder);
+      });
+    });
+  }
+
   void handleCardTap(Post post) {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => ThreadRoute(post: post)));
@@ -139,7 +166,21 @@ class _PostsTabState extends State<PostsTab> {
       children: [
         AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text("Posts"),
+          title: DropdownButton<Watcher>(
+            value: _selectedWatcher,
+            onChanged: handleWatcherChanged,
+            items: [
+              const DropdownMenuItem(
+                value: null,
+                child: Text('All'),
+              ),
+              for (final watcher in _watchers!)
+                DropdownMenuItem(
+                  value: watcher,
+                  child: Text(watcher.name!),
+                )
+            ],
+          ),
           actions: [
             PopupMenuButton(
               onSelected: handleOrderChanged,

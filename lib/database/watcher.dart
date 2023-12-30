@@ -1,3 +1,4 @@
+import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/repository/watcher.dart';
 import 'package:objectbox/objectbox.dart';
 
@@ -31,4 +32,8 @@ class Watcher implements BaseEntity {
 
   @Backlink("watcher")
   final filters = ToMany<Filter>();
+
+  bool isPostMatch(Post post) {
+    return filters.any((element) => element.isPostMatch(post));
+  }
 }
