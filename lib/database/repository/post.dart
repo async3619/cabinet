@@ -93,4 +93,10 @@ class PostRepository extends BaseRepository<Post> {
   Future<List<Post>> getOpeningPosts() async {
     return box.query(Post_.parent.equals(0)).build().find();
   }
+
+  Stream<Query<Post>> watchOpeningPosts({bool triggerImmediately = false}) {
+    return box
+        .query(Post_.parent.equals(0))
+        .watch(triggerImmediately: triggerImmediately);
+  }
 }
