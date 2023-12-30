@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const selectedWatcherIdKey = 'selectedWatcherId';
 const selectedBoardIdKey = 'selectedBoardId';
+const selectedFilteredByKey = 'selectedFilteredBy';
 
 enum PostSortOrder {
   bumpOrder,
@@ -89,6 +90,8 @@ class _PostsTabState extends State<PostsTab> {
     (() async {
       final prefs = await SharedPreferences.getInstance();
       final selectedWatcherId = prefs.getInt(selectedWatcherIdKey);
+      final selectedBoardId = prefs.getInt(selectedBoardIdKey);
+      final selectedFilteredBy = prefs.getInt(selectedFilteredByKey);
       final posts = await holder.post.getOpeningPosts();
 
       setState(() {
@@ -98,22 +101,39 @@ class _PostsTabState extends State<PostsTab> {
             .whereNotNull()
             .distinct((b) => b.id)
             .toList();
+
         _posts = sortPosts(posts, _sortOrder);
+        _filteredBy = selectedFilteredBy == null
+            ? PostFilteredBy.watcher
+            : PostFilteredBy.values[selectedFilteredBy];
 
         if (selectedWatcherId != null) {
           _selectedWatcher = holder.watcher.box.get(selectedWatcherId);
         } else {
           _selectedWatcher = null;
         }
+
+        if (selectedBoardId != null) {
+          _selectedBoard = holder.board.box.get(selectedBoardId);
+        } else {
+          _selectedBoard = null;
+        }
       });
     })();
   }
 
   void switchFilteredBy() {
+    final newFilteredBy = _filteredBy == PostFilteredBy.watcher
+        ? PostFilteredBy.board
+        : PostFilteredBy.watcher;
+
+    (() async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setInt(selectedFilteredByKey, newFilteredBy.index);
+    })();
+
     setState(() {
-      _filteredBy = _filteredBy == PostFilteredBy.watcher
-          ? PostFilteredBy.board
-          : PostFilteredBy.watcher;
+      _filteredBy = newFilteredBy;
     });
   }
 
@@ -281,7 +301,7 @@ class _PostsTabState extends State<PostsTab> {
       children: [
         AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: buildFilterDropdown(),
+          title: _posts == null ? Container() : buildFilterDropdown(),
           actions: [
             IconButton(onPressed: switchFilteredBy, icon: filterIcon),
             PopupMenuButton(
