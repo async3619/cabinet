@@ -40,10 +40,16 @@ class _DynamicImageState extends State<DynamicImage> {
     super.didUpdateWidget(oldWidget);
 
     final image = widget.image;
-    if (image == null) return;
+    if (image == null) {
+      _imageFile = null;
+      return;
+    }
 
     final targetPath = widget.showThumbnail ? image.thumbnailPath : image.path;
-    if (targetPath == null) return;
+    if (targetPath == null) {
+      _imageFile = null;
+      return;
+    }
 
     _imageFile = File(targetPath);
   }
