@@ -30,6 +30,8 @@ class _PostsTabState extends State<PostsTab> {
     super.initState();
 
     getPosts().then((posts) {
+      if (!mounted) return;
+
       setState(() {
         _posts = posts;
       });
@@ -38,6 +40,8 @@ class _PostsTabState extends State<PostsTab> {
     final holder = Provider.of<RepositoryHolder>(context, listen: false);
     holder.post.watch(Post_.parent.isNull()).listen((_) {
       getPosts().then((posts) {
+        if (!mounted) return;
+
         setState(() {
           _posts = posts;
         });
