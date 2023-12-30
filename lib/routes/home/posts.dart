@@ -1,11 +1,13 @@
 import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/database/watcher.dart';
-import 'package:cabinet/objectbox.g.dart';
 import 'package:cabinet/routes/thread.dart';
 import 'package:cabinet/widgets/post_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+const selectedWatcherIdKey = 'selectedWatcherId';
 
 enum PostSortOrder {
   bumpOrder,
@@ -33,26 +35,35 @@ class _PostsTabState extends State<PostsTab> {
   void initState() {
     super.initState();
 
-    getPosts().then((posts) {
-      if (!mounted) return;
+    (() async {
+      final holder = Provider.of<RepositoryHolder>(context, listen: false);
+      final watchers = holder.watcher.box.getAll();
+      final prefs = await SharedPreferences.getInstance();
+      final selectedWatcherId = prefs.getInt(selectedWatcherIdKey);
 
       setState(() {
-        _posts = posts;
+        _watchers = watchers;
+        _selectedWatcher = selectedWatcherId == null
+            ? null
+            : watchers
+                .where((watcher) => watcher.id == selectedWatcherId)
+                .firstOrNull;
       });
-    });
 
-    final holder = Provider.of<RepositoryHolder>(context, listen: false);
-    _watchers = holder.watcher.box.getAll();
-
-    holder.post.watch(Post_.parent.isNull()).listen((_) {
       getPosts().then((posts) {
         if (!mounted) return;
 
+        if (_selectedWatcher != null) {
+          posts = posts
+              .where((post) => _selectedWatcher!.isPostMatch(post))
+              .toList();
+        }
+
         setState(() {
-          _posts = posts;
+          _posts = sortPosts(posts, _sortOrder);
         });
       });
-    });
+    })();
   }
 
   Future<List<Post>> getPosts() async {
@@ -106,22 +117,37 @@ class _PostsTabState extends State<PostsTab> {
     });
   }
 
-  void handleWatcherChanged(Watcher? value) {
+  void handleWatcherChanged(int? value) {
+    final watchers = _watchers;
+    if (watchers == null) return;
+
+    final watcher = value == null
+        ? null
+        : watchers.where((watcher) => watcher.id == value).firstOrNull;
+
     setState(() {
       _posts = null;
-      _selectedWatcher = value;
+      _selectedWatcher = watcher;
     });
 
     getPosts().then((posts) {
       if (!mounted) return;
 
-      if (value != null) {
-        posts = posts.where((post) => value.isPostMatch(post)).toList();
+      if (watcher != null) {
+        posts = posts.where((post) => watcher.isPostMatch(post)).toList();
       }
 
       setState(() {
         _posts = sortPosts(posts, _sortOrder);
       });
+    });
+
+    SharedPreferences.getInstance().then((prefs) {
+      if (value == null) {
+        prefs.remove(selectedWatcherIdKey);
+      } else {
+        prefs.setInt(selectedWatcherIdKey, value);
+      }
     });
   }
 
@@ -162,25 +188,37 @@ class _PostsTabState extends State<PostsTab> {
 
   @override
   Widget build(BuildContext context) {
+    Widget postList;
+    final watchers = _watchers;
+    if (watchers == null) {
+      postList = const Center(child: CircularProgressIndicator());
+    } else {
+      postList = buildPostList();
+    }
+
+    Widget title = DropdownButton<int>(
+      value: _selectedWatcher?.id,
+      onChanged: handleWatcherChanged,
+      items: [
+        if (watchers != null)
+          const DropdownMenuItem(
+            value: null,
+            child: Text('All'),
+          ),
+        if (watchers != null)
+          for (final watcher in watchers)
+            DropdownMenuItem(
+              value: watcher.id,
+              child: Text(watcher.name!),
+            )
+      ],
+    );
+
     return Column(
       children: [
         AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: DropdownButton<Watcher>(
-            value: _selectedWatcher,
-            onChanged: handleWatcherChanged,
-            items: [
-              const DropdownMenuItem(
-                value: null,
-                child: Text('All'),
-              ),
-              for (final watcher in _watchers!)
-                DropdownMenuItem(
-                  value: watcher,
-                  child: Text(watcher.name!),
-                )
-            ],
-          ),
+          title: title,
           actions: [
             PopupMenuButton(
               onSelected: handleOrderChanged,
@@ -195,7 +233,7 @@ class _PostsTabState extends State<PostsTab> {
             )
           ],
         ),
-        Expanded(child: buildPostList())
+        Expanded(child: postList)
       ],
     );
   }
