@@ -2,7 +2,7 @@ import 'package:cabinet/database/blacklist.dart';
 import 'package:cabinet/database/repository/base.dart';
 import 'package:objectbox/objectbox.dart';
 
-class BlacklistRepository extends BaseRepository {
+class BlacklistRepository extends BaseRepository<Blacklist> {
   BlacklistRepository(Box<Blacklist> box) : super(box);
 
   Future<void> add(int boardId, int postId) async {
