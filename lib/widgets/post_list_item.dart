@@ -1,8 +1,11 @@
 import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/image.dart' as db_image;
+import 'package:cabinet/database/repository/holder.dart';
+import 'package:cabinet/widgets/dialogs/menu.dart';
 import 'package:cabinet/widgets/dynamic_image.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
+import 'package:provider/provider.dart';
 
 class PostListItem extends StatelessWidget {
   final Post post;
@@ -27,6 +30,34 @@ class PostListItem extends StatelessWidget {
     if (onCardTap != null) {
       onCardTap!(post);
     }
+  }
+
+  void handleExcludePost(BuildContext context) async {
+    final holder = Provider.of<RepositoryHolder>(context, listen: false);
+    final posts = [post, ...post.children];
+    final images = posts
+        .expand((post) => post.images)
+        .where((element) => element.posts.length == 1)
+        .toList();
+
+    await holder.blacklist.add(post.board.targetId, post.no!);
+
+    await holder.post.bulkDelete(posts);
+    await holder.image.bulkDelete(images);
+  }
+
+  void handleLongPress(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => MenuDialog(
+              items: [
+                MenuItem(
+                    title: "Exclude",
+                    onTap: () {
+                      handleExcludePost(context);
+                    }),
+              ],
+            ));
   }
 
   Widget? buildThumbnail(BuildContext context) {
@@ -137,6 +168,9 @@ class PostListItem extends StatelessWidget {
                             child: Material(
                                 color: Colors.transparent,
                                 child: InkWell(
+                                  onLongPress: () {
+                                    handleLongPress(context);
+                                  },
                                   onTap: () {
                                     handleCardTap();
                                   },

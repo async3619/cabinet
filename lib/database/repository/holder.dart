@@ -1,8 +1,10 @@
 import 'package:cabinet/api/image_board/api.dart';
+import 'package:cabinet/database/blacklist.dart';
 import 'package:cabinet/database/board.dart';
 import 'package:cabinet/database/image.dart';
 import 'package:cabinet/database/object_box.dart';
 import 'package:cabinet/database/post.dart';
+import 'package:cabinet/database/repository/blacklist.dart';
 import 'package:cabinet/database/repository/board.dart';
 import 'package:cabinet/database/repository/image.dart';
 import 'package:cabinet/database/repository/post.dart';
@@ -14,6 +16,7 @@ class RepositoryHolder {
   late final WatcherRepository watcher;
   late final PostRepository post;
   late final ImageRepository image;
+  late final BlacklistRepository blacklist;
   late final ObjectBox objectBox;
 
   RepositoryHolder(
@@ -24,5 +27,6 @@ class RepositoryHolder {
     watcher = WatcherRepository(objectBox.store.box<Watcher>());
     post = PostRepository(imageBoardApi, objectBox.store.box<Post>());
     image = ImageRepository(objectBox.store.box<Image>());
+    blacklist = BlacklistRepository(objectBox.store.box<Blacklist>());
   }
 }
