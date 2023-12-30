@@ -32,6 +32,7 @@ dependencies:
   awesome_notifications: ^0.8.2
   uuid: ^4.2.2
   shared_preferences: ^2.2.2
+  collection: ^1.18.0
 
 dev_dependencies:
   flutter_test:
