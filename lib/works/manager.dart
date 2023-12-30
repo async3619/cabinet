@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:cabinet/database/object_box.dart';
-import 'package:flutter/foundation.dart';
+import 'package:cabinet/works/image.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'base.dart';
@@ -19,14 +19,12 @@ class WorkManager {
 
   final _works = <BaseWork>[
     WatcherWork(),
+    ImageWork(),
   ];
 
   void initialize(ObjectBox objectBox) {
     Workmanager().initialize(callbackDispatcher);
-
-    if (kDebugMode) {
-      Workmanager().cancelAll();
-    }
+    Workmanager().cancelAll();
 
     Workmanager().registerPeriodicTask("worker-tasks", "worker-tasks",
         inputData: {
