@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cabinet/database/repository/watcher.dart';
 import 'package:darq/darq.dart';
 import 'package:cabinet/database/image.dart';
@@ -5,6 +7,7 @@ import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/database/watcher.dart';
 import 'package:html/parser.dart';
+import 'package:p_limit/p_limit.dart';
 
 import 'base.dart';
 
@@ -62,6 +65,24 @@ class WatcherTask extends BaseTask {
       final openingPosts =
           await _repositoryHolder.post.fetchOpeningPosts(board);
 
+      if (_watcher.archived == true) {
+        final archivedPostIds =
+            await _repositoryHolder.post.fetchArchivedPostIds(board);
+
+        final limit = PLimit<void>(Platform.numberOfProcessors * 2);
+        final input = archivedPostIds.map((postId) => limit(() async {
+              try {
+                final post =
+                    await _repositoryHolder.post.fetchPost(board, postId);
+                if (_watcher.isPostMatch(post)) {
+                  filteredPosts.add(post);
+                }
+              } catch (_) {}
+            }));
+
+        await Future.wait(input);
+      }
+
       for (var post in openingPosts) {
         if (!_watcher.isPostMatch(post)) {
           continue;
@@ -91,7 +112,14 @@ class WatcherTask extends BaseTask {
     var images = <Image>[];
     var postsList = <List<Post>>[];
     for (var post in filteredPosts) {
-      final childPosts = await _repositoryHolder.post.fetchChildPosts(post);
+      List<Post> childPosts;
+
+      if (post.children.isEmpty) {
+        childPosts = await _repositoryHolder.post.fetchChildPosts(post);
+      } else {
+        childPosts = post.children;
+      }
+
       final posts = [post, ...childPosts].map((e) {
         final cachedPost = postMap['${e.board.target?.code}-${e.no}'];
         if (cachedPost != null) {

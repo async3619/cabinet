@@ -15,13 +15,14 @@ class WatcherRepository extends BaseRepository<Watcher> {
   WatcherRepository(Box<Watcher> box) : super(box);
 
   Future<Watcher> create(String name, List<Board> boards, List<Filter> filters,
-      int crawlingInterval) async {
+      int crawlingInterval, bool archived) async {
     final entity = Watcher();
     entity.name = name;
     entity.boards.addAll(boards);
     entity.filters.addAll(filters);
     entity.currentStatus = WatcherStatus.idle;
     entity.crawlingInterval = crawlingInterval;
+    entity.archived = archived;
 
     box.put(entity);
 
@@ -32,7 +33,8 @@ class WatcherRepository extends BaseRepository<Watcher> {
       {String? name,
       List<Board>? boards,
       List<Filter>? filters,
-      int? crawlingInterval}) async {
+      int? crawlingInterval,
+      bool? archived}) async {
     final entity = box.get(id);
     if (entity == null) {
       throw Exception('Watcher with id $id not found');
@@ -44,6 +46,10 @@ class WatcherRepository extends BaseRepository<Watcher> {
 
     if (crawlingInterval != null) {
       entity.crawlingInterval = crawlingInterval;
+    }
+
+    if (archived != null) {
+      entity.archived = archived;
     }
 
     if (boards != null) {

@@ -1,4 +1,5 @@
 import 'package:cabinet/widgets/form_widget/list_input/filter_list_input.dart';
+import 'package:cabinet/widgets/form_widget/list_input/switch_list_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 
@@ -44,6 +45,8 @@ class _FormWidgetState extends State<FormWidget> {
       fieldWidget = SelectListInput(field: field);
     } else if (field is FilterFormFieldItem) {
       fieldWidget = FilterListInput(field: field);
+    } else if (field is SwitchFormFieldItem) {
+      fieldWidget = SwitchListInput(field: field);
     } else {
       throw Exception('Unknown field type');
     }

@@ -1,3 +1,7 @@
+import 'package:cabinet/database/image.dart';
+import 'package:cabinet/database/post.dart';
+import 'package:cabinet/database/repository/watcher.dart';
+import 'package:cabinet/database/watcher.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -19,6 +23,18 @@ class ObjectBox {
       store = await openStore(
         directory: storeDir,
       );
+    }
+
+    if (kDebugMode) {
+      final watchers = store.box<Watcher>().getAll();
+      for (final watcher in watchers) {
+        watcher.status = WatcherStatus.idle.index;
+        watcher.lastRun = null;
+      }
+
+      store.box<Watcher>().putMany(watchers);
+      store.box<Image>().removeAll();
+      store.box<Post>().removeAll();
     }
 
     return ObjectBox._create(store);

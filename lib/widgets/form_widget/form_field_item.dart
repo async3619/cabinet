@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class FormFieldItem {
   final String name;
   final String label;
+  final String? description;
   final FormFieldValidator? validator;
 
   FormFieldItem({
     required this.name,
     required this.label,
     this.validator,
+    this.description,
   });
 }
 
@@ -88,9 +90,16 @@ class FilterFormFieldItem extends FormFieldItem {
     required String name,
     required String label,
     FormFieldValidator? validator,
+    String? description,
   }) : super(
           name: name,
           label: label,
           validator: validator,
+          description: description,
         );
+}
+
+class SwitchFormFieldItem extends FormFieldItem {
+  SwitchFormFieldItem(
+      {required super.name, required super.label, super.description});
 }

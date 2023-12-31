@@ -57,6 +57,14 @@ class _WatchersTabState extends State<WatchersTab> {
     final task = WatcherTask(
       repositoryHolder: holder,
       watcher: watcher,
+      onError: (error) {
+        holder.watcher.setWatcherStatus(watcher, WatcherStatus.idle);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Task \'${watcher.name}\' failed: $error'),
+          ),
+        );
+      },
       onStart: () {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
