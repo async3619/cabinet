@@ -33,11 +33,11 @@ class _FilterListInputState extends State<FilterListInput> {
   Widget renderItem(FormFieldState<List<Filter>> field, Filter filter,
       int index, List<Filter> value) {
     final keyword = filter.keyword;
-    final location = filter.location?.name ?? "(not set)";
+    final location = filter.location?.name ?? '(not set)';
     final caseSensitive = filter.caseSensitive ?? false;
 
     return ListTile(
-      title: Text("Filter ${index + 1}"),
+      title: Text('Filter ${index + 1}'),
       subtitle: Text(
           "$keyword, $location, ${caseSensitive ? 'Case Sensitive' : 'Case Insensitive'}"),
       trailing: IconButton(
@@ -68,7 +68,7 @@ class _FilterListInputState extends State<FilterListInput> {
             ListTile(
               onTap: () => handleAddFilterClick(context, field),
               title: Text(
-                field.errorText ?? "Add a new filter",
+                field.errorText ?? 'Add a new filter',
                 style: TextStyle(
                   color: field.errorText != null
                       ? Theme.of(context).colorScheme.error

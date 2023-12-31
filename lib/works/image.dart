@@ -20,8 +20,8 @@ class ImageWork extends BaseWork {
     if (allImages.isNotEmpty) {
       final imageNotificationId = await NotificationManager()
           .createNotification(
-              title: "Cabinet Watcher",
-              body: "Downloading all ${allImages.length} images...",
+              title: 'Cabinet Watcher',
+              body: 'Downloading all ${allImages.length} images...',
               locked: true,
               category: NotificationCategory.Progress,
               progress: 0);
@@ -30,8 +30,8 @@ class ImageWork extends BaseWork {
       for (var image in allImages) {
         await NotificationManager().updateNotification(
             id: imageNotificationId,
-            title: "Cabinet Watcher",
-            body: "Downloading image ${index + 1} of ${allImages.length}...",
+            title: 'Cabinet Watcher',
+            body: 'Downloading image ${index + 1} of ${allImages.length}...',
             locked: true,
             category: NotificationCategory.Progress,
             layout: NotificationLayout.ProgressBar,

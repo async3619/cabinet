@@ -31,7 +31,7 @@ class Watcher implements BaseEntity {
 
   final boards = ToMany<Board>();
 
-  @Backlink("watcher")
+  @Backlink('watcher')
   final filters = ToMany<Filter>();
 
   bool isPostMatch(Post post) {

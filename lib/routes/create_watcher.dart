@@ -58,7 +58,7 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
 
   List<FormFieldGroup> getFormFields(BuildContext context) {
     return [
-      FormFieldGroup(name: "General", fields: [
+      FormFieldGroup(name: 'General', fields: [
         TextFormFieldItem(
             name: 'name',
             label: 'Name',
@@ -66,7 +66,7 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
               FormBuilderValidators.required(),
             ]))
       ]),
-      FormFieldGroup(name: "Target", fields: [
+      FormFieldGroup(name: 'Target', fields: [
         MultipleSelectFormFieldItem<String>(
           name: 'boards',
           label: 'Boards',
@@ -74,33 +74,33 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
             FormBuilderValidators.required(),
           ]),
           formatValue: (values) =>
-              values.map((code) => "/${code}/").join(', ').toString(),
+              values.map((code) => '/$code/').join(', ').toString(),
           getOptions: () => _boards.map((board) {
             return SelectOption(value: board.code!, label: board.name);
           }).toList(),
         )
       ]),
-      FormFieldGroup(name: "Filters", fields: [
+      FormFieldGroup(name: 'Filters', fields: [
         FilterFormFieldItem(
-          name: "filters",
-          label: "Filters",
+          name: 'filters',
+          label: 'Filters',
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(),
           ]),
         )
       ]),
-      FormFieldGroup(name: "Settings", fields: [
+      FormFieldGroup(name: 'Settings', fields: [
         SingularSelectFormFieldItem(
-            name: "crawlingInterval",
-            label: "Crawling Interval",
+            name: 'crawlingInterval',
+            label: 'Crawling Interval',
             getOptions: () => [
-                  SelectOption(value: 15, label: "15 Minutes"),
-                  SelectOption(value: 30, label: "30 Minutes"),
-                  SelectOption(value: 60, label: "1 Hour"),
-                  SelectOption(value: 120, label: "2 Hours"),
-                  SelectOption(value: 240, label: "4 Hours"),
-                  SelectOption(value: 480, label: "8 Hours"),
-                  SelectOption(value: 1440, label: "1 Day"),
+                  SelectOption(value: 15, label: '15 Minutes'),
+                  SelectOption(value: 30, label: '30 Minutes'),
+                  SelectOption(value: 60, label: '1 Hour'),
+                  SelectOption(value: 120, label: '2 Hours'),
+                  SelectOption(value: 240, label: '4 Hours'),
+                  SelectOption(value: 480, label: '8 Hours'),
+                  SelectOption(value: 1440, label: '1 Day'),
                 ])
       ])
     ];

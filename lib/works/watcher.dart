@@ -17,8 +17,8 @@ class WatcherWork extends BaseWork {
     final watchers = await repositoryHolder.watcher.findAll();
 
     final notificationId = await NotificationManager().createNotification(
-        title: "Cabinet Watcher",
-        body: "Watcher Work is running",
+        title: 'Cabinet Watcher',
+        body: 'Watcher Work is running',
         locked: true);
 
     for (final watcher in watchers) {
@@ -40,7 +40,7 @@ class WatcherWork extends BaseWork {
 
       await NotificationManager().updateNotification(
           id: notificationId,
-          title: "Cabinet Watcher",
+          title: 'Cabinet Watcher',
           body: "Watcher #${watcher.id} '${watcher.name}' is running",
           locked: true);
 

@@ -55,16 +55,16 @@ class _SelectListInputState<T> extends State<SelectListInput<T>> {
           final formatValue = (widgetField as dynamic).formatValue;
 
           if (value.isEmpty) {
-            valueLabel = "Nothing selected";
+            valueLabel = 'Nothing selected';
           } else if (formatValue != null) {
             valueLabel = formatValue!(value);
           } else {
-            valueLabel = "${value.length} items selected";
+            valueLabel = '${value.length} items selected';
           }
         } else if (value is T? &&
             widgetField is SingularSelectFormFieldItem<T>) {
           if (value == null) {
-            valueLabel = "Nothing selected";
+            valueLabel = 'Nothing selected';
           } else if (widgetField.formatValue != null) {
             valueLabel = widgetField.formatValue!(value);
           } else {
@@ -74,7 +74,7 @@ class _SelectListInputState<T> extends State<SelectListInput<T>> {
             valueLabel = option.label;
           }
         } else {
-          throw Exception("Unknown value type");
+          throw Exception('Unknown value type');
         }
 
         return ListTile(

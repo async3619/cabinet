@@ -36,7 +36,7 @@ class WatcherTask extends BaseTask {
     final postMap = await _repositoryHolder.post.findAll().then((value) {
       final Map<String, Post> map = {};
       for (var post in value) {
-        map["${post.board.target?.code}-${post.no}"] = post;
+        map['${post.board.target?.code}-${post.no}'] = post;
       }
 
       return map;
@@ -79,10 +79,10 @@ class WatcherTask extends BaseTask {
      */
     final blacklists = await _repositoryHolder.blacklist
         .findAll()
-        .then((value) => value.map((e) => "${e.boardId}-${e.postId}").toList());
+        .then((value) => value.map((e) => '${e.boardId}-${e.postId}').toList());
 
     filteredPosts.removeWhere((element) =>
-        blacklists.contains("${element.board.target?.id}-${element.no}"));
+        blacklists.contains('${element.board.target?.id}-${element.no}'));
 
     /**
      * get all child posts of filtered posts and get all images from opening posts and child posts.
@@ -96,7 +96,7 @@ class WatcherTask extends BaseTask {
     for (var post in filteredPosts) {
       final childPosts = await _repositoryHolder.post.fetchChildPosts(post);
       final posts = [post, ...childPosts].map((e) {
-        final cachedPost = postMap["${e.board.target?.code}-${e.no}"];
+        final cachedPost = postMap['${e.board.target?.code}-${e.no}'];
         if (cachedPost != null) {
           e.id = cachedPost.id;
         }

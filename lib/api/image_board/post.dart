@@ -31,7 +31,7 @@ class ImageBoardPost implements BasePost {
   @override
   late String? title;
 
-  @JsonKey(name: "com")
+  @JsonKey(name: 'com')
   @override
   late String? content;
 
