@@ -26,6 +26,14 @@ class WatcherWork extends BaseWork {
         continue;
       }
 
+      final currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
+      final lastRunTimeStamp = watcher.lastRun?.millisecondsSinceEpoch ?? 0;
+      final crawlingInterval = watcher.crawlingInterval ?? 0;
+
+      if (currentTimeStamp - lastRunTimeStamp < crawlingInterval) {
+        continue;
+      }
+
       final task = WatcherTask(
         repositoryHolder: repositoryHolder,
         watcher: watcher,
