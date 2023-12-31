@@ -1,6 +1,8 @@
+import 'package:cabinet/system/file.dart';
 import 'package:cabinet/widgets/media_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:cabinet/database/image.dart' as database;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:video_player/video_player.dart';
 
 class MediaViewerModal extends ModalRoute {
@@ -37,6 +39,15 @@ class MediaViewerModal extends ModalRoute {
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 100);
+
+  handleSavePressed(BuildContext context) async {
+    await FileSystem().saveImageToGallery(images[currentIndex]);
+
+    Fluttertoast.showToast(
+        msg: 'Image saved to gallery',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER);
+  }
 
   handlePageChanged(int index) {
     setState(() {
@@ -83,6 +94,12 @@ class MediaViewerModal extends ModalRoute {
                 ),
               ],
             ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.download),
+                onPressed: () => handleSavePressed(context),
+              ),
+            ],
           ),
           Expanded(
               child: PageView(
