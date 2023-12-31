@@ -25,7 +25,7 @@ class ImageBoardBoard implements BaseBoard {
 
   @override
   String getName() {
-    return "/$id/ - $title";
+    return '/$id/ - $title';
   }
 
   factory ImageBoardBoard.fromJson(Map<String, dynamic> json) =>

@@ -4,8 +4,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../form_field_item.dart';
 
-class SelectListInput extends StatefulWidget {
-  final SelectFormFieldItem field;
+class SelectListInput<T> extends StatefulWidget {
+  final SelectFormFieldItem<T> field;
 
   const SelectListInput({
     Key? key,
@@ -13,23 +13,29 @@ class SelectListInput extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SelectListInput> createState() => _SelectListInputState();
+  State<SelectListInput<T>> createState() => _SelectListInputState<T>();
 }
 
-class _SelectListInputState extends State<SelectListInput> {
+class _SelectListInputState<T> extends State<SelectListInput<T>> {
   handleListTap(FormFieldState<dynamic> field) {
+    final options = widget.field.getOptions();
+    final multiple = widget.field is MultipleSelectFormFieldItem;
+    final initialSelection = multiple ? field.value : [field.value];
+
     showDialog(
         context: context,
         builder: (context) {
           return SelectDialog(
               title: widget.field.label,
-              getOptions: widget.field.getOptions,
+              options: options,
               onSubmit: (value) {
-                field.didChange(value);
+                field.didChange(
+                  multiple ? value : value.firstOrNull,
+                );
                 Navigator.of(context).pop();
               },
-              multiple: widget.field.multiple ?? false,
-              initialSelection: field.value);
+              multiple: multiple,
+              initialSelection: initialSelection);
         });
   }
 
@@ -42,15 +48,31 @@ class _SelectListInputState extends State<SelectListInput> {
       builder: (field) {
         String valueLabel;
 
+        final widgetField = widget.field;
+        final options = widget.field.getOptions();
         dynamic value = field.value;
-        if (value is List?) {
-          if (value == null || value.isEmpty) {
+        if (value is List<T> && widgetField is MultipleSelectFormFieldItem<T>) {
+          final formatValue = (widgetField as dynamic).formatValue;
+
+          if (value.isEmpty) {
             valueLabel = 'Nothing selected';
+          } else if (formatValue != null) {
+            valueLabel = formatValue!(value);
           } else {
             valueLabel = '${value.length} items selected';
           }
-        } else if (value is String?) {
-          valueLabel = value ?? 'Nothing selected';
+        } else if (value is T? &&
+            widgetField is SingularSelectFormFieldItem<T>) {
+          if (value == null) {
+            valueLabel = 'Nothing selected';
+          } else if (widgetField.formatValue != null) {
+            valueLabel = widgetField.formatValue!(value);
+          } else {
+            final option =
+                options.firstWhere((option) => option.value == value);
+
+            valueLabel = option.label;
+          }
         } else {
           throw Exception('Unknown value type');
         }

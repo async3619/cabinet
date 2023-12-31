@@ -52,7 +52,7 @@ class PostListItem extends StatelessWidget {
         builder: (context) => MenuDialog(
               items: [
                 MenuItem(
-                    title: "Exclude",
+                    title: 'Exclude',
                     onTap: () {
                       handleExcludePost(context);
                     }),
@@ -98,7 +98,7 @@ class PostListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final thumbnail = buildThumbnail(context);
     final title = post.title;
-    final document = parse(post.content?.replaceAll("<br>", "\n") ?? "");
+    final document = parse(post.content?.replaceAll('<br>', '\n') ?? '');
     final content = parse(document.body?.text).documentElement?.text;
 
     final bodyTextStyle = Theme.of(context).textTheme.bodySmall?.copyWith(

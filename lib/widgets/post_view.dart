@@ -32,9 +32,9 @@ class PostView extends StatelessWidget {
     final descriptionTextStyle = descriptionText(context, 128);
 
     final postMetadata = [
-      "No.${post.no}",
+      'No.${post.no}',
       DateFormat('yyyy-MM-dd HH:mm:ss').format(post.createdAt!),
-    ].join(" ");
+    ].join(' ');
 
     String? primaryImageMetadata;
     if (primaryImage != null) {
@@ -42,15 +42,15 @@ class PostView extends StatelessWidget {
       final extension = primaryImage.extension!;
 
       primaryImageMetadata = [
-        "$filename$extension",
+        '$filename$extension',
         if (primaryImage.size != null) filesize(primaryImage.size!),
         if (primaryImage.width != null && primaryImage.height != null)
-          "${primaryImage.width}x${primaryImage.height}",
-      ].join(" ");
+          '${primaryImage.width}x${primaryImage.height}',
+      ].join(' ');
     }
 
     final thumbnailUrl = post.thumbnailUrl;
-    final isPrimaryMediaVideo = post.images.firstOrNull?.extension == ".webm";
+    final isPrimaryMediaVideo = post.images.firstOrNull?.extension == '.webm';
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,7 +110,7 @@ class PostView extends StatelessWidget {
                   ),
                 if (post.author != null)
                   Text(
-                    " ",
+                    ' ',
                     style: descriptionTextStyle,
                   ),
                 Expanded(
@@ -130,11 +130,11 @@ class PostView extends StatelessWidget {
                 ),
               const SizedBox(height: 8),
               Html(
-                  data: post.content ?? "",
+                  data: post.content ?? '',
                   onAnchorTap: (url, _, __) {
                     if (url == null) return;
 
-                    if (url.startsWith("#p")) {
+                    if (url.startsWith('#p')) {
                       final postId = int.tryParse(url.substring(2));
                       if (postId != null && onRequestShowPost != null) {
                         onRequestShowPost!(postId);
@@ -142,7 +142,7 @@ class PostView extends StatelessWidget {
                     }
                   },
                   style: {
-                    "body": Style(
+                    'body': Style(
                       margin: Margins.zero,
                       padding: HtmlPaddings.zero,
                       fontSize: FontSize(
@@ -150,10 +150,10 @@ class PostView extends StatelessWidget {
                               14),
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
-                    "a": Style(
+                    'a': Style(
                       color: Theme.of(context).colorScheme.secondary,
                     ),
-                    ".quote": Style(
+                    '.quote': Style(
                       color: const Color(0xFFB5BD68),
                     ),
                   })

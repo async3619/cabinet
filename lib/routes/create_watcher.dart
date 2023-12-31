@@ -1,4 +1,5 @@
 import 'package:cabinet/api/image_board/api.dart';
+import 'package:cabinet/database/board.dart';
 import 'package:cabinet/database/filter.dart';
 import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/database/watcher.dart';
@@ -31,22 +32,33 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
   );
 
   final Map<String, dynamic> initialValues = {};
+  List<Board> _boards = [];
 
   @override
   void initState() {
     super.initState();
+
+    (() async {
+      final holder = Provider.of<RepositoryHolder>(context, listen: false);
+      final boards = await holder.board.getBoards();
+
+      setState(() {
+        _boards = boards;
+      });
+    })();
 
     if (widget.watcher != null) {
       initialValues['name'] = widget.watcher!.name;
       initialValues['boards'] =
           widget.watcher!.boards.map((board) => board.code!).toList();
       initialValues['filters'] = widget.watcher!.filters.toList();
+      initialValues['crawlingInterval'] = widget.watcher!.crawlingInterval;
     }
   }
 
   List<FormFieldGroup> getFormFields(BuildContext context) {
     return [
-      FormFieldGroup(name: "General", fields: [
+      FormFieldGroup(name: 'General', fields: [
         TextFormFieldItem(
             name: 'name',
             label: 'Name',
@@ -54,30 +66,43 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
               FormBuilderValidators.required(),
             ]))
       ]),
-      FormFieldGroup(name: "Target", fields: [
-        SelectFormFieldItem(
+      FormFieldGroup(name: 'Target', fields: [
+        MultipleSelectFormFieldItem<String>(
           name: 'boards',
           label: 'Boards',
-          multiple: true,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(),
           ]),
-          getOptions: () async {
-            return context
-                .read<RepositoryHolder>()
-                .board
-                .getBoards()
-                .then((boards) {
-              return boards.map((board) {
-                return SelectOption(value: board.code!, label: board.name);
-              }).toList();
-            });
-          },
+          formatValue: (values) =>
+              values.map((code) => '/$code/').join(', ').toString(),
+          getOptions: () => _boards.map((board) {
+            return SelectOption(value: board.code!, label: board.name);
+          }).toList(),
         )
       ]),
-      FormFieldGroup(
-          name: "Filters",
-          fields: [FilterFormFieldItem(name: "filters", label: "Filters")])
+      FormFieldGroup(name: 'Filters', fields: [
+        FilterFormFieldItem(
+          name: 'filters',
+          label: 'Filters',
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(),
+          ]),
+        )
+      ]),
+      FormFieldGroup(name: 'Settings', fields: [
+        SingularSelectFormFieldItem(
+            name: 'crawlingInterval',
+            label: 'Crawling Interval',
+            getOptions: () => [
+                  SelectOption(value: 15, label: '15 Minutes'),
+                  SelectOption(value: 30, label: '30 Minutes'),
+                  SelectOption(value: 60, label: '1 Hour'),
+                  SelectOption(value: 120, label: '2 Hours'),
+                  SelectOption(value: 240, label: '4 Hours'),
+                  SelectOption(value: 480, label: '8 Hours'),
+                  SelectOption(value: 1440, label: '1 Day'),
+                ])
+      ])
     ];
   }
 
@@ -93,15 +118,19 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
       String name = value['name'];
       List<String> boardCodes = value['boards'];
       List<Filter> filters = value['filters'];
+      int crawlingInterval = value['crawlingInterval'];
 
       var selectedBoards =
           boards.where((board) => boardCodes.contains(board.code)).toList();
 
       if (widget.watcher != null) {
         holder.watcher.update(widget.watcher!.id,
-            name: name, boards: selectedBoards, filters: filters);
+            name: name,
+            boards: selectedBoards,
+            filters: filters,
+            crawlingInterval: crawlingInterval);
       } else {
-        holder.watcher.create(name, selectedBoards, filters);
+        holder.watcher.create(name, selectedBoards, filters, crawlingInterval);
       }
     })()
         .then((_) {
