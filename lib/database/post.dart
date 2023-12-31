@@ -20,9 +20,13 @@ class Post implements BaseEntity {
 
   final board = ToOne<Board>();
   final parent = ToOne<Post>();
+  final replyParent = ToMany<Post>();
 
   @Backlink('parent')
   final children = ToMany<Post>();
+
+  @Backlink('replyParent')
+  final replies = ToMany<Post>();
 
   @Backlink('posts')
   final images = ToMany<Image>();
@@ -36,7 +40,10 @@ class Post implements BaseEntity {
   }
 
   @Transient()
-  int get replyCount => children.length;
+  int get childCount => children.length;
+
+  @Transient()
+  int get replyCount => replies.length;
 
   String? get thumbnailUrl {
     if (images.isEmpty) {

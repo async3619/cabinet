@@ -52,7 +52,7 @@ class _PostsTabState extends State<PostsTab> {
         break;
 
       case PostSortOrder.replyCount:
-        copiedPosts.sort((a, b) => b.replyCount.compareTo(a.replyCount));
+        copiedPosts.sort((a, b) => b.childCount.compareTo(a.childCount));
         break;
 
       case PostSortOrder.imageCount:

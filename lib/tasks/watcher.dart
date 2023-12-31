@@ -5,6 +5,7 @@ import 'package:cabinet/database/image.dart';
 import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/database/watcher.dart';
+import 'package:html/parser.dart';
 
 import 'base.dart';
 
@@ -129,8 +130,45 @@ class WatcherTask extends BaseTask {
       }
     }
 
-    await _repositoryHolder.post
-        .saveAll(postsList.expand((element) => element).toList());
+    /**
+     * link replies to their parent posts
+     */
+    final allPosts = postsList.expand((element) => element).toList();
+    final postIdMap = <int, Post>{};
+    for (var post in allPosts) {
+      postIdMap[post.no!] = post;
+    }
+
+    for (var post in allPosts) {
+      final content = post.content;
+      if (content == null) continue;
+
+      final addedIds = <int>{};
+      for (var replyParent in post.replyParent) {
+        addedIds.add(replyParent.no!);
+      }
+
+      final document = parse(content);
+      final quotelinks = document.querySelectorAll('.quotelink');
+      for (var quotelink in quotelinks) {
+        final href = quotelink.attributes['href'];
+        if (href == null) continue;
+
+        final rawId = href.substring(2);
+        final id = int.tryParse(rawId);
+        if (id == null) continue;
+
+        final repliedPost = postIdMap[id];
+        if (repliedPost == null) continue;
+
+        if (addedIds.contains(id)) continue;
+
+        addedIds.add(id);
+        post.replyParent.add(repliedPost);
+      }
+    }
+
+    await _repositoryHolder.post.saveAll(allPosts);
 
     await _repositoryHolder.watcher
         .setWatcherStatus(_watcher, WatcherStatus.idle);

@@ -56,14 +56,15 @@ class _ThreadRouteState extends State<ThreadRoute> {
         onIndexChanged: handleMediaIndexChanged));
   }
 
-  handleRequestShowPost(int postId) {
+  handleRequestShowPost(List<int> postIds) {
     final allPosts = [widget.post, ...widget.post.children];
-    final post = allPosts.where((element) => element.no == postId).firstOrNull;
-    if (post == null) return;
+    final posts = allPosts.where((post) => postIds.contains(post.no)).toList();
+
+    if (posts.isEmpty) return;
 
     showDialog(
         context: context,
-        builder: (context) => PostDialog(post: post, allPosts: allPosts));
+        builder: (context) => PostDialog(posts: posts, allPosts: allPosts));
   }
 
   @override

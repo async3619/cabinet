@@ -23,8 +23,14 @@ class PostView extends StatelessWidget {
   }) : super(key: key);
 
   final Post post;
-  final Function(int postId)? onRequestShowPost;
+  final Function(List<int> postIds)? onRequestShowPost;
   final Function(Post post)? onShowMedia;
+
+  handleRepliesTap() {
+    if (onRequestShowPost == null) return;
+
+    onRequestShowPost?.call(post.replies.map((e) => e.no!).toList());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +143,7 @@ class PostView extends StatelessWidget {
                     if (url.startsWith('#p')) {
                       final postId = int.tryParse(url.substring(2));
                       if (postId != null && onRequestShowPost != null) {
-                        onRequestShowPost!(postId);
+                        onRequestShowPost!([postId]);
                       }
                     }
                   },
@@ -156,7 +162,15 @@ class PostView extends StatelessWidget {
                     '.quote': Style(
                       color: const Color(0xFFB5BD68),
                     ),
-                  })
+                  }),
+              if (post.replyCount > 0) const SizedBox(height: 8),
+              if (post.replyCount > 0)
+                InkWell(
+                    onTap: handleRepliesTap,
+                    child: Text(
+                      '${post.replyCount} replies',
+                      style: descriptionTextStyle,
+                    )),
             ],
           ),
         ))

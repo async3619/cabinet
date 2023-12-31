@@ -158,7 +158,7 @@ class PostListItem extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             color: Theme.of(context).cardColor,
                             child: Text(
-                              '${post.replyCount}R ${post.imageCount}I',
+                              '${post.childCount}R ${post.imageCount}I',
                               style: bodyTextStyle,
                               textAlign: TextAlign.right,
                             ),
