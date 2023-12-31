@@ -1,3 +1,5 @@
+import 'package:cabinet/database/image.dart';
+import 'package:cabinet/database/post.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -19,6 +21,11 @@ class ObjectBox {
       store = await openStore(
         directory: storeDir,
       );
+    }
+
+    if (kDebugMode) {
+      store.box<Post>().removeAll();
+      store.box<Image>().removeAll();
     }
 
     return ObjectBox._create(store);

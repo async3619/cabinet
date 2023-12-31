@@ -116,7 +116,7 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
       final boards = await holder.board.getBoards();
 
       String name = value['name'];
-      List<String> boardCodes = value['boards'];
+      List<String> boardCodes = value['boards'].cast<String>();
       List<Filter> filters = value['filters'];
       int crawlingInterval = value['crawlingInterval'];
 
