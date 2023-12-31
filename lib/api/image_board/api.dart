@@ -12,6 +12,17 @@ class ImageBoardApi extends BaseApi<ImageBoardBoard, ImageBoardPost> {
 
   ImageBoardApi({required this.baseUrl});
 
+  Future<List<int>> getArchivedPostIds(String boardId) async {
+    final response =
+        await client.get(Uri.parse('$baseUrl/$boardId/archive.json'));
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load archived post ids');
+    }
+
+    return (jsonDecode(response.body) as List<dynamic>).cast();
+  }
+
   @override
   Future<List<ImageBoardBoard>> getBoards() async {
     var response = await client.get(Uri.parse('$baseUrl/boards.json'));
@@ -63,8 +74,7 @@ class ImageBoardApi extends BaseApi<ImageBoardBoard, ImageBoardPost> {
     return posts;
   }
 
-  @override
-  Future<List<ImageBoardPost>> getChildPosts(
+  Future<List<ImageBoardPost>> getPosts(
       String boardId, String openingPostId) async {
     var response = await client
         .get(Uri.parse('$baseUrl/$boardId/thread/$openingPostId.json'));
@@ -75,10 +85,8 @@ class ImageBoardApi extends BaseApi<ImageBoardBoard, ImageBoardPost> {
 
     final rawResponse = jsonDecode(response.body) as Map<String, dynamic>;
     final rawPosts = rawResponse['posts'] as List<dynamic>;
-    final posts = rawPosts
-        .map((rawPost) => ImageBoardPost.fromJson(rawPost))
-        .toList()
-        .sublist(1);
+    final posts =
+        rawPosts.map((rawPost) => ImageBoardPost.fromJson(rawPost)).toList();
 
     for (var post in posts) {
       if (post.title != null) {
@@ -91,5 +99,13 @@ class ImageBoardApi extends BaseApi<ImageBoardBoard, ImageBoardPost> {
     }
 
     return posts;
+  }
+
+  @override
+  Future<List<ImageBoardPost>> getChildPosts(
+      String boardId, String openingPostId) async {
+    final list = await getPosts(boardId, openingPostId);
+
+    return list.sublist(1);
   }
 }

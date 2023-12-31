@@ -1,4 +1,5 @@
 import 'package:cabinet/api/image_board/api.dart';
+import 'package:cabinet/database/archived_post.dart';
 import 'package:cabinet/database/blacklist.dart';
 import 'package:cabinet/database/board.dart';
 import 'package:cabinet/database/image.dart';
@@ -25,7 +26,8 @@ class RepositoryHolder {
   ) {
     board = BoardRepository(imageBoardApi, objectBox.store.box<Board>());
     watcher = WatcherRepository(objectBox.store.box<Watcher>());
-    post = PostRepository(imageBoardApi, objectBox.store.box<Post>());
+    post = PostRepository(imageBoardApi, objectBox.store.box<Post>(),
+        archivedPostBox: objectBox.store.box<ArchivedPost>());
     image = ImageRepository(objectBox.store.box<Image>());
     blacklist = BlacklistRepository(objectBox.store.box<Blacklist>());
   }

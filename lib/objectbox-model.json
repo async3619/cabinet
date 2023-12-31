@@ -294,9 +294,38 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "10:3599335393619564066",
+      "lastPropertyId": "4:5712805484160446730",
+      "name": "ArchivedPost",
+      "properties": [
+        {
+          "id": "1:2193211653502104838",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8886335369791248974",
+          "name": "no",
+          "type": 6
+        },
+        {
+          "id": "3:2847854375922098314",
+          "name": "boardCode",
+          "type": 9
+        },
+        {
+          "id": "4:5712805484160446730",
+          "name": "rawJson",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "9:3414343236739698481",
+  "lastEntityId": "10:3599335393619564066",
   "lastIndexId": "5:8185176029638657869",
   "lastRelationId": "4:2475761135884355597",
   "lastSequenceId": "0:0",

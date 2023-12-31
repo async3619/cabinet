@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:cabinet/api/image_board/api.dart';
+import 'package:cabinet/api/image_board/post.dart';
+import 'package:cabinet/database/archived_post.dart';
 import 'package:cabinet/database/board.dart';
 import 'package:cabinet/database/image.dart';
 import 'package:cabinet/database/post.dart';
@@ -7,39 +11,92 @@ import 'package:cabinet/objectbox.g.dart';
 import 'base.dart';
 
 class PostRepository extends BaseRepository<Post> {
-  final ImageBoardApi _api;
+  static Post _composePost(ImageBoardPost post, Board board) {
+    final entity = Post();
+    entity.no = post.id;
+    entity.title = post.title;
+    entity.content = post.content;
+    entity.author = post.author;
+    entity.createdAt = post.createdAt;
+    entity.board.target = board;
 
-  PostRepository(this._api, Box<Post> box) : super(box);
+    if (post.filename != null) {
+      entity.images.add(Image(
+        post.filename,
+        post.extension,
+        post.width,
+        post.height,
+        post.thumbnailWidth,
+        post.thumbnailHeight,
+        post.imageTime,
+        post.imageSize,
+        post.imageMd5,
+        'https://i.4cdn.org/${board.code}/${post.imageTime}${post.extension}',
+        'https://i.4cdn.org/${board.code}/${post.imageTime}s.jpg',
+      ));
+    }
+
+    return entity;
+  }
+
+  final ImageBoardApi _api;
+  final Box<ArchivedPost> _archivedPostBox;
+
+  PostRepository(
+    this._api,
+    Box<Post> box, {
+    required Box<ArchivedPost> archivedPostBox,
+  })  : _archivedPostBox = archivedPostBox,
+        super(box);
+
+  Future<Post> fetchPost(Board board, int postId) async {
+    final archivedPost = await _archivedPostBox
+        .query(
+          ArchivedPost_.no
+              .equals(postId)
+              .and(ArchivedPost_.boardCode.equals(board.code!)),
+        )
+        .build()
+        .findFirstAsync();
+
+    List<ImageBoardPost> rawPosts;
+    if (archivedPost == null) {
+      rawPosts = await _api.getPosts(board.code!, postId.toString());
+      if (rawPosts.isEmpty) {
+        throw Exception('Post with id $postId not found');
+      }
+
+      if (rawPosts[0].archived == 1) {
+        final archivedPost = ArchivedPost();
+        archivedPost.boardCode = board.code!;
+        archivedPost.no = postId;
+        archivedPost.rawJson = jsonEncode(rawPosts);
+
+        await _archivedPostBox.putAsync(archivedPost);
+      }
+    } else {
+      rawPosts = (jsonDecode(archivedPost.rawJson!) as List<dynamic>)
+          .map(
+            (rawPost) => ImageBoardPost.fromJson(rawPost),
+          )
+          .toList();
+    }
+
+    final openingPost = _composePost(rawPosts[0], board);
+    openingPost.children.addAll(rawPosts
+        .sublist(1)
+        .map((post) => _composePost(post, board)..parent.target = openingPost));
+
+    return openingPost;
+  }
+
+  Future<List<int>> fetchArchivedPostIds(Board board) async {
+    return _api.getArchivedPostIds(board.code!);
+  }
 
   Future<List<Post>> fetchOpeningPosts(Board board) async {
     var rawPosts = await _api.getOpeningPosts(board.code!);
-    var posts = rawPosts.map((post) {
-      final entity = Post();
-      entity.no = post.id;
-      entity.title = post.title;
-      entity.content = post.content;
-      entity.author = post.author;
-      entity.createdAt = post.createdAt;
-      entity.board.target = board;
-
-      if (post.filename != null) {
-        entity.images.add(Image(
-          post.filename,
-          post.extension,
-          post.width,
-          post.height,
-          post.thumbnailWidth,
-          post.thumbnailHeight,
-          post.imageTime,
-          post.imageSize,
-          post.imageMd5,
-          'https://i.4cdn.org/${board.code}/${post.imageTime}${post.extension}',
-          'https://i.4cdn.org/${board.code}/${post.imageTime}s.jpg',
-        ));
-      }
-
-      return entity;
-    }).toList();
+    var posts = rawPosts.map((post) => _composePost(post, board)).toList();
 
     return posts;
   }
@@ -48,34 +105,10 @@ class PostRepository extends BaseRepository<Post> {
     final boardCode = parent.board.target!.code!;
     var rawPosts = await _api.getChildPosts(boardCode, parent.no.toString());
 
-    var posts = rawPosts.map((post) {
-      final entity = Post();
-      entity.no = post.id;
-      entity.title = post.title;
-      entity.content = post.content;
-      entity.author = post.author;
-      entity.createdAt = post.createdAt;
-      entity.board.target = parent.board.target;
-      entity.parent.target = parent;
-
-      if (post.filename != null) {
-        entity.images.add(Image(
-          post.filename,
-          post.extension,
-          post.width,
-          post.height,
-          post.thumbnailWidth,
-          post.thumbnailHeight,
-          post.imageTime,
-          post.imageSize,
-          post.imageMd5,
-          'https://i.4cdn.org/$boardCode/${post.imageTime}${post.extension}',
-          'https://i.4cdn.org/$boardCode/${post.imageTime}s.jpg',
-        ));
-      }
-
-      return entity;
-    }).toList();
+    var posts = rawPosts
+        .map((post) =>
+            _composePost(post, parent.board.target!)..parent.target = parent)
+        .toList();
 
     return posts;
   }

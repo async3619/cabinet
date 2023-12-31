@@ -70,6 +70,9 @@ class ImageBoardPost implements BasePost {
   @JsonKey(name: 'fsize')
   late int? imageSize;
 
+  @JsonKey(name: 'archived')
+  late int? archived;
+
   factory ImageBoardPost.fromJson(Map<String, dynamic> json) =>
       _$ImageBoardPostFromJson(json);
 
