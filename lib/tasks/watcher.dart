@@ -1,6 +1,5 @@
 import 'package:cabinet/database/repository/watcher.dart';
 import 'package:darq/darq.dart';
-import 'package:cabinet/database/filter.dart';
 import 'package:cabinet/database/image.dart';
 import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/repository/holder.dart';
@@ -57,34 +56,19 @@ class WatcherTask extends BaseTask {
      * filter out posts that match the filter
      */
     final targetBoards = _watcher.boards.toList();
-    final filters = _watcher.filters.toList();
     final filteredPosts = <Post>[];
 
     for (var board in targetBoards) {
       final openingPosts =
           await _repositoryHolder.post.fetchOpeningPosts(board);
 
-      final includingFilters =
-          filters.where((element) => element.exclude != true);
       for (var post in openingPosts) {
-        for (var filter in includingFilters) {
-          if (!_checkFilter(post, filter)) {
-            continue;
-          }
-
-          filteredPosts.add(post);
+        if (!_watcher.isPostMatch(post)) {
+          continue;
         }
+
+        filteredPosts.add(post);
       }
-    }
-
-    /**
-     * remove posts that are in filters that are set to exclude
-     */
-    final excludingFilters =
-        filters.where((element) => element.exclude == true);
-
-    for (var filter in excludingFilters) {
-      filteredPosts.removeWhere((element) => _checkFilter(element, filter));
     }
 
     /**
@@ -184,40 +168,5 @@ class WatcherTask extends BaseTask {
 
     await _repositoryHolder.watcher
         .setWatcherStatus(_watcher, WatcherStatus.idle);
-  }
-
-  bool _checkFilter(Post post, Filter filter) {
-    final shouldCheckTitle = filter.location == SearchLocation.subject ||
-        filter.location == SearchLocation.subjectContent;
-    final shouldCheckContent = filter.location == SearchLocation.content ||
-        filter.location == SearchLocation.subjectContent;
-
-    final title = post.title;
-    final content = post.content;
-    final caseSensitive = filter.caseSensitive ?? false;
-
-    if (shouldCheckTitle && title != null) {
-      if (caseSensitive && title.contains(filter.keyword!)) {
-        return true;
-      }
-
-      if (!caseSensitive &&
-          title.toLowerCase().contains(filter.keyword!.toLowerCase())) {
-        return true;
-      }
-    }
-
-    if (shouldCheckContent && content != null) {
-      if (caseSensitive && content.contains(filter.keyword!)) {
-        return true;
-      }
-
-      if (!caseSensitive &&
-          content.toLowerCase().contains(filter.keyword!.toLowerCase())) {
-        return true;
-      }
-    }
-
-    return false;
   }
 }
