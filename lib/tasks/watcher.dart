@@ -64,8 +64,10 @@ class WatcherTask extends BaseTask {
       final openingPosts =
           await _repositoryHolder.post.fetchOpeningPosts(board);
 
+      final includingFilters =
+          filters.where((element) => element.exclude != true);
       for (var post in openingPosts) {
-        for (var filter in filters) {
+        for (var filter in includingFilters) {
           if (!_checkFilter(post, filter)) {
             continue;
           }
@@ -73,6 +75,16 @@ class WatcherTask extends BaseTask {
           filteredPosts.add(post);
         }
       }
+    }
+
+    /**
+     * remove posts that are in filters that are set to exclude
+     */
+    final excludingFilters =
+        filters.where((element) => element.exclude == true);
+
+    for (var filter in excludingFilters) {
+      filteredPosts.removeWhere((element) => _checkFilter(element, filter));
     }
 
     /**
