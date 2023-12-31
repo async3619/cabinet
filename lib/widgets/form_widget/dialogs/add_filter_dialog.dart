@@ -77,6 +77,14 @@ class _AddFilterDialogState extends State<AddFilterDialog> {
                 contentPadding: EdgeInsets.zero,
               ),
             ),
+            FormBuilderCheckbox(
+              name: 'exclude',
+              title: const Text('Exclude'),
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
+              ),
+            ),
           ],
         ),
       )),
@@ -95,6 +103,7 @@ class _AddFilterDialogState extends State<AddFilterDialog> {
               filter.keyword = values['keyword'];
               filter.location = values['location'];
               filter.caseSensitive = values['caseSensitive'];
+              filter.exclude = values['exclude'];
 
               widget.onSubmit(filter);
             }

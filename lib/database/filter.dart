@@ -16,6 +16,7 @@ class Filter {
 
   String? keyword;
   bool? caseSensitive;
+  bool? exclude;
 
   final watcher = ToOne<Watcher>();
 
