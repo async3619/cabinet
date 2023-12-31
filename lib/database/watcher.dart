@@ -15,6 +15,7 @@ class Watcher implements BaseEntity {
   String? name;
   DateTime? lastRun;
   int? crawlingInterval;
+  bool? archived;
 
   @Transient()
   WatcherStatus? currentStatus;

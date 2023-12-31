@@ -53,6 +53,7 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
           widget.watcher!.boards.map((board) => board.code!).toList();
       initialValues['filters'] = widget.watcher!.filters.toList();
       initialValues['crawlingInterval'] = widget.watcher!.crawlingInterval;
+      initialValues['archived'] = widget.watcher!.archived;
     }
   }
 
@@ -78,7 +79,11 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
           getOptions: () => _boards.map((board) {
             return SelectOption(value: board.code!, label: board.name);
           }).toList(),
-        )
+        ),
+        SwitchFormFieldItem(
+            name: 'archived',
+            label: 'Check Archived',
+            description: 'Enable if you want to check archived post')
       ]),
       FormFieldGroup(name: 'Filters', fields: [
         FilterFormFieldItem(
@@ -119,6 +124,7 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
       List<String> boardCodes = value['boards'].cast<String>();
       List<Filter> filters = value['filters'];
       int crawlingInterval = value['crawlingInterval'];
+      bool archived = value['archived'] ?? false;
 
       var selectedBoards =
           boards.where((board) => boardCodes.contains(board.code)).toList();
@@ -128,9 +134,11 @@ class _CreateWatcherRouteState extends State<CreateWatcherRoute> {
             name: name,
             boards: selectedBoards,
             filters: filters,
-            crawlingInterval: crawlingInterval);
+            crawlingInterval: crawlingInterval,
+            archived: archived);
       } else {
-        holder.watcher.create(name, selectedBoards, filters, crawlingInterval);
+        holder.watcher
+            .create(name, selectedBoards, filters, crawlingInterval, archived);
       }
     })()
         .then((_) {
