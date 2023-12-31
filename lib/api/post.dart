@@ -7,6 +7,6 @@ abstract class BasePost {
 
   @override
   String toString() {
-    return 'Post(id: $id, title: $title, content: $content, author: $author, createdAt: $createdAt)';
+    return "Post(id: $id, title: $title, content: $content, author: $author, createdAt: $createdAt)";
   }
 }

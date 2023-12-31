@@ -14,7 +14,6 @@ class Watcher implements BaseEntity {
 
   String? name;
   DateTime? lastRun;
-  int? crawlingInterval;
 
   @Transient()
   WatcherStatus? currentStatus;
@@ -31,7 +30,7 @@ class Watcher implements BaseEntity {
 
   final boards = ToMany<Board>();
 
-  @Backlink('watcher')
+  @Backlink("watcher")
   final filters = ToMany<Filter>();
 
   bool isPostMatch(Post post) {

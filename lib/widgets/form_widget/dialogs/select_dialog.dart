@@ -1,39 +1,41 @@
 import 'package:cabinet/widgets/form_widget/form_field_item.dart';
 import 'package:flutter/material.dart';
 
-class SelectDialog<T> extends StatefulWidget {
+class SelectDialog extends StatefulWidget {
   final String title;
-  final List<SelectOption<T>> options;
-  final void Function(List<T>) onSubmit;
+  final Future<List<SelectOption>> Function() getOptions;
+  final void Function(List<String>) onSubmit;
   final bool multiple;
 
-  final List<T>? initialSelection;
+  final List<String>? initialSelection;
 
   const SelectDialog({
     Key? key,
     required this.title,
-    required this.options,
+    required this.getOptions,
     required this.onSubmit,
     this.multiple = false,
     this.initialSelection,
   }) : super(key: key);
 
   @override
-  State<SelectDialog<T>> createState() => _SelectDialogState<T>();
+  State<SelectDialog> createState() => _SelectDialogState();
 }
 
-class _SelectDialogState<T> extends State<SelectDialog<T>> {
-  List<T> selectedOptions = [];
+class _SelectDialogState extends State<SelectDialog> {
+  Future<List<SelectOption>> optionsFuture = Future.value([]);
+  List<String> selectedOptions = [];
 
   @override
   void initState() {
     super.initState();
+    optionsFuture = widget.getOptions();
     selectedOptions = widget.initialSelection ?? [];
   }
 
   Widget buildOption(SelectOption option) {
     if (!widget.multiple) {
-      return RadioListTile<T>(
+      return RadioListTile<String>(
         dense: true,
         title: Text(option.label),
         value: option.value,
@@ -70,12 +72,28 @@ class _SelectDialogState<T> extends State<SelectDialog<T>> {
     return AlertDialog(
       title: Text(widget.title),
       contentPadding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-      content: SingleChildScrollView(
-        child: Column(
-          children: [
-            for (var option in widget.options) buildOption(option),
-          ],
-        ),
+      content: FutureBuilder<List<SelectOption>>(
+        future: optionsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  for (var option in snapshot.data!) buildOption(option),
+                ],
+              ),
+            );
+          }
+
+          return const SingleChildScrollView(
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          );
+        },
       ),
       actions: [
         TextButton(

@@ -17,7 +17,7 @@ class ThreadRoute extends StatefulWidget {
 class _ThreadRouteState extends State<ThreadRoute> {
   handleOpenAlbum() {
     var title = widget.post.title;
-    title ??= 'Thread #${widget.post.no!}';
+    title ??= "Thread #${widget.post.no!}";
 
     final allPosts = [widget.post, ...widget.post.children];
     final images =
@@ -52,7 +52,7 @@ class _ThreadRouteState extends State<ThreadRoute> {
   @override
   Widget build(BuildContext context) {
     var title = widget.post.title;
-    title ??= 'Thread #${widget.post.no!}';
+    title ??= "Thread #${widget.post.no!}";
 
     var posts = [widget.post, ...widget.post.children];
 

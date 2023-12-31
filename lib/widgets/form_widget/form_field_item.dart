@@ -24,8 +24,8 @@ class TextFormFieldItem extends FormFieldItem {
         );
 }
 
-class SelectOption<T> {
-  final T value;
+class SelectOption {
+  final String value;
   final String label;
 
   SelectOption({
@@ -34,52 +34,20 @@ class SelectOption<T> {
   });
 }
 
-abstract class SelectFormFieldItem<T> extends FormFieldItem {
-  final List<SelectOption<T>> Function() getOptions;
+class SelectFormFieldItem extends FormFieldItem {
+  final Future<List<SelectOption>> Function() getOptions;
+  final bool? multiple;
 
   SelectFormFieldItem({
     required String name,
     required String label,
     FormFieldValidator? validator,
     required this.getOptions,
+    this.multiple,
   }) : super(
           name: name,
           label: label,
           validator: validator,
-        );
-}
-
-class SingularSelectFormFieldItem<T> extends SelectFormFieldItem<T> {
-  final String Function(T?)? formatValue;
-
-  SingularSelectFormFieldItem({
-    required String name,
-    required String label,
-    FormFieldValidator? validator,
-    required List<SelectOption<T>> Function() getOptions,
-    this.formatValue,
-  }) : super(
-          name: name,
-          label: label,
-          validator: validator,
-          getOptions: getOptions,
-        );
-}
-
-class MultipleSelectFormFieldItem<T> extends SelectFormFieldItem<T> {
-  final String Function(List<T>)? formatValue;
-
-  MultipleSelectFormFieldItem({
-    required String name,
-    required String label,
-    FormFieldValidator? validator,
-    required List<SelectOption<T>> Function() getOptions,
-    this.formatValue,
-  }) : super(
-          name: name,
-          label: label,
-          validator: validator,
-          getOptions: getOptions,
         );
 }
 

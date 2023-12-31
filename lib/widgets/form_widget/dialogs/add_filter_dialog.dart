@@ -70,8 +70,8 @@ class _AddFilterDialogState extends State<AddFilterDialog> {
             ),
             const SizedBox(height: 8),
             FormBuilderCheckbox(
-              name: 'caseSensitive',
-              title: const Text('Case Sensitive'),
+              name: "caseSensitive",
+              title: const Text("Case Sensitive"),
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,

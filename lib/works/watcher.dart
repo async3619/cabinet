@@ -17,19 +17,12 @@ class WatcherWork extends BaseWork {
     final watchers = await repositoryHolder.watcher.findAll();
 
     final notificationId = await NotificationManager().createNotification(
-        title: 'Cabinet Watcher',
-        body: 'Watcher Work is running',
+        title: "Cabinet Watcher",
+        body: "Watcher Work is running",
         locked: true);
 
     for (final watcher in watchers) {
       if (watcher.status == WatcherStatus.running.index) {
-        continue;
-      }
-
-      final currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
-      final lastRunTimeStamp = watcher.lastRun?.millisecondsSinceEpoch ?? 0;
-      final crawlingInterval = (watcher.crawlingInterval ?? 0) * 1000 * 60;
-      if (currentTimeStamp - lastRunTimeStamp < crawlingInterval) {
         continue;
       }
 
@@ -40,7 +33,7 @@ class WatcherWork extends BaseWork {
 
       await NotificationManager().updateNotification(
           id: notificationId,
-          title: 'Cabinet Watcher',
+          title: "Cabinet Watcher",
           body: "Watcher #${watcher.id} '${watcher.name}' is running",
           locked: true);
 

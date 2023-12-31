@@ -73,7 +73,7 @@ class _WatcherCardState extends State<WatcherCard> {
                         onTap: () {
                           widget.onEdit(widget.watcher);
                         },
-                        child: const Text('Edit'),
+                        child: const Text("Edit"),
                       ),
                       PopupMenuItem(
                         enabled:
@@ -81,7 +81,7 @@ class _WatcherCardState extends State<WatcherCard> {
                         onTap: () {
                           widget.onDelete(widget.watcher);
                         },
-                        child: const Text('Delete'),
+                        child: const Text("Delete"),
                       ),
                       const PopupMenuDivider(),
                       PopupMenuItem(
@@ -90,7 +90,7 @@ class _WatcherCardState extends State<WatcherCard> {
                         onTap: () {
                           widget.onForceRun(widget.watcher);
                         },
-                        child: const Text('Force Run'),
+                        child: const Text("Force Run"),
                       ),
                     ]),
           ),
@@ -104,18 +104,18 @@ class _WatcherCardState extends State<WatcherCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Watcher #${widget.watcher.id}',
+                            "Watcher #${widget.watcher.id}",
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(height: 16),
                         ]),
                   ),
-                  buildItem('Name', widget.watcher.name!, null, 6),
+                  buildItem("Name", widget.watcher.name!, null, 6),
                   buildItem(
-                      'Boards',
+                      "Boards",
                       widget.watcher.boards
-                          .map((element) => '/${element.code}/')
-                          .join(', '),
+                          .map((element) => "/${element.code}/")
+                          .join(", "),
                       null,
                       6),
                   ResponsiveGridCol(
@@ -125,10 +125,10 @@ class _WatcherCardState extends State<WatcherCard> {
                     ),
                   ),
                   buildItem(
-                    'Status',
+                    "Status",
                     widget.watcher.currentStatus == WatcherStatus.idle
-                        ? 'Idle'
-                        : 'Running',
+                        ? "Idle"
+                        : "Running",
                     Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color:
                               widget.watcher.currentStatus == WatcherStatus.idle
@@ -138,9 +138,9 @@ class _WatcherCardState extends State<WatcherCard> {
                     6,
                   ),
                   buildItem(
-                    'Last Run',
+                    "Last Run",
                     widget.watcher.lastRun == null
-                        ? '(never)'
+                        ? "(never)"
                         : DateFormat('yyyy-MM-dd HH:mm:ss')
                             .format(widget.watcher.lastRun!),
                     null,

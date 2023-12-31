@@ -26,9 +26,9 @@ class WorkManager {
     Workmanager().initialize(callbackDispatcher);
     Workmanager().cancelAll();
 
-    Workmanager().registerPeriodicTask('worker-tasks', 'worker-tasks',
+    Workmanager().registerPeriodicTask("worker-tasks", "worker-tasks",
         inputData: {
-          'reference':
+          "reference":
               base64Encode(objectBox.store.reference.buffer.asUint8List()),
         },
         frequency: const Duration(minutes: 15),

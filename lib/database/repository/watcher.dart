@@ -14,14 +14,13 @@ enum WatcherStatus {
 class WatcherRepository extends BaseRepository<Watcher> {
   WatcherRepository(Box<Watcher> box) : super(box);
 
-  Future<Watcher> create(String name, List<Board> boards, List<Filter> filters,
-      int crawlingInterval) async {
+  Future<Watcher> create(
+      String name, List<Board> boards, List<Filter> filters) async {
     final entity = Watcher();
     entity.name = name;
     entity.boards.addAll(boards);
     entity.filters.addAll(filters);
     entity.currentStatus = WatcherStatus.idle;
-    entity.crawlingInterval = crawlingInterval;
 
     box.put(entity);
 
@@ -29,10 +28,7 @@ class WatcherRepository extends BaseRepository<Watcher> {
   }
 
   Future<Watcher> update(int id,
-      {String? name,
-      List<Board>? boards,
-      List<Filter>? filters,
-      int? crawlingInterval}) async {
+      {String? name, List<Board>? boards, List<Filter>? filters}) async {
     final entity = box.get(id);
     if (entity == null) {
       throw Exception('Watcher with id $id not found');
@@ -40,10 +36,6 @@ class WatcherRepository extends BaseRepository<Watcher> {
 
     if (name != null) {
       entity.name = name;
-    }
-
-    if (crawlingInterval != null) {
-      entity.crawlingInterval = crawlingInterval;
     }
 
     if (boards != null) {

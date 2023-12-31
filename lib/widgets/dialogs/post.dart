@@ -83,7 +83,7 @@ class _PostDialogState extends State<PostDialog> {
                                   Icon(Icons.chevron_left),
                                   SizedBox(width: 8),
                                   Text(
-                                    'Back',
+                                    "Back",
                                   )
                                 ],
                               ),
@@ -105,7 +105,7 @@ class _PostDialogState extends State<PostDialog> {
                                   Icon(Icons.close),
                                   SizedBox(width: 8),
                                   Text(
-                                    'Close',
+                                    "Close",
                                   )
                                 ],
                               ),

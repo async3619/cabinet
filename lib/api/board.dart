@@ -6,6 +6,6 @@ abstract class BaseBoard {
 
   @override
   String toString() {
-    return 'Board(id: $id, title: $title)';
+    return "Board(id: $id, title: $title)";
   }
 }

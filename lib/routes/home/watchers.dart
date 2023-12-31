@@ -89,7 +89,7 @@ class _WatchersTabState extends State<WatchersTab> {
       children: [
         AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: const Text('Watchers'),
+          title: const Text("Watchers"),
         ),
         Expanded(
           child: FutureBuilder<List<Watcher>>(
@@ -113,7 +113,7 @@ class _WatchersTabState extends State<WatchersTab> {
                   },
                 );
               } else if (snapshot.hasError) {
-                return Text('${snapshot.error}');
+                return Text("${snapshot.error}");
               }
 
               return const Center(child: CircularProgressIndicator());

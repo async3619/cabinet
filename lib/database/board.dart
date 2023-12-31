@@ -20,5 +20,5 @@ class Board implements BaseEntity {
   final posts = ToMany<Post>();
 
   @Transient()
-  String get name => '/$code/ - $title';
+  String get name => "/$code/ - $title";
 }

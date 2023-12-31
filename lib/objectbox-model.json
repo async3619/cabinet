@@ -77,7 +77,7 @@
     },
     {
       "id": "4:3258664332393499857",
-      "lastPropertyId": "6:582620610792620956",
+      "lastPropertyId": "5:8292578406987926769",
       "name": "Watcher",
       "properties": [
         {
@@ -100,11 +100,6 @@
           "id": "5:8292578406987926769",
           "name": "lastRun",
           "type": 10
-        },
-        {
-          "id": "6:582620610792620956",
-          "name": "crawlingInterval",
-          "type": 6
         }
       ],
       "relations": [
