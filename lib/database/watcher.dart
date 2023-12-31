@@ -35,6 +35,16 @@ class Watcher implements BaseEntity {
   final filters = ToMany<Filter>();
 
   bool isPostMatch(Post post) {
-    return filters.any((element) => element.isPostMatch(post));
+    final excludingFilters =
+        filters.where((element) => element.exclude == true);
+
+    final includingFilters =
+        filters.where((element) => element.exclude != true);
+
+    if (excludingFilters.any((element) => element.isPostMatch(post))) {
+      return false;
+    }
+
+    return includingFilters.any((element) => element.isPostMatch(post));
   }
 }
