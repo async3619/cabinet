@@ -67,7 +67,14 @@ class _FilterListInputState extends State<FilterListInput> {
               renderItem(field, value[i], i, value),
             ListTile(
               onTap: () => handleAddFilterClick(context, field),
-              title: const Text("Add a new filter"),
+              title: Text(
+                field.errorText ?? "Add a new filter",
+                style: TextStyle(
+                  color: field.errorText != null
+                      ? Theme.of(context).colorScheme.error
+                      : null,
+                ),
+              ),
               leading: const Icon(Icons.add),
             )
           ],
