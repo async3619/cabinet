@@ -1,41 +1,39 @@
 import 'package:cabinet/widgets/form_widget/form_field_item.dart';
 import 'package:flutter/material.dart';
 
-class SelectDialog extends StatefulWidget {
+class SelectDialog<T> extends StatefulWidget {
   final String title;
-  final Future<List<SelectOption>> Function() getOptions;
-  final void Function(List<String>) onSubmit;
+  final List<SelectOption<T>> options;
+  final void Function(List<T>) onSubmit;
   final bool multiple;
 
-  final List<String>? initialSelection;
+  final List<T>? initialSelection;
 
   const SelectDialog({
     Key? key,
     required this.title,
-    required this.getOptions,
+    required this.options,
     required this.onSubmit,
     this.multiple = false,
     this.initialSelection,
   }) : super(key: key);
 
   @override
-  State<SelectDialog> createState() => _SelectDialogState();
+  State<SelectDialog<T>> createState() => _SelectDialogState<T>();
 }
 
-class _SelectDialogState extends State<SelectDialog> {
-  Future<List<SelectOption>> optionsFuture = Future.value([]);
-  List<String> selectedOptions = [];
+class _SelectDialogState<T> extends State<SelectDialog<T>> {
+  List<T> selectedOptions = [];
 
   @override
   void initState() {
     super.initState();
-    optionsFuture = widget.getOptions();
     selectedOptions = widget.initialSelection ?? [];
   }
 
   Widget buildOption(SelectOption option) {
     if (!widget.multiple) {
-      return RadioListTile<String>(
+      return RadioListTile<T>(
         dense: true,
         title: Text(option.label),
         value: option.value,
@@ -72,28 +70,12 @@ class _SelectDialogState extends State<SelectDialog> {
     return AlertDialog(
       title: Text(widget.title),
       contentPadding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-      content: FutureBuilder<List<SelectOption>>(
-        future: optionsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  for (var option in snapshot.data!) buildOption(option),
-                ],
-              ),
-            );
-          }
-
-          return const SingleChildScrollView(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(),
-              ),
-            ),
-          );
-        },
+      content: SingleChildScrollView(
+        child: Column(
+          children: [
+            for (var option in widget.options) buildOption(option),
+          ],
+        ),
       ),
       actions: [
         TextButton(
