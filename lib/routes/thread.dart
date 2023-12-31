@@ -4,6 +4,7 @@ import 'package:cabinet/widgets/modal/album.dart';
 import 'package:cabinet/widgets/modal/media_viewer.dart';
 import 'package:cabinet/widgets/post_view.dart';
 import 'package:flutter/material.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 class ThreadRoute extends StatefulWidget {
   const ThreadRoute({Key? key, required this.post}) : super(key: key);
@@ -15,6 +16,20 @@ class ThreadRoute extends StatefulWidget {
 }
 
 class _ThreadRouteState extends State<ThreadRoute> {
+  final AutoScrollController _controller = AutoScrollController();
+
+  handleMediaIndexChanged(int mediaIndex) {
+    final allPosts = [widget.post, ...widget.post.children];
+    final imagePostIndex = <int>[];
+    for (int i = 0; i < allPosts.length; i++) {
+      final post = allPosts[i];
+      imagePostIndex.addAll(post.images.map((_) => i));
+    }
+
+    _controller.scrollToIndex(imagePostIndex[mediaIndex],
+        preferPosition: AutoScrollPosition.begin);
+  }
+
   handleOpenAlbum() {
     var title = widget.post.title;
     title ??= 'Thread #${widget.post.no!}';
@@ -35,8 +50,10 @@ class _ThreadRouteState extends State<ThreadRoute> {
         .indexWhere((element) => element.id == post.images.firstOrNull?.id);
     if (index == -1) return;
 
-    Navigator.of(context)
-        .push(MediaViewerModal(images: images, currentIndex: index));
+    Navigator.of(context).push(MediaViewerModal(
+        images: images,
+        currentIndex: index,
+        onIndexChanged: handleMediaIndexChanged));
   }
 
   handleRequestShowPost(int postId) {
@@ -68,19 +85,25 @@ class _ThreadRouteState extends State<ThreadRoute> {
         ],
       ),
       body: ListView.builder(
+        controller: _controller,
         itemCount: posts.length,
         itemBuilder: (context, index) {
-          return Column(
-            children: [
-              PostView(
-                post: posts[index],
-                onShowMedia: handleShowMedia,
-                onRequestShowPost: handleRequestShowPost,
-              ),
-              const Divider(
-                height: 1,
-              ),
-            ],
+          return AutoScrollTag(
+            key: ValueKey(index),
+            controller: _controller,
+            index: index,
+            child: Column(
+              children: [
+                PostView(
+                  post: posts[index],
+                  onShowMedia: handleShowMedia,
+                  onRequestShowPost: handleRequestShowPost,
+                ),
+                const Divider(
+                  height: 1,
+                ),
+              ],
+            ),
           );
         },
       ),

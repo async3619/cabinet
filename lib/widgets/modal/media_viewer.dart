@@ -8,12 +8,14 @@ class MediaViewerModal extends ModalRoute {
   late final PageController pageController;
   late VideoPlayerController? videoPlayerController;
   late bool isVideoInitialized = false;
+  late final Function(int)? onIndexChanged;
 
   int currentIndex = 0;
 
   MediaViewerModal({
     required this.images,
     this.currentIndex = 0,
+    this.onIndexChanged,
   }) : super() {
     pageController = PageController(initialPage: currentIndex);
   }
@@ -40,6 +42,10 @@ class MediaViewerModal extends ModalRoute {
     setState(() {
       currentIndex = index;
     });
+
+    if (onIndexChanged != null) {
+      onIndexChanged!(index);
+    }
 
     changedExternalState();
   }
