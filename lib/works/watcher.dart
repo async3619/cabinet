@@ -28,8 +28,7 @@ class WatcherWork extends BaseWork {
 
       final currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
       final lastRunTimeStamp = watcher.lastRun?.millisecondsSinceEpoch ?? 0;
-      final crawlingInterval = watcher.crawlingInterval ?? 0;
-
+      final crawlingInterval = (watcher.crawlingInterval ?? 0) * 1000 * 60;
       if (currentTimeStamp - lastRunTimeStamp < crawlingInterval) {
         continue;
       }
