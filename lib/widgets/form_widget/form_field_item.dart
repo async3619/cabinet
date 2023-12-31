@@ -67,7 +67,7 @@ class SingularSelectFormFieldItem<T> extends SelectFormFieldItem<T> {
 }
 
 class MultipleSelectFormFieldItem<T> extends SelectFormFieldItem<T> {
-  final String Function(List<T>)? formatValue;
+  final String Function(List<dynamic>)? formatValue;
 
   MultipleSelectFormFieldItem({
     required String name,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cabinet/database/object_box.dart';
+import 'package:cabinet/works/clean_up.dart';
 import 'package:cabinet/works/image.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -19,6 +20,7 @@ class WorkManager {
 
   final _works = <BaseWork>[
     WatcherWork(),
+    CleanUpWork(),
     ImageWork(),
   ];
 

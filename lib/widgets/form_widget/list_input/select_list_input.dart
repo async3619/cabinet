@@ -41,7 +41,7 @@ class _SelectListInputState<T> extends State<SelectListInput<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return FormBuilderField<dynamic>(
+    return FormBuilderField<T>(
       name: widget.field.name,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: widget.field.validator,
@@ -51,10 +51,11 @@ class _SelectListInputState<T> extends State<SelectListInput<T>> {
         final widgetField = widget.field;
         final options = widget.field.getOptions();
         dynamic value = field.value;
-        if (value is List<T> && widgetField is MultipleSelectFormFieldItem<T>) {
+        if (value is List<T>? &&
+            widgetField is MultipleSelectFormFieldItem<T>) {
           final formatValue = (widgetField as dynamic).formatValue;
 
-          if (value.isEmpty) {
+          if (value == null || value.isEmpty) {
             valueLabel = 'Nothing selected';
           } else if (formatValue != null) {
             valueLabel = formatValue!(value);
