@@ -40,7 +40,7 @@
     },
     {
       "id": "3:3837527181350947478",
-      "lastPropertyId": "5:4966943925093952897",
+      "lastPropertyId": "6:1481435091190173634",
       "name": "Filter",
       "properties": [
         {
@@ -71,6 +71,11 @@
           "flags": 520,
           "indexId": "1:3373980394132309307",
           "relationTarget": "Watcher"
+        },
+        {
+          "id": "6:1481435091190173634",
+          "name": "exclude",
+          "type": 1
         }
       ],
       "relations": []

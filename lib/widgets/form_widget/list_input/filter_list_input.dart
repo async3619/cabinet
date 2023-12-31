@@ -30,16 +30,43 @@ class _FilterListInputState extends State<FilterListInput> {
             ));
   }
 
-  Widget renderItem(FormFieldState<List<Filter>> field, Filter filter,
-      int index, List<Filter> value) {
-    final keyword = filter.keyword;
-    final location = filter.location?.name ?? '(not set)';
-    final caseSensitive = filter.caseSensitive ?? false;
+  String buildFilterText(Filter filter) {
+    final tokens = <String>[filter.keyword!];
 
+    if (filter.location != null) {
+      String location;
+      switch (filter.location!) {
+        case SearchLocation.content:
+          location = 'Content';
+          break;
+
+        case SearchLocation.subject:
+          location = 'Subject';
+          break;
+
+        case SearchLocation.subjectContent:
+          location = 'Subject or Content';
+          break;
+      }
+
+      tokens.add(location);
+    }
+
+    tokens.add(
+        filter.caseSensitive == true ? 'Case Sensitive' : 'Case Insensitive');
+
+    if (filter.exclude == true) {
+      tokens.add('Exclude');
+    }
+
+    return tokens.join(', ');
+  }
+
+  Widget buildItem(FormFieldState<List<Filter>> field, Filter filter, int index,
+      List<Filter> value) {
     return ListTile(
       title: Text('Filter ${index + 1}'),
-      subtitle: Text(
-          "$keyword, $location, ${caseSensitive ? 'Case Sensitive' : 'Case Insensitive'}"),
+      subtitle: Text(buildFilterText(filter)),
       trailing: IconButton(
         splashRadius: 16,
         iconSize: 20,
@@ -64,7 +91,7 @@ class _FilterListInputState extends State<FilterListInput> {
         return Column(
           children: [
             for (var i = 0; i < value.length; i++)
-              renderItem(field, value[i], i, value),
+              buildItem(field, value[i], i, value),
             ListTile(
               onTap: () => handleAddFilterClick(context, field),
               title: Text(

@@ -1,10 +1,12 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
+import 'dart:io';
+
 import 'package:cabinet/api/image_board/api.dart';
 import 'package:cabinet/database/object_box.dart';
 import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/notifications/manager.dart';
 import 'package:cabinet/system/file.dart';
 import 'package:cabinet/works/base.dart';
+import 'package:p_limit/p_limit.dart';
 
 class ImageWork extends BaseWork {
   ImageWork() : super(_doWork);
@@ -18,33 +20,32 @@ class ImageWork extends BaseWork {
     allImages = allImages.where((element) => element.path == null).toList();
 
     if (allImages.isNotEmpty) {
+      var remaining = allImages.length;
       final imageNotificationId = await NotificationManager()
           .createNotification(
               title: 'Cabinet Watcher',
-              body: 'Downloading all ${allImages.length} images...',
+              body: 'Downloading $remaining images...',
+              locked: true);
+
+      final coreCount = Platform.numberOfProcessors;
+      final limit = PLimit<void>(coreCount);
+      final input = allImages.map((image) => limit(() async {
+            final oldImage = await repositoryHolder.image.findById(image.id);
+            if (oldImage == null) return;
+
+            image = await FileSystem().saveImage(image);
+            await repositoryHolder.image.save(image);
+
+            remaining--;
+            await NotificationManager().updateNotification(
+              id: imageNotificationId,
+              title: 'Cabinet Watcher',
+              body: 'Downloading $remaining images...',
               locked: true,
-              category: NotificationCategory.Progress,
-              progress: 0);
+            );
+          }));
 
-      var index = 0;
-      for (var image in allImages) {
-        await NotificationManager().updateNotification(
-            id: imageNotificationId,
-            title: 'Cabinet Watcher',
-            body: 'Downloading image ${index + 1} of ${allImages.length}...',
-            locked: true,
-            category: NotificationCategory.Progress,
-            layout: NotificationLayout.ProgressBar,
-            progress: ((index / allImages.length) * 100).toInt());
-
-        final oldImage = await repositoryHolder.image.findById(image.id);
-        if (oldImage == null) continue;
-
-        image = await FileSystem().saveImage(image);
-        await repositoryHolder.image.save(image);
-
-        index++;
-      }
+      await Future.wait(input);
 
       await NotificationManager().dismissNotification(imageNotificationId);
     }

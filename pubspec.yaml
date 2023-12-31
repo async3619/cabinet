@@ -35,6 +35,7 @@ dependencies:
   collection: ^1.18.0
   html: ^0.15.4
   scroll_to_index: ^3.0.1
+  p_limit: ^1.0.3
 
 dev_dependencies:
   flutter_test:
