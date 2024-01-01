@@ -23,5 +23,5 @@ class ExecutionLog implements BaseEntity {
   int? postCount;
   int? watcherCount;
 
-  get executionTime => finishedAt! - startedAt!;
+  int get executionTime => finishedAt! - startedAt!;
 }
