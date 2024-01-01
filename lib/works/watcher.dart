@@ -9,8 +9,8 @@ import 'package:cabinet/works/base.dart';
 class WatcherWork extends BaseWork {
   WatcherWork() : super(_doWork);
 
-  static Future<void> _doWork(
-      ObjectBox objectBox, bool isNotificationGranted) async {
+  static Future<void> _doWork(ObjectBox objectBox, bool isNotificationGranted,
+      WorkDataCallback onData) async {
     final repositoryHolder = RepositoryHolder(
         objectBox, ImageBoardApi(baseUrl: 'https://a.4cdn.org'));
 
@@ -36,6 +36,9 @@ class WatcherWork extends BaseWork {
       final task = WatcherTask(
         repositoryHolder: repositoryHolder,
         watcher: watcher,
+        onNewData: (newPosts, newImages) {
+          onData(newImages.length, newPosts.length);
+        },
       );
 
       await NotificationManager().updateNotification(

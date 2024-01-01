@@ -11,8 +11,8 @@ import 'package:p_limit/p_limit.dart';
 class ImageWork extends BaseWork {
   ImageWork() : super(_doWork);
 
-  static Future<void> _doWork(
-      ObjectBox objectBox, bool isNotificationGranted) async {
+  static Future<void> _doWork(ObjectBox objectBox, bool isNotificationGranted,
+      WorkDataCallback onDAta) async {
     final repositoryHolder = RepositoryHolder(
         objectBox, ImageBoardApi(baseUrl: 'https://a.4cdn.org'));
 

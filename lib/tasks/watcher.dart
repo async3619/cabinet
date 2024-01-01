@@ -11,9 +11,13 @@ import 'package:p_limit/p_limit.dart';
 
 import 'base.dart';
 
+typedef NewDataCallback = void Function(
+    List<Post> newPosts, List<Image> newImages);
+
 class WatcherTask extends BaseTask {
   final RepositoryHolder _repositoryHolder;
   final Watcher _watcher;
+  final NewDataCallback? onNewData;
 
   WatcherTask({
     required RepositoryHolder repositoryHolder,
@@ -22,6 +26,7 @@ class WatcherTask extends BaseTask {
     Function()? onStart,
     Function()? onComplete,
     Function(dynamic)? onError,
+    this.onNewData,
   })  : _repositoryHolder = repositoryHolder,
         _watcher = watcher,
         super(
@@ -104,12 +109,15 @@ class WatcherTask extends BaseTask {
      */
     var images = <Image>[];
     var postsList = <List<Post>>[];
+    final newPosts = <Post>[];
     for (var post in filteredPosts) {
       final childPosts = await _repositoryHolder.post.fetchChildPosts(post);
       final posts = [post, ...childPosts].map((e) {
         final cachedPost = postMap['${e.board.target?.code}-${e.no}'];
         if (cachedPost != null) {
           e.id = cachedPost.id;
+        } else {
+          newPosts.add(e);
         }
 
         return e;
@@ -123,6 +131,11 @@ class WatcherTask extends BaseTask {
         .distinct((element) => element.md5!)
         .where((element) => !imageMap.containsKey(element.md5!))
         .toList();
+
+    final newImages = List<Image>.from(images);
+    if (onNewData != null) {
+      onNewData!(newPosts, newImages);
+    }
 
     await _repositoryHolder.image.box.putManyAsync(images).then((ids) {
       for (var i = 0; i < images.length; i++) {
