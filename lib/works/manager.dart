@@ -60,7 +60,7 @@ class WorkManager {
     final repositoryHolder = RepositoryHolder(
         objectBox, ImageBoardApi(baseUrl: 'https://a.4cdn.org'));
 
-    int watcherCount = await repositoryHolder.watcher.count();
+    int watcherCount = repositoryHolder.watcher.count();
 
     repositoryHolder.executionLog.create(
         startedAt, finishedAt, totalImageCount, totalPostCount, watcherCount);
