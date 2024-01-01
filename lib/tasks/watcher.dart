@@ -69,18 +69,11 @@ class WatcherTask extends BaseTask {
         final archivedPostIds =
             await _repositoryHolder.post.fetchArchivedPostIds(board);
 
-        final limit = PLimit<void>(Platform.numberOfProcessors * 2);
-        final input = archivedPostIds.map((postId) => limit(() async {
-              try {
-                final post =
-                    await _repositoryHolder.post.fetchPost(board, postId);
-                if (_watcher.isPostMatch(post)) {
-                  filteredPosts.add(post);
-                }
-              } catch (_) {}
-            }));
+        final limit = PLimit<Post>(Platform.numberOfProcessors * 2);
+        final input = archivedPostIds.map((postId) =>
+            limit(() => _repositoryHolder.post.fetchPost(board, postId)));
 
-        await Future.wait(input);
+        openingPosts.addAll(await Future.wait(input));
       }
 
       for (var post in openingPosts) {
@@ -112,14 +105,7 @@ class WatcherTask extends BaseTask {
     var images = <Image>[];
     var postsList = <List<Post>>[];
     for (var post in filteredPosts) {
-      List<Post> childPosts;
-
-      if (post.children.isEmpty) {
-        childPosts = await _repositoryHolder.post.fetchChildPosts(post);
-      } else {
-        childPosts = post.children;
-      }
-
+      final childPosts = await _repositoryHolder.post.fetchChildPosts(post);
       final posts = [post, ...childPosts].map((e) {
         final cachedPost = postMap['${e.board.target?.code}-${e.no}'];
         if (cachedPost != null) {
@@ -132,6 +118,8 @@ class WatcherTask extends BaseTask {
       postsList.add(posts);
       images.addAll(posts.expand((element) => element.images));
     }
+
+    print(postsList.length);
 
     images = images
         .distinct((element) => element.md5!)

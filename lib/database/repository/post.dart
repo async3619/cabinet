@@ -82,12 +82,7 @@ class PostRepository extends BaseRepository<Post> {
           .toList();
     }
 
-    final openingPost = _composePost(rawPosts[0], board);
-    openingPost.children.addAll(rawPosts
-        .sublist(1)
-        .map((post) => _composePost(post, board)..parent.target = openingPost));
-
-    return openingPost;
+    return _composePost(rawPosts[0], board);
   }
 
   Future<List<int>> fetchArchivedPostIds(Board board) async {
@@ -103,7 +98,26 @@ class PostRepository extends BaseRepository<Post> {
 
   Future<List<Post>> fetchChildPosts(Post parent) async {
     final boardCode = parent.board.target!.code!;
-    var rawPosts = await _api.getChildPosts(boardCode, parent.no.toString());
+    final archivedPost = await _archivedPostBox
+        .query(
+          ArchivedPost_.no
+              .equals(parent.no!)
+              .and(ArchivedPost_.boardCode.equals(boardCode)),
+        )
+        .build()
+        .findFirstAsync();
+
+    List<ImageBoardPost> rawPosts;
+    if (archivedPost == null) {
+      rawPosts = await _api.getChildPosts(boardCode, parent.no.toString());
+    } else {
+      rawPosts = (jsonDecode(archivedPost.rawJson!) as List<dynamic>)
+          .map(
+            (rawPost) => ImageBoardPost.fromJson(rawPost),
+          )
+          .toList()
+          .sublist(1);
+    }
 
     var posts = rawPosts
         .map((post) =>
