@@ -56,6 +56,8 @@ jobs:
 
       - name: Semantic Release
         run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - uses: sarisia/actions-status-discord@v1
         if: always()
