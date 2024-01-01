@@ -67,4 +67,31 @@ class FileSystem {
 
     return image;
   }
+
+  Future<void> saveImageToGallery(Image image) async {
+    final directory = await getExternalStorageDirectory();
+    if (directory == null) {
+      throw Exception('Failed to get external storage directory');
+    }
+
+    final imagePath = '${directory.path}/cabinet';
+    final imageDirectory = Directory(imagePath);
+    if (!imageDirectory.existsSync()) {
+      imageDirectory.createSync(recursive: true);
+    }
+
+    final uuid = this.uuid.v4();
+    final imageFileName = '$uuid.${image.extension}';
+    final imageFile = File('$imagePath/$imageFileName');
+
+    if (!imageFile.existsSync()) {
+      imageFile.createSync(recursive: true);
+    }
+
+    final imageBuffer = await http
+        .get(Uri.parse(image.url!))
+        .then((response) => response.bodyBytes);
+
+    await imageFile.writeAsBytes(imageBuffer);
+  }
 }
