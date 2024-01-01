@@ -119,8 +119,6 @@ class WatcherTask extends BaseTask {
       images.addAll(posts.expand((element) => element.images));
     }
 
-    print(postsList.length);
-
     images = images
         .distinct((element) => element.md5!)
         .where((element) => !imageMap.containsKey(element.md5!))
