@@ -1,12 +1,17 @@
 import 'package:cabinet/database/object_box.dart';
 
+typedef WorkDataCallback = Future<void> Function(int imageCount, int postCount);
+
+typedef WorkCallback = Future<void> Function(
+    ObjectBox objectBox, bool isNotificationGranted, WorkDataCallback onData);
+
 abstract class BaseWork {
-  final Future<void> Function(ObjectBox objectBox, bool isNotificationGranted)
-      _callback;
+  final WorkCallback _callback;
 
   BaseWork(this._callback);
 
-  Future<void> doWork(ObjectBox objectBox, bool isNotificationGranted) async {
-    await _callback(objectBox, isNotificationGranted);
+  Future<void> doWork(ObjectBox objectBox, bool isNotificationGranted,
+      WorkDataCallback onData) async {
+    await _callback(objectBox, isNotificationGranted, onData);
   }
 }

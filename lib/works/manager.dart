@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:cabinet/api/image_board/api.dart';
 import 'package:cabinet/database/object_box.dart';
+import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/works/clean_up.dart';
 import 'package:cabinet/works/image.dart';
 import 'package:workmanager/workmanager.dart';
@@ -40,8 +42,27 @@ class WorkManager {
   }
 
   Future<void> start(ObjectBox objectBox, bool isNotificationGranted) async {
-    for (final work in _works) {
-      await work.doWork(objectBox, isNotificationGranted);
+    int startedAt = DateTime.now().millisecondsSinceEpoch;
+    int totalImageCount = 0;
+    int totalPostCount = 0;
+
+    handleData(int imageCount, int postCount) async {
+      totalImageCount += imageCount;
+      totalPostCount += postCount;
     }
+
+    for (final work in _works) {
+      await work.doWork(objectBox, isNotificationGranted, handleData);
+    }
+
+    int finishedAt = DateTime.now().millisecondsSinceEpoch;
+
+    final repositoryHolder = RepositoryHolder(
+        objectBox, ImageBoardApi(baseUrl: 'https://a.4cdn.org'));
+
+    int watcherCount = await repositoryHolder.watcher.count();
+
+    repositoryHolder.executionLog.create(
+        startedAt, finishedAt, totalImageCount, totalPostCount, watcherCount);
   }
 }

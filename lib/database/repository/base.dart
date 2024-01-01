@@ -21,6 +21,10 @@ class BaseRepository<TEntity extends BaseEntity> {
     return box.getAsync(id);
   }
 
+  int count() {
+    return box.count();
+  }
+
   Future<TEntity> save(TEntity entity) async {
     if (entity.id == 0) {
       entity.id = await box.putAsync(entity);
