@@ -94,7 +94,7 @@ class _WatchersTabState extends State<WatchersTab> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ExecutionLogsRoute(),
+        builder: (context) => const ExecutionLogsRoute(),
       ),
     );
   }

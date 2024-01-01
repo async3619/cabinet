@@ -1,6 +1,6 @@
 import 'package:cabinet/database/execution_log.dart';
 import 'package:cabinet/database/repository/holder.dart';
-import 'package:cabinet/utils/formatDuration.dart';
+import 'package:cabinet/utils/format_duration.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +61,7 @@ class _ExecutionLogsRouteState extends State<ExecutionLogsRoute> {
             SwitchListTile(
                 value: showOnlyAddedData,
                 onChanged: handleSwitchChanged,
-                title: Text('Show only execution added data')),
+                title: const Text('Show only execution added data')),
             Expanded(
                 child: FutureBuilder(
               future: holder.executionLog
