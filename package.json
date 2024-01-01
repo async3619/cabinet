@@ -1,0 +1,19 @@
+{
+  "name": "cabinet",
+  "version": "0.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:async3619/cabinet.git",
+  "author": "Turner <me@sophia-dev.io>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@semantic-release/commit-analyzer": "^11.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^9.2.6",
+    "@semantic-release/release-notes-generator": "^12.1.0",
+    "@types/node": "^20.10.6",
+    "semantic-release": "^22.0.12",
+    "semantic-release-pub": "^0.6.2",
+    "yaml": "^2.3.4"
+  }
+}
