@@ -50,6 +50,12 @@
       }
     ],
     [
+      "@semantic-release/exec",
+      {
+        "publishCmd": "flutter build apk --split-per-abi"
+      }
+    ],
+    [
       "@semantic-release/github",
       {
         "assets": [
