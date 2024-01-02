@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:external_path/external_path.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import 'package:cabinet/database/image.dart';
@@ -69,12 +70,10 @@ class FileSystem {
   }
 
   Future<void> saveImageToGallery(Image image) async {
-    final directory = await getExternalStorageDirectory();
-    if (directory == null) {
-      throw Exception('Failed to get external storage directory');
-    }
+    final directory = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOWNLOADS);
 
-    final imagePath = '${directory.path}/cabinet';
+    final imagePath = '$directory/cabinet';
     final imageDirectory = Directory(imagePath);
     if (!imageDirectory.existsSync()) {
       imageDirectory.createSync(recursive: true);
