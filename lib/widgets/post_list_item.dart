@@ -157,10 +157,24 @@ class PostListItem extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.all(8.0),
                             color: Theme.of(context).cardColor,
-                            child: Text(
-                              '${post.childCount}R ${post.imageCount}I',
-                              style: bodyTextStyle,
-                              textAlign: TextAlign.right,
+                            child: Row(
+                              children: [
+                                if (post.isArchived == true)
+                                  Icon(
+                                    Icons.archive,
+                                    size: 16,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withOpacity(0.75),
+                                  ),
+                                Expanded(child: Container()),
+                                Text(
+                                  '${post.childCount}R ${post.imageCount}I',
+                                  style: bodyTextStyle,
+                                  textAlign: TextAlign.right,
+                                )
+                              ],
                             ),
                           ),
                         ),

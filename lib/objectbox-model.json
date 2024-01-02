@@ -127,7 +127,7 @@
     },
     {
       "id": "7:3124562287720995515",
-      "lastPropertyId": "9:5671333099472788669",
+      "lastPropertyId": "10:1889214090753298288",
       "name": "Post",
       "properties": [
         {
@@ -176,6 +176,11 @@
           "flags": 520,
           "indexId": "4:1682380513401251853",
           "relationTarget": "Post"
+        },
+        {
+          "id": "10:1889214090753298288",
+          "name": "isArchived",
+          "type": 1
         }
       ],
       "relations": [
