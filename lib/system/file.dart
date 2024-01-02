@@ -73,7 +73,7 @@ class FileSystem {
     final directory = await ExternalPath.getExternalStoragePublicDirectory(
         ExternalPath.DIRECTORY_DOWNLOADS);
 
-    final imagePath = '${directory}/cabinet';
+    final imagePath = '$directory/cabinet';
     final imageDirectory = Directory(imagePath);
     if (!imageDirectory.existsSync()) {
       imageDirectory.createSync(recursive: true);
