@@ -88,6 +88,11 @@ class _ExecutionLogsRouteState extends State<ExecutionLogsRoute> {
 
                       final executionTime = formatDuration(log.executionTime);
 
+                      String status = 'Success';
+                      if (log.errorMessage != null) {
+                        status = 'Failed';
+                      }
+
                       return Card(
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
@@ -106,6 +111,12 @@ class _ExecutionLogsRouteState extends State<ExecutionLogsRoute> {
                               const SizedBox(height: 16),
                               ResponsiveGridRow(
                                 children: [
+                                  buildItem('Status', status,
+                                      xs: log.errorMessage == null ? 12 : 6),
+                                  if (log.errorMessage != null)
+                                    buildItem(
+                                        'Error Message', log.errorMessage!),
+                                  buildSpacing(),
                                   buildItem('New Posts',
                                       log.postCount?.toString() ?? '0'),
                                   buildItem('New Images',
