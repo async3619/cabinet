@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cabinet/database/board.dart';
+import 'package:cabinet/widgets/modal/album.dart';
 import 'package:collection/collection.dart';
 import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/repository/holder.dart';
@@ -227,6 +228,35 @@ class _PostsTabState extends State<PostsTab> {
         MaterialPageRoute(builder: (context) => ThreadRoute(post: post)));
   }
 
+  void handleOpenAlbum() {
+    final posts = _posts;
+    if (posts == null) {
+      return;
+    }
+
+    final filter = _filteredBy == PostFilteredBy.watcher
+        ? filterPostByWatcher
+        : filterPostByBoard;
+
+    final filteredPosts = posts.where(filter).toList();
+
+    final images = filteredPosts
+        .map((post) => [post, ...post.children])
+        .flatten()
+        .expand((posts) => posts.images)
+        .toList();
+
+    final imageHashSet = images.map((image) => image.md5).toSet();
+
+    final uniqueImages =
+        images.where((image) => imageHashSet.contains(image.md5)).toList();
+
+    uniqueImages.sort((a, b) => a.time!.compareTo(b.time!));
+
+    Navigator.of(context)
+        .push(AlbumModal(images: uniqueImages, title: 'All Images'));
+  }
+
   Widget buildFilterDropdown() {
     List<DropdownMenuItem<int>> items = [];
     if (_filteredBy == PostFilteredBy.watcher && _watchers != null) {
@@ -322,6 +352,10 @@ class _PostsTabState extends State<PostsTab> {
           title: _posts == null ? Container() : buildFilterDropdown(),
           actions: [
             IconButton(onPressed: switchFilteredBy, icon: filterIcon),
+            IconButton(
+              icon: const Icon(Icons.photo_library),
+              onPressed: handleOpenAlbum,
+            ),
             PopupMenuButton(
               onSelected: handleOrderChanged,
               icon: const Icon(Icons.sort),
