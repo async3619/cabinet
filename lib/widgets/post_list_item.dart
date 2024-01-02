@@ -105,93 +105,96 @@ class PostListItem extends StatelessWidget {
           color: Theme.of(context).colorScheme.onSurface,
         );
 
-    return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: Container(
-        color: Theme.of(context).cardColor,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (thumbnail != null) thumbnail,
-            Expanded(
-                child: Material(
-                    color: Theme.of(context).cardColor,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                            child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (title != null)
-                                  Text(
-                                    title,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.left,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall
-                                        ?.copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                        ),
-                                  ),
-                                if (title != null) const SizedBox(height: 4),
-                                if (content != null)
-                                  Text(
-                                    content,
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.left,
-                                    style: bodyTextStyle,
-                                  )
-                              ]),
-                        )),
-                        Positioned(
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          child: Container(
+    return Opacity(
+      opacity: post.allRead == true ? 0.5 : 1.0,
+      child: Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: Container(
+          color: Theme.of(context).cardColor,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (thumbnail != null) thumbnail,
+              Expanded(
+                  child: Material(
+                      color: Theme.of(context).cardColor,
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                              child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            color: Theme.of(context).cardColor,
-                            child: Row(
-                              children: [
-                                if (post.isArchived == true)
-                                  Icon(
-                                    Icons.archive,
-                                    size: 16,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withOpacity(0.75),
-                                  ),
-                                Expanded(child: Container()),
-                                Text(
-                                  '${post.childCount}R ${post.imageCount}I',
-                                  style: bodyTextStyle,
-                                  textAlign: TextAlign.right,
-                                )
-                              ],
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (title != null)
+                                    Text(
+                                      title,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.left,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
+                                          ),
+                                    ),
+                                  if (title != null) const SizedBox(height: 4),
+                                  if (content != null)
+                                    Text(
+                                      content,
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.left,
+                                      style: bodyTextStyle,
+                                    )
+                                ]),
+                          )),
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(8.0),
+                              color: Theme.of(context).cardColor,
+                              child: Row(
+                                children: [
+                                  if (post.isArchived == true)
+                                    Icon(
+                                      Icons.archive,
+                                      size: 16,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withOpacity(0.75),
+                                    ),
+                                  Expanded(child: Container()),
+                                  Text(
+                                    '${post.childCount}R ${post.imageCount}I',
+                                    style: bodyTextStyle,
+                                    textAlign: TextAlign.right,
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        Positioned.fill(
-                            child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onLongPress: () {
-                                    handleLongPress(context);
-                                  },
-                                  onTap: () {
-                                    handleCardTap();
-                                  },
-                                )))
-                      ],
-                    )))
-          ],
+                          Positioned.fill(
+                              child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onLongPress: () {
+                                      handleLongPress(context);
+                                    },
+                                    onTap: () {
+                                      handleCardTap();
+                                    },
+                                  )))
+                        ],
+                      )))
+            ],
+          ),
         ),
       ),
     );
