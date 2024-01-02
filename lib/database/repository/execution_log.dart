@@ -11,14 +11,16 @@ class ExecutionLogRepository extends BaseRepository<ExecutionLog> {
     int finishedAt,
     int imageCount,
     int postCount,
-    int watcherCount,
-  ) async {
+    int watcherCount, {
+    String? errorMessage,
+  }) async {
     final entity = ExecutionLog(
       startedAt: startedAt,
       finishedAt: finishedAt,
       imageCount: imageCount,
       postCount: postCount,
       watcherCount: watcherCount,
+      errorMessage: errorMessage,
     );
 
     await box.putAsync(entity);

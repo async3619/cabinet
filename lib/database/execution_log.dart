@@ -10,6 +10,7 @@ class ExecutionLog implements BaseEntity {
     this.imageCount,
     this.postCount,
     this.watcherCount,
+    this.errorMessage,
   });
 
   @override
@@ -22,6 +23,8 @@ class ExecutionLog implements BaseEntity {
   int? imageCount;
   int? postCount;
   int? watcherCount;
+
+  String? errorMessage;
 
   int get executionTime => finishedAt! - startedAt!;
 }

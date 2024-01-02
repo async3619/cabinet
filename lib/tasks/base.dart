@@ -1,35 +1,42 @@
 abstract class BaseTask {
-  final Function()? onStart;
-  final Function()? onComplete;
-  final Function(dynamic)? onError;
-  final Function()? onDone;
+  final Function()? _onStart;
+  final Function()? _onComplete;
+  final Function(dynamic)? _onError;
+  final Function()? _onDone;
 
   BaseTask({
-    this.onStart,
-    this.onComplete,
-    this.onError,
-    this.onDone,
-  });
+    dynamic Function()? onStart,
+    dynamic Function()? onComplete,
+    dynamic Function(dynamic)? onError,
+    dynamic Function()? onDone,
+  })  : _onStart = onStart,
+        _onComplete = onComplete,
+        _onError = onError,
+        _onDone = onDone;
 
   Future<void> run() {
-    if (onStart != null) {
-      onStart!();
+    if (_onStart != null) {
+      _onStart();
     }
 
     return doTask().then((value) {
-      if (onComplete != null) {
-        onComplete!();
+      if (_onComplete != null) {
+        _onComplete();
       }
     }).catchError((error) {
-      if (onError != null) {
-        onError!(error);
-      }
+      handleError(error);
     }).whenComplete(() {
-      if (onDone != null) {
-        onDone!();
+      if (_onDone != null) {
+        _onDone();
       }
     });
   }
 
   Future<void> doTask();
+
+  void handleError(dynamic error) {
+    if (_onError != null) {
+      _onError(error);
+    }
+  }
 }

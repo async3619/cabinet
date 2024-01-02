@@ -196,4 +196,10 @@ class WatcherTask extends BaseTask {
     await _repositoryHolder.watcher
         .setWatcherStatus(_watcher, WatcherStatus.idle);
   }
+
+  @override
+  void handleError(dynamic error) {
+    _repositoryHolder.watcher.setWatcherStatus(_watcher, WatcherStatus.idle);
+    super.handleError(error);
+  }
 }
