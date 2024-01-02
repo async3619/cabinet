@@ -74,6 +74,21 @@ class WatcherTask extends BaseTask {
         final archivedPostIds =
             await _repositoryHolder.post.fetchArchivedPostIds(board);
 
+        final oldArchivedPosts = <Post>[];
+        for (var postId in archivedPostIds) {
+          final cachedPost = postMap['${board.code}-$postId'];
+          if (cachedPost == null) {
+            continue;
+          }
+
+          cachedPost.isArchived = true;
+          oldArchivedPosts.add(cachedPost);
+        }
+
+        if (oldArchivedPosts.isNotEmpty) {
+          await _repositoryHolder.post.saveAll(oldArchivedPosts);
+        }
+
         final limit = PLimit<Post?>(Platform.numberOfProcessors * 2);
         final input = archivedPostIds.map((postId) => limit(() async {
               try {
@@ -85,6 +100,9 @@ class WatcherTask extends BaseTask {
 
         final result = await Future.wait(input);
         final archivedPosts = result.whereType<Post>().toList();
+        for (final post in archivedPosts) {
+          post.isArchived = true;
+        }
 
         openingPosts.addAll(archivedPosts);
       }
