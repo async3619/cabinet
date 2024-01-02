@@ -36,6 +36,7 @@ dependencies:
   scroll_to_index: ^3.0.1
   p_limit: ^1.0.3
   fluttertoast: ^8.2.4
+  visibility_detector: ^0.4.0+2
 
 dev_dependencies:
   flutter_test:

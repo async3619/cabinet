@@ -15,6 +15,7 @@ class Post implements BaseEntity {
   String? content;
   String? author;
   bool? isArchived;
+  bool? isRead;
 
   @Property(type: PropertyType.date)
   DateTime? createdAt;
