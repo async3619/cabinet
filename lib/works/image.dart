@@ -12,7 +12,7 @@ class ImageWork extends BaseWork {
   ImageWork() : super(_doWork);
 
   static Future<void> _doWork(ObjectBox objectBox, bool isNotificationGranted,
-      WorkDataCallback onDAta) async {
+      WorkDataCallback onData, ErrorCallback onError) async {
     final repositoryHolder = RepositoryHolder(
         objectBox, ImageBoardApi(baseUrl: 'https://a.4cdn.org'));
 

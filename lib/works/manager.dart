@@ -45,14 +45,24 @@ class WorkManager {
     int startedAt = DateTime.now().millisecondsSinceEpoch;
     int totalImageCount = 0;
     int totalPostCount = 0;
+    String? errorMessage;
 
     handleData(int imageCount, int postCount) async {
       totalImageCount += imageCount;
       totalPostCount += postCount;
     }
 
+    handleError(dynamic error) {
+      errorMessage = error.toString();
+    }
+
     for (final work in _works) {
-      await work.doWork(objectBox, isNotificationGranted, handleData);
+      await work.doWork(
+          objectBox, isNotificationGranted, handleData, handleError);
+
+      if (errorMessage != null) {
+        break;
+      }
     }
 
     int finishedAt = DateTime.now().millisecondsSinceEpoch;
@@ -63,6 +73,7 @@ class WorkManager {
     int watcherCount = repositoryHolder.watcher.count();
 
     repositoryHolder.executionLog.create(
-        startedAt, finishedAt, totalImageCount, totalPostCount, watcherCount);
+        startedAt, finishedAt, totalImageCount, totalPostCount, watcherCount,
+        errorMessage: errorMessage);
   }
 }

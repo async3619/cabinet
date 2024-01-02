@@ -10,7 +10,7 @@ class WatcherWork extends BaseWork {
   WatcherWork() : super(_doWork);
 
   static Future<void> _doWork(ObjectBox objectBox, bool isNotificationGranted,
-      WorkDataCallback onData) async {
+      WorkDataCallback onData, ErrorCallback onError) async {
     final repositoryHolder = RepositoryHolder(
         objectBox, ImageBoardApi(baseUrl: 'https://a.4cdn.org'));
 
@@ -20,6 +20,12 @@ class WatcherWork extends BaseWork {
         title: 'Cabinet Watcher',
         body: 'Watcher Work is running',
         locked: true);
+
+    dynamic error;
+    handleError(dynamic e) {
+      error = e;
+      onError(e);
+    }
 
     for (final watcher in watchers) {
       if (watcher.status == WatcherStatus.running.index) {
@@ -39,6 +45,7 @@ class WatcherWork extends BaseWork {
         onNewData: (newPosts, newImages) {
           onData(newImages.length, newPosts.length);
         },
+        onError: handleError,
       );
 
       await NotificationManager().updateNotification(
@@ -47,7 +54,11 @@ class WatcherWork extends BaseWork {
           body: "Watcher #${watcher.id} '${watcher.name}' is running",
           locked: true);
 
-      await task.doTask();
+      await task.run();
+
+      if (error != null) {
+        break;
+      }
     }
 
     await NotificationManager().dismissNotification(notificationId);

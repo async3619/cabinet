@@ -7,7 +7,7 @@ class CleanUpWork extends BaseWork {
   CleanUpWork() : super(_doWork);
 
   static Future<void> _doWork(ObjectBox objectBox, bool isNotificationGranted,
-      WorkDataCallback onData) async {
+      WorkDataCallback onData, ErrorCallback onError) async {
     final repositoryHolder = RepositoryHolder(
         objectBox, ImageBoardApi(baseUrl: 'https://a.4cdn.org'));
 

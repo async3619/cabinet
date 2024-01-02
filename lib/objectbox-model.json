@@ -326,7 +326,7 @@
     },
     {
       "id": "11:7175047807353449834",
-      "lastPropertyId": "6:4523829994453695304",
+      "lastPropertyId": "7:8934499482886249012",
       "name": "ExecutionLog",
       "properties": [
         {
@@ -359,6 +359,11 @@
           "id": "6:4523829994453695304",
           "name": "watcherCount",
           "type": 6
+        },
+        {
+          "id": "7:8934499482886249012",
+          "name": "errorMessage",
+          "type": 9
         }
       ],
       "relations": []
