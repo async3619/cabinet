@@ -15,6 +15,7 @@ class Post implements BaseEntity {
   String? content;
   String? author;
   bool? isArchived;
+  bool? isRead;
 
   @Property(type: PropertyType.date)
   DateTime? createdAt;
@@ -45,6 +46,9 @@ class Post implements BaseEntity {
 
   @Transient()
   int get replyCount => replies.length;
+
+  @Transient()
+  bool get allRead => children.every((element) => element.isRead == true);
 
   String? get thumbnailUrl {
     if (images.isEmpty) {
