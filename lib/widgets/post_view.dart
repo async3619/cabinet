@@ -40,12 +40,22 @@ class PostView extends StatelessWidget {
       return;
     }
 
-    post.isRead = true;
+    final parent = post.parent.target;
+    if (parent == null) return;
+
+    final children = [parent, ...parent.children.toList()];
+    children.removeWhere((element) => element.id > post.id);
+
+    if (children.isEmpty) return;
 
     final repositoryHolder =
         Provider.of<RepositoryHolder>(context, listen: false);
 
-    repositoryHolder.post.save(post);
+    for (var post in children) {
+      post.isRead = true;
+    }
+
+    repositoryHolder.post.saveAll(children);
   }
 
   @override
