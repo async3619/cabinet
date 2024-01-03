@@ -1,5 +1,6 @@
 import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/repository/holder.dart';
+import 'package:cabinet/utils/debouncer.dart';
 import 'package:cabinet/widgets/dynamic_image.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,8 @@ TextStyle descriptionText(BuildContext context, int? alpha) {
 }
 
 class PostView extends StatelessWidget {
+  static final Debouncer _readDebouncer = Debouncer(milliseconds: 750);
+
   const PostView({
     Key? key,
     required this.post,
@@ -36,26 +39,28 @@ class PostView extends StatelessWidget {
   }
 
   handleVisibilityChanged(VisibilityInfo info, BuildContext context) {
-    if (info.visibleFraction != 1) {
-      return;
-    }
+    _readDebouncer.run(() async {
+      if (info.visibleFraction != 1) {
+        return;
+      }
 
-    final parent = post.parent.target;
-    if (parent == null) return;
+      final parent = post.parent.target;
+      if (parent == null) return;
 
-    final children = [parent, ...parent.children.toList()];
-    children.removeWhere((element) => element.id > post.id);
+      final children = [parent, ...parent.children.toList()];
+      children.removeWhere((element) => element.id > post.id);
 
-    if (children.isEmpty) return;
+      if (children.isEmpty) return;
 
-    final repositoryHolder =
-        Provider.of<RepositoryHolder>(context, listen: false);
+      final repositoryHolder =
+          Provider.of<RepositoryHolder>(context, listen: false);
 
-    for (var post in children) {
-      post.isRead = true;
-    }
+      for (var post in children) {
+        post.isRead = true;
+      }
 
-    repositoryHolder.post.saveAll(children);
+      repositoryHolder.post.saveAll(children);
+    });
   }
 
   @override
