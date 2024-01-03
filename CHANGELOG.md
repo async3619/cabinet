@@ -1,3 +1,10 @@
+## [1.0.0-dev.5](https://github.com/async3619/cabinet/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2024-01-03)
+
+
+### Bug Fixes 🐞
+
+* **media:** now exported media file are visible in gallery apps ([#68](https://github.com/async3619/cabinet/issues/68)) ([9ae799d](https://github.com/async3619/cabinet/commit/9ae799d34049b2bee0168325bf679cbea01163d0))
+
 ## [1.0.0-dev.4](https://github.com/async3619/cabinet/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2024-01-03)
 
 
