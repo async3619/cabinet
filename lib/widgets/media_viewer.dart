@@ -118,6 +118,7 @@ class _MediaViewerState extends State<MediaViewer> {
 
   Widget buildImage() {
     return DynamicImage(
+      showThumbnail: false,
       image: widget.image,
       fit: BoxFit.cover,
     );
