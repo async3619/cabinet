@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:external_path/external_path.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 import 'package:cabinet/database/image.dart';
@@ -92,5 +93,7 @@ class FileSystem {
         .then((response) => response.bodyBytes);
 
     await imageFile.writeAsBytes(imageBuffer);
+
+    ImageGallerySaver.saveFile(imageFile.path);
   }
 }
