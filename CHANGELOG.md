@@ -1,3 +1,16 @@
+## [1.0.0-dev.4](https://github.com/async3619/cabinet/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2024-01-03)
+
+
+### Bug Fixes 🐞
+
+* **media:** fix a bug that always showed thumbnails for image-typed media files ([#61](https://github.com/async3619/cabinet/issues/61)) ([d948c12](https://github.com/async3619/cabinet/commit/d948c12af5b5a40fa463dd9925d4b414aa4ad9df))
+
+
+### Internal 🧰
+
+* **media:** now gallery view for all images of post list sorted by added time ([#60](https://github.com/async3619/cabinet/issues/60)) ([94d9c89](https://github.com/async3619/cabinet/commit/94d9c898c26a63acced62a73c1caccc040ecd16a))
+* **post:** apply debouncing for post read status update ([#62](https://github.com/async3619/cabinet/issues/62)) ([6c16c57](https://github.com/async3619/cabinet/commit/6c16c571d1b7d7905f6d2435157d0cce439c6b18))
+
 ## [1.0.0-dev.3](https://github.com/async3619/cabinet/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2024-01-02)
 
 
