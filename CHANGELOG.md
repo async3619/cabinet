@@ -1,3 +1,10 @@
+## [1.0.0-dev.6](https://github.com/async3619/cabinet/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2024-01-18)
+
+
+### Features ✨
+
+* **watcher:** now watchers can reset their status to `idle` ([#71](https://github.com/async3619/cabinet/issues/71)) ([6f66dab](https://github.com/async3619/cabinet/commit/6f66dab06fd97df396d74923cc86e7477b0c34c5))
+
 ## [1.0.0-dev.5](https://github.com/async3619/cabinet/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2024-01-03)
 
 
