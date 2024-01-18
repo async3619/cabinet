@@ -11,14 +11,14 @@ class WatcherCard extends StatefulWidget {
   final Watcher watcher;
   final void Function(Watcher) onDelete;
   final void Function(Watcher) onEdit;
-  final void Function(Watcher) onForceRun;
+  final void Function(Watcher) onResetStatus;
 
   const WatcherCard(
       {Key? key,
       required this.watcher,
       required this.onDelete,
       required this.onEdit,
-      required this.onForceRun})
+      required this.onResetStatus})
       : super(key: key);
 
   @override
@@ -85,12 +85,10 @@ class _WatcherCardState extends State<WatcherCard> {
                       ),
                       const PopupMenuDivider(),
                       PopupMenuItem(
-                        enabled:
-                            widget.watcher.currentStatus == WatcherStatus.idle,
                         onTap: () {
-                          widget.onForceRun(widget.watcher);
+                          widget.onDelete(widget.watcher);
                         },
-                        child: const Text('Force Run'),
+                        child: const Text('Reset Status'),
                       ),
                     ]),
           ),
