@@ -1,3 +1,25 @@
+## [1.1.0](https://github.com/async3619/cabinet/compare/v1.0.0...v1.1.0) (2024-01-18)
+
+
+### Features ✨
+
+* **background-task:** now background task can be executed forcefully ([#75](https://github.com/async3619/cabinet/issues/75)) ([488c965](https://github.com/async3619/cabinet/commit/488c96510497a33330e2714ce70e16a4d15f1968))
+* **watcher:** now watchers can reset their status to `idle` ([#71](https://github.com/async3619/cabinet/issues/71)) ([6f66dab](https://github.com/async3619/cabinet/commit/6f66dab06fd97df396d74923cc86e7477b0c34c5))
+
+
+### Bug Fixes 🐞
+
+* **media:** fix a bug that always showed thumbnails for image-typed media files ([#61](https://github.com/async3619/cabinet/issues/61)) ([d948c12](https://github.com/async3619/cabinet/commit/d948c12af5b5a40fa463dd9925d4b414aa4ad9df))
+* **media:** now exported media file are visible in gallery apps ([#68](https://github.com/async3619/cabinet/issues/68)) ([9ae799d](https://github.com/async3619/cabinet/commit/9ae799d34049b2bee0168325bf679cbea01163d0))
+* **post:** now posts read status not cleared after crawling ([#77](https://github.com/async3619/cabinet/issues/77)) ([60a170d](https://github.com/async3619/cabinet/commit/60a170d3f10bb5e8876bceea31231dc77cfd24aa))
+* **watcher:** make resetting watcher status not to delete itself ([#73](https://github.com/async3619/cabinet/issues/73)) ([5fac0af](https://github.com/async3619/cabinet/commit/5fac0af6921e00ac2940cf57bb07efb13eeda828))
+
+
+### Internal 🧰
+
+* **media:** now gallery view for all images of post list sorted by added time ([#60](https://github.com/async3619/cabinet/issues/60)) ([94d9c89](https://github.com/async3619/cabinet/commit/94d9c898c26a63acced62a73c1caccc040ecd16a))
+* **post:** apply debouncing for post read status update ([#62](https://github.com/async3619/cabinet/issues/62)) ([6c16c57](https://github.com/async3619/cabinet/commit/6c16c571d1b7d7905f6d2435157d0cce439c6b18))
+
 ## [1.0.0-dev.7](https://github.com/async3619/cabinet/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2024-01-18)
 
 
