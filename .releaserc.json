@@ -87,7 +87,8 @@
       "semantic-release-pub",
       {
         "cli": "flutter",
-        "publishPub": false
+        "publishPub": false,
+        "updateBuildNumber": true
       }
     ],
     [
