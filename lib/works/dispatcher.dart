@@ -24,11 +24,12 @@ void callbackDispatcher() {
       return Future.value(false);
     }
 
+    final force = inputData['force'] ?? false;
     final reference =
         ByteData.view(Uint8List.fromList(base64Decode(rawReference)).buffer);
     final objectBox = await ObjectBox.create(reference: reference);
 
-    await WorkManager().start(objectBox, isNotificationGranted);
+    await WorkManager().start(objectBox, isNotificationGranted, force);
 
     return Future.value(true);
   });

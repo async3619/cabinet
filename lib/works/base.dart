@@ -4,8 +4,12 @@ typedef WorkDataCallback = Future<void> Function(int imageCount, int postCount);
 
 typedef ErrorCallback = void Function(dynamic error);
 
-typedef WorkCallback = Future<void> Function(ObjectBox objectBox,
-    bool isNotificationGranted, WorkDataCallback onData, ErrorCallback onError);
+typedef WorkCallback = Future<void> Function(
+    ObjectBox objectBox,
+    bool isNotificationGranted,
+    bool force,
+    WorkDataCallback onData,
+    ErrorCallback onError);
 
 abstract class BaseWork {
   final WorkCallback _callback;
@@ -13,7 +17,7 @@ abstract class BaseWork {
   BaseWork(this._callback);
 
   Future<void> doWork(ObjectBox objectBox, bool isNotificationGranted,
-      WorkDataCallback onData, ErrorCallback onError) async {
-    await _callback(objectBox, isNotificationGranted, onData, onError);
+      bool force, WorkDataCallback onData, ErrorCallback onError) async {
+    await _callback(objectBox, isNotificationGranted, force, onData, onError);
   }
 }
