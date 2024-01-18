@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:cabinet/database/repository/watcher.dart';
-import 'package:darq/darq.dart';
 import 'package:cabinet/database/image.dart';
 import 'package:cabinet/database/post.dart';
 import 'package:cabinet/database/repository/holder.dart';
+import 'package:cabinet/database/repository/watcher.dart';
 import 'package:cabinet/database/watcher.dart';
+import 'package:darq/darq.dart';
 import 'package:html/parser.dart';
 import 'package:p_limit/p_limit.dart';
 
@@ -142,6 +142,7 @@ class WatcherTask extends BaseTask {
         final cachedPost = postMap['${e.board.target?.code}-${e.no}'];
         if (cachedPost != null) {
           e.id = cachedPost.id;
+          e.isRead = cachedPost.isRead;
         } else {
           newPosts.add(e);
         }

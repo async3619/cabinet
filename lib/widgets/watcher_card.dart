@@ -86,7 +86,7 @@ class _WatcherCardState extends State<WatcherCard> {
                       const PopupMenuDivider(),
                       PopupMenuItem(
                         onTap: () {
-                          widget.onDelete(widget.watcher);
+                          widget.onResetStatus(widget.watcher);
                         },
                         child: const Text('Reset Status'),
                       ),

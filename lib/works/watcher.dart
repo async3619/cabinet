@@ -10,7 +10,7 @@ class WatcherWork extends BaseWork {
   WatcherWork() : super(_doWork);
 
   static Future<void> _doWork(ObjectBox objectBox, bool isNotificationGranted,
-      WorkDataCallback onData, ErrorCallback onError) async {
+      bool force, WorkDataCallback onData, ErrorCallback onError) async {
     final repositoryHolder = RepositoryHolder(
         objectBox, ImageBoardApi(baseUrl: 'https://a.4cdn.org'));
 
@@ -35,7 +35,7 @@ class WatcherWork extends BaseWork {
       final currentTimeStamp = DateTime.now().millisecondsSinceEpoch;
       final lastRunTimeStamp = watcher.lastRun?.millisecondsSinceEpoch ?? 0;
       final crawlingInterval = (watcher.crawlingInterval ?? 0) * 1000 * 60;
-      if (currentTimeStamp - lastRunTimeStamp < crawlingInterval) {
+      if (currentTimeStamp - lastRunTimeStamp < crawlingInterval && !force) {
         continue;
       }
 
