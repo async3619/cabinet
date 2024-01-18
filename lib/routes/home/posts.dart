@@ -251,7 +251,7 @@ class _PostsTabState extends State<PostsTab> {
     final uniqueImages =
         images.where((image) => imageHashSet.contains(image.md5)).toList();
 
-    uniqueImages.sort((a, b) => a.time!.compareTo(b.time!));
+    uniqueImages.sort((a, b) => b.id.compareTo(a.id));
 
     Navigator.of(context)
         .push(AlbumModal(images: uniqueImages, title: 'All Images'));

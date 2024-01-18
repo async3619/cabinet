@@ -4,8 +4,8 @@ import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/database/repository/watcher.dart';
 import 'package:cabinet/database/watcher.dart';
 import 'package:cabinet/routes/execution_logs.dart';
-import 'package:cabinet/tasks/watcher.dart';
 import 'package:cabinet/widgets/watcher_card.dart';
+import 'package:cabinet/works/manager.dart';
 import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 import 'package:provider/provider.dart';
@@ -53,37 +53,9 @@ class _WatchersTabState extends State<WatchersTab> {
     );
   }
 
-  void handleForceRunWatcher(Watcher watcher) {
+  void handleResetStatus(Watcher watcher) {
     final holder = Provider.of<RepositoryHolder>(context, listen: false);
-    final task = WatcherTask(
-      repositoryHolder: holder,
-      watcher: watcher,
-      onError: (error) {
-        holder.watcher.setWatcherStatus(watcher, WatcherStatus.idle);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Task \'${watcher.name}\' failed: $error'),
-          ),
-        );
-      },
-      onStart: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Task \'${watcher.name}\' started'),
-          ),
-        );
-      },
-      onComplete: () {
-        holder.watcher.setWatcherStatus(watcher, WatcherStatus.idle);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Task \'${watcher.name}\' completed'),
-          ),
-        );
-      },
-    );
-
-    task.run();
+    holder.watcher.setWatcherStatus(watcher, WatcherStatus.idle);
   }
 
   void handleWatcherChanged(Query<Watcher> event) {
@@ -99,6 +71,10 @@ class _WatchersTabState extends State<WatchersTab> {
     );
   }
 
+  void handleExecuteButtonPressed() {
+    WorkManager().schedule();
+  }
+
   @override
   Widget build(BuildContext context) {
     final holder = Provider.of<RepositoryHolder>(context);
@@ -109,6 +85,10 @@ class _WatchersTabState extends State<WatchersTab> {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text('Watchers'),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.sync),
+              onPressed: handleExecuteButtonPressed,
+            ),
             IconButton(
               icon: const Icon(Icons.receipt_long),
               onPressed: handleExecutionLogPressed,
@@ -132,7 +112,7 @@ class _WatchersTabState extends State<WatchersTab> {
                       watcher: watcher,
                       onDelete: handleDeleteWatcher,
                       onEdit: handleEditWatcher,
-                      onForceRun: handleForceRunWatcher,
+                      onResetStatus: handleResetStatus,
                     );
                   },
                 );
