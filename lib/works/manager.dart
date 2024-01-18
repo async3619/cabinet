@@ -20,6 +20,8 @@ class WorkManager {
 
   WorkManager._internal();
 
+  ObjectBox? _objectBox;
+
   final _works = <BaseWork>[
     WatcherWork(),
     CleanUpWork(),
@@ -27,6 +29,8 @@ class WorkManager {
   ];
 
   void initialize(ObjectBox objectBox) {
+    _objectBox = objectBox;
+
     Workmanager().initialize(callbackDispatcher);
     Workmanager().cancelAll();
 
@@ -41,7 +45,25 @@ class WorkManager {
         ));
   }
 
-  Future<void> start(ObjectBox objectBox, bool isNotificationGranted) async {
+  void schedule() {
+    final box = _objectBox;
+    if (box == null) {
+      return;
+    }
+
+    Workmanager().registerOneOffTask(
+        'worker-task-scheduled', 'worker-task-scheduled',
+        inputData: {
+          'reference': base64Encode(box.store.reference.buffer.asUint8List()),
+          'force': true,
+        },
+        constraints: Constraints(
+          networkType: NetworkType.connected,
+        ));
+  }
+
+  Future<void> start(
+      ObjectBox objectBox, bool isNotificationGranted, bool force) async {
     int startedAt = DateTime.now().millisecondsSinceEpoch;
     int totalImageCount = 0;
     int totalPostCount = 0;
@@ -58,7 +80,7 @@ class WorkManager {
 
     for (final work in _works) {
       await work.doWork(
-          objectBox, isNotificationGranted, handleData, handleError);
+          objectBox, isNotificationGranted, force, handleData, handleError);
 
       if (errorMessage != null) {
         break;
