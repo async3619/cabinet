@@ -1,3 +1,10 @@
+## [1.0.0-dev.8](https://github.com/async3619/cabinet/compare/v1.0.0-dev.7...v1.0.0-dev.8) (2024-01-20)
+
+
+### Bug Fixes 🐞
+
+* **album:** now duplicated media will be hidden in album modal ([#79](https://github.com/async3619/cabinet/issues/79)) ([531c5cf](https://github.com/async3619/cabinet/commit/531c5cfb64a5e7d1401b90f7967af13e2d05dfdc))
+
 ## [1.0.0-dev.7](https://github.com/async3619/cabinet/compare/v1.0.0-dev.6...v1.0.0-dev.7) (2024-01-18)
 
 
