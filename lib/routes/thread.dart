@@ -1,4 +1,5 @@
 import 'package:cabinet/database/post.dart';
+import 'package:cabinet/utils/unique.dart';
 import 'package:cabinet/widgets/dialogs/post.dart';
 import 'package:cabinet/widgets/modal/album.dart';
 import 'package:cabinet/widgets/modal/media_viewer.dart';
@@ -35,8 +36,11 @@ class _ThreadRouteState extends State<ThreadRoute> {
     title ??= 'Thread #${widget.post.no!}';
 
     final allPosts = [widget.post, ...widget.post.children];
-    final images =
-        allPosts.map((post) => post.images).expand((images) => images).toList();
+    final images = allPosts
+        .map((post) => post.images)
+        .expand((images) => images)
+        .toList()
+        .unique((element) => element.md5);
 
     Navigator.of(context).push(AlbumModal(images: images, title: title));
   }
