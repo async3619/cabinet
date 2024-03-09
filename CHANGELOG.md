@@ -1,3 +1,10 @@
+## [1.2.0-dev.1](https://github.com/async3619/cabinet/compare/v1.1.2-dev.1...v1.2.0-dev.1) (2024-03-09)
+
+
+### Features ✨
+
+* **post:** now thread viewer scroll will be started in lastly viewed index ([#86](https://github.com/async3619/cabinet/issues/86)) ([6574169](https://github.com/async3619/cabinet/commit/65741697eba9d4cd327950c221f3fa6edc60f450))
+
 ## [1.1.2-dev.1](https://github.com/async3619/cabinet/compare/v1.1.1...v1.1.2-dev.1) (2024-03-09)
 
 
