@@ -8,6 +8,14 @@ import 'base.dart';
 class ImageRepository extends BaseRepository<Image> {
   ImageRepository(Box<Image> box) : super(box);
 
+  Future<List<Image>> findAllFavorites() async {
+    final query = box.query(Image_.isFavorite.equals(true)).build();
+    final images = await query.findAsync();
+    query.close();
+
+    return images;
+  }
+
   @override
   Future<void> bulkDelete(List<Image> images) async {
     for (final image in images) {

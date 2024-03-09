@@ -6,18 +6,17 @@ import 'post.dart';
 @Entity()
 class Image implements BaseEntity {
   Image(
-    this.filename,
-    this.extension,
-    this.width,
-    this.height,
-    this.thumbnailWidth,
-    this.thumbnailHeight,
-    this.time,
-    this.size,
-    this.md5,
-    this.url,
-    this.thumbnailUrl,
-  );
+      this.filename,
+      this.extension,
+      this.width,
+      this.height,
+      this.thumbnailWidth,
+      this.thumbnailHeight,
+      this.time,
+      this.size,
+      this.md5,
+      this.url,
+      this.thumbnailUrl);
 
   @override
   @Id()
@@ -36,6 +35,7 @@ class Image implements BaseEntity {
   String? thumbnailUrl;
   String? path;
   String? thumbnailPath;
+  bool? isFavorite = false;
 
   final posts = ToMany<Post>();
 
