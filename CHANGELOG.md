@@ -1,3 +1,10 @@
+## [1.2.0-dev.2](https://github.com/async3619/cabinet/compare/v1.2.0-dev.1...v1.2.0-dev.2) (2024-03-09)
+
+
+### Features ✨
+
+* **media:** implement media favoriting feature ([#88](https://github.com/async3619/cabinet/issues/88)) ([c9b0669](https://github.com/async3619/cabinet/commit/c9b0669d0487574a6a74113f40922311f22015d0))
+
 ## [1.2.0-dev.1](https://github.com/async3619/cabinet/compare/v1.1.2-dev.1...v1.2.0-dev.1) (2024-03-09)
 
 
