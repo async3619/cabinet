@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cabinet/database/post.dart';
 import 'package:cabinet/utils/unique.dart';
 import 'package:cabinet/widgets/dialogs/post.dart';
@@ -18,6 +20,31 @@ class ThreadRoute extends StatefulWidget {
 
 class _ThreadRouteState extends State<ThreadRoute> {
   final AutoScrollController _controller = AutoScrollController();
+  int lastReadIndex = -1;
+
+  @override
+  initState() {
+    super.initState();
+
+    final allPosts = [widget.post, ...widget.post.children];
+    int lastReadIndex = -1;
+    for (int i = 0; i < allPosts.length; i++) {
+      var value = allPosts[i];
+      if (value.isRead == true) {
+        lastReadIndex = i;
+      }
+    }
+
+    if (lastReadIndex != -1) {
+      _controller.scrollToIndex(lastReadIndex,
+          preferPosition: AutoScrollPosition.begin,
+          duration: const Duration(milliseconds: 1));
+
+      setState(() {
+        this.lastReadIndex = lastReadIndex;
+      });
+    }
+  }
 
   handleMediaIndexChanged(int mediaIndex) {
     final allPosts = [widget.post, ...widget.post.children];
@@ -78,6 +105,8 @@ class _ThreadRouteState extends State<ThreadRoute> {
 
     var posts = [widget.post, ...widget.post.children];
 
+    log(lastReadIndex.toString());
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -104,8 +133,11 @@ class _ThreadRouteState extends State<ThreadRoute> {
                   onShowMedia: handleShowMedia,
                   onRequestShowPost: handleRequestShowPost,
                 ),
-                const Divider(
-                  height: 1,
+                Divider(
+                  height: lastReadIndex == index ? 4 : 1,
+                  color: lastReadIndex == index
+                      ? const Color.fromARGB(255, 255, 0, 0)
+                      : null,
                 ),
               ],
             ),
