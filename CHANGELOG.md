@@ -1,3 +1,10 @@
+## [1.1.2-dev.1](https://github.com/async3619/cabinet/compare/v1.1.1...v1.1.2-dev.1) (2024-03-09)
+
+
+### Bug Fixes 🐞
+
+* **media:** now media file will be saved properly if it is already stored in local device ([#82](https://github.com/async3619/cabinet/issues/82)) ([11cf9cf](https://github.com/async3619/cabinet/commit/11cf9cf2f51966a6f2a6c2ad7fff77bbbba5c231))
+
 ## [1.1.1](https://github.com/async3619/cabinet/compare/v1.1.0...v1.1.1) (2024-01-22)
 
 
