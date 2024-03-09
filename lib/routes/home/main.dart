@@ -4,10 +4,10 @@ import 'package:cabinet/works/manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../create_watcher.dart';
+import 'favorites.dart';
 import 'posts.dart';
 import 'watchers.dart';
-
-import '../create_watcher.dart';
 
 class HomeRoute extends StatefulWidget {
   const HomeRoute({super.key});
@@ -59,8 +59,13 @@ class _HomeRouteState extends State<HomeRoute> {
           child: const Icon(Icons.add),
         );
         break;
+
       case 1:
         body = const PostsTab();
+        break;
+
+      case 2:
+        body = const FavoritesTab();
         break;
 
       default:
@@ -79,6 +84,10 @@ class _HomeRouteState extends State<HomeRoute> {
           BottomNavigationBarItem(
             icon: Icon(Icons.forum_outlined),
             label: 'Posts',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star),
+            label: 'Favorites',
           ),
         ],
         currentIndex: _selectedIndex,
