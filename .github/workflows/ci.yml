@@ -57,9 +57,34 @@ jobs:
         run: flutter analyze
 
       - name: Semantic Release
-        run: npx semantic-release
+        uses: cycjimmy/semantic-release-action@v4
+        id: semantic
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Sign app APK
+        uses: r0adkll/sign-android-release@v1
+        if: steps.semantic.outputs.new_release_published == 'true'
+        id: sign_app
+        with:
+          releaseDirectory: build/app/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY_BASE54 }}
+          alias: ${{ secrets.SIGNING_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_STORE_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
+
+      - name: Do something when a new release published
+        if: steps.semantic.outputs.new_release_published == 'true'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/app/outputs/apk/release/*.apk
+          tag: ${{ steps.semantic.outputs.new_release_version }}
+          overwrite: true
+          file_glob: true
 
       - uses: sarisia/actions-status-discord@v1
         if: always()
