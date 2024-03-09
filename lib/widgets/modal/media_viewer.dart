@@ -1,8 +1,10 @@
+import 'package:cabinet/database/image.dart' as database;
+import 'package:cabinet/database/repository/holder.dart';
 import 'package:cabinet/system/file.dart';
 import 'package:cabinet/widgets/media_viewer.dart';
 import 'package:flutter/material.dart';
-import 'package:cabinet/database/image.dart' as database;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 class MediaViewerModal extends ModalRoute {
@@ -47,6 +49,18 @@ class MediaViewerModal extends ModalRoute {
         msg: 'Image saved to gallery',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER);
+  }
+
+  handleFavoriteClick(BuildContext context) {
+    final image = images[currentIndex];
+    image.isFavorite = image.isFavorite != true ? true : false;
+
+    final repositoryHolder =
+        Provider.of<RepositoryHolder>(context, listen: false);
+
+    repositoryHolder.image.save(image);
+
+    changedExternalState();
   }
 
   handlePageChanged(int index) {
@@ -95,6 +109,14 @@ class MediaViewerModal extends ModalRoute {
               ],
             ),
             actions: [
+              IconButton(
+                icon: Icon(
+                  currentImage.isFavorite == true
+                      ? Icons.star
+                      : Icons.star_border,
+                ),
+                onPressed: () => handleFavoriteClick(context),
+              ),
               IconButton(
                 icon: const Icon(Icons.download),
                 onPressed: () => handleSavePressed(context),

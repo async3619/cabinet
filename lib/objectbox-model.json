@@ -198,7 +198,7 @@
     },
     {
       "id": "8:1718792483664455346",
-      "lastPropertyId": "14:5619545512186724114",
+      "lastPropertyId": "15:8766464652817164891",
       "name": "Image",
       "properties": [
         {
@@ -271,6 +271,11 @@
           "id": "14:5619545512186724114",
           "name": "thumbnailPath",
           "type": 9
+        },
+        {
+          "id": "15:8766464652817164891",
+          "name": "isFavorite",
+          "type": 1
         }
       ],
       "relations": [
