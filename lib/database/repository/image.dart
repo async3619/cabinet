@@ -10,7 +10,7 @@ class ImageRepository extends BaseRepository<Image> {
 
   Future<List<Image>> findAllFavorites() async {
     final query = box.query(Image_.isFavorite.equals(true)).build();
-    final images = await query.find();
+    final images = await query.findAsync();
     query.close();
 
     return images;

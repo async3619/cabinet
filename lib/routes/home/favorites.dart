@@ -20,7 +20,6 @@ class _FavoritesTabState extends State<FavoritesTab> {
         AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text('Favorites'),
-          actions: [],
         ),
         Expanded(
           child: FutureBuilder(
