@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:external_path/external_path.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:uuid/uuid.dart';
-import 'package:http/http.dart' as http;
 import 'package:cabinet/database/image.dart';
+import 'package:external_path/external_path.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 class FileSystem {
   static final FileSystem _instance = FileSystem._internal();
@@ -84,15 +84,20 @@ class FileSystem {
     final imageFileName = '$uuid.${image.extension}';
     final imageFile = File('$imagePath/$imageFileName');
 
-    if (!imageFile.existsSync()) {
-      imageFile.createSync(recursive: true);
+    if (image.path == null) {
+      if (!imageFile.existsSync()) {
+        imageFile.createSync(recursive: true);
+      }
+
+      final imageBuffer = await http
+          .get(Uri.parse(image.url!))
+          .then((response) => response.bodyBytes);
+
+      await imageFile.writeAsBytes(imageBuffer);
+    } else {
+      final oldFile = File(image.path!);
+      await oldFile.copy(imageFile.path);
     }
-
-    final imageBuffer = await http
-        .get(Uri.parse(image.url!))
-        .then((response) => response.bodyBytes);
-
-    await imageFile.writeAsBytes(imageBuffer);
 
     ImageGallerySaver.saveFile(imageFile.path);
   }
