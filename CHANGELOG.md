@@ -1,3 +1,16 @@
+## [1.2.0](https://github.com/async3619/cabinet/compare/v1.1.1...v1.2.0) (2024-03-10)
+
+
+### Features ✨
+
+* **media:** implement media favoriting feature ([#88](https://github.com/async3619/cabinet/issues/88)) ([c9b0669](https://github.com/async3619/cabinet/commit/c9b0669d0487574a6a74113f40922311f22015d0))
+* **post:** now thread viewer scroll will be started in lastly viewed index ([#86](https://github.com/async3619/cabinet/issues/86)) ([6574169](https://github.com/async3619/cabinet/commit/65741697eba9d4cd327950c221f3fa6edc60f450))
+
+
+### Bug Fixes 🐞
+
+* **media:** now media file will be saved properly if it is already stored in local device ([#82](https://github.com/async3619/cabinet/issues/82)) ([11cf9cf](https://github.com/async3619/cabinet/commit/11cf9cf2f51966a6f2a6c2ad7fff77bbbba5c231))
+
 ## [1.2.0-dev.2](https://github.com/async3619/cabinet/compare/v1.2.0-dev.1...v1.2.0-dev.2) (2024-03-09)
 
 
